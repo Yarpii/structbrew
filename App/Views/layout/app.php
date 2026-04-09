@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth" x-data x-bind:class="$store.theme.dark ? 'dark' : ''">
+<html lang="<?= htmlspecialchars(\App\Core\Seo::htmlLang(), ENT_QUOTES, 'UTF-8') ?>" class="scroll-smooth" x-data x-bind:class="$store.theme.dark ? 'dark' : ''">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($title ?? 'Store') ?> — Scooter Dynamics</title>
+    <?= \App\Core\Seo::head() ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>

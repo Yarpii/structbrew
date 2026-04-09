@@ -78,15 +78,15 @@ try {
         </div>
         <div class="flex items-center gap-3 ml-auto">
             <a href="/contact" class="hidden lg:inline text-white/80 hover:text-white transition-colors">Support: +1 800 555 1234</a>
-            <a href="<?= htmlspecialchars($headerSupportUrl) ?>" class="text-white/80 hover:text-white transition-colors">Support Center</a>
+            <a href="<?= htmlspecialchars($headerSupportUrl) ?>" class="text-white/80 hover:text-white transition-colors"><?= htmlspecialchars(__('customer_service')) ?></a>
             <?php if (!empty($isLoggedIn) && !empty($currentCustomer)): ?>
                 <a href="/account" class="text-white/80 hover:text-white transition-colors">My Portal</a>
                 <form method="POST" action="/logout" class="inline-flex">
                     <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars((string) ($csrfToken ?? '')) ?>">
-                    <button type="submit" class="text-white/80 hover:text-white transition-colors">Logout</button>
+                    <button type="submit" class="text-white/80 hover:text-white transition-colors"><?= htmlspecialchars(__('logout')) ?></button>
                 </form>
             <?php else: ?>
-                <a href="/login" class="text-white/80 hover:text-white transition-colors">Login / Account</a>
+                <a href="/login" class="text-white/80 hover:text-white transition-colors"><?= htmlspecialchars(__('login')) ?> / <?= htmlspecialchars(__('account')) ?></a>
             <?php endif; ?>
             <button
                 type="button"
@@ -132,7 +132,7 @@ try {
                 <svg class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-muted)]" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 <input
                     type="search" name="q"
-                    placeholder="Search products..."
+                    placeholder="<?= htmlspecialchars(__('search')) ?>..."
                     class="h-10 w-full rounded-[var(--radius-input)] border border-[var(--color-border)] bg-[var(--color-bg)] pl-10 pr-4 text-sm focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/10"
                 >
             </form>
@@ -140,12 +140,12 @@ try {
 
         <!-- Navigation (desktop) -->
         <nav class="hidden lg:flex items-center gap-5 text-sm font-medium shrink-0">
-            <a href="/" class="text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors">Home</a>
-            <a href="/shop" class="text-[var(--color-text)] hover:text-[var,--color-accent)] transition-colors">Shop</a>
-            <a href="/categories" class="text-[var(--color-text)] hover:text-[var,--color-accent)] transition-colors">Categories</a>
-            <a href="/about" class="text-[var,--color-text] hover:text-[var,--color-accent] transition-colors">About</a>
-            <a href="/contact" class="text-[var,--color-text)] hover:text-[var,--color-accent] transition-colors">Contact</a>
-            <a href="<?= htmlspecialchars($headerSupportUrl) ?>" class="text-[var,--color-text] hover:text-[var,--color-accent] transition-colors">Support</a>
+            <a href="/" class="text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors"><?= htmlspecialchars(__('home')) ?></a>
+            <a href="/shop" class="text-[var(--color-text)] hover:text-[var,--color-accent)] transition-colors"><?= htmlspecialchars(__('shop')) ?></a>
+            <a href="/categories" class="text-[var(--color-text)] hover:text-[var,--color-accent)] transition-colors"><?= htmlspecialchars(__('categories')) ?></a>
+            <a href="/about" class="text-[var,--color-text] hover:text-[var,--color-accent] transition-colors"><?= htmlspecialchars(__('about')) ?></a>
+            <a href="/contact" class="text-[var,--color-text)] hover:text-[var,--color-accent] transition-colors"><?= htmlspecialchars(__('contact')) ?></a>
+            <a href="<?= htmlspecialchars($headerSupportUrl) ?>" class="text-[var,--color-text] hover:text-[var,--color-accent] transition-colors"><?= htmlspecialchars(__('help')) ?></a>
             <?php if (!empty($isLoggedIn) && !empty($currentCustomer)): ?>
                 <a href="/account" class="text-[var(--color-accent)] hover:text-[var,--color-accent-hover] transition-colors">Portal</a>
             <?php endif; ?>
@@ -253,7 +253,7 @@ try {
                 class="relative inline-flex h-10 items-center gap-2 rounded-[var(--radius-button)] bg-[var,--color-accent] px-3.5 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"
             >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-                <span class="hidden xs:inline">Cart</span>
+                <span class="hidden xs:inline"><?= htmlspecialchars(__('cart')) ?></span>
                 <template x-if="$store.cart.count > 0">
                     <span class="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-white text-[var(--color-accent)] text-[11px] font-bold shadow" x-text="$store.cart.count"></span>
                 </template>
@@ -274,19 +274,19 @@ try {
     <div x-show="searchOpen" x-cloak x-transition class="sm:hidden border-t border-[var,--color-border] p-3">
         <form action="/shop" method="get" class="relative">
             <svg class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-muted)]" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="search" name="q" placeholder="Search products..." class="h-10 w-full rounded-[var(--radius-input)] border border-[var,--color-border] bg-[var,--color-bg)] pl-10 pr-4 text-sm focus:border-[var,--color-accent] focus:ring-2 focus:ring-[var,--color-accent)]/10">
+            <input type="search" name="q" placeholder="<?= htmlspecialchars(__('search')) ?>..." class="h-10 w-full rounded-[var(--radius-input)] border border-[var,--color-border] bg-[var,--color-bg)] pl-10 pr-4 text-sm focus:border-[var,--color-accent] focus:ring-2 focus:ring-[var,--color-accent)]/10">
         </form>
     </div>
 
     <!-- Mobile nav -->
     <nav x-show="mobileOpen" x-cloak x-transition.opacity.duration.150ms class="lg:hidden border-t border-[var,--color-border] bg-[var,--color-surface)]">
         <div class="mx-auto w-[92%] py-3 space-y-1">
-            <a href="/" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors">Home</a>
-            <a href="/shop" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors">Shop</a>
-            <a href="/categories" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors">Categories</a>
-            <a href="/about" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors">About</a>
-            <a href="/contact" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors">Contact</a>
-            <a href="<?= htmlspecialchars($headerSupportUrl) ?>" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors">Support Center</a>
+            <a href="/" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors"><?= htmlspecialchars(__('home')) ?></a>
+            <a href="/shop" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors"><?= htmlspecialchars(__('shop')) ?></a>
+            <a href="/categories" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors"><?= htmlspecialchars(__('categories')) ?></a>
+            <a href="/about" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors"><?= htmlspecialchars(__('about')) ?></a>
+            <a href="/contact" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors"><?= htmlspecialchars(__('contact')) ?></a>
+            <a href="<?= htmlspecialchars($headerSupportUrl) ?>" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors"><?= htmlspecialchars(__('customer_service')) ?></a>
             <?php if (!empty($isLoggedIn) && !empty($currentCustomer)): ?>
                 <a href="/account/tickets" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors">My Tickets</a>
                 <a href="/account/tickets/create" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors">Open Ticket</a>
@@ -297,8 +297,8 @@ try {
                     <button type="submit" class="block w-full rounded-lg px-3 py-2.5 text-left text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors">Logout</button>
                 </form>
             <?php else: ?>
-                <a href="/login" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors">Login</a>
-                <a href="/register" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-accent)] hover:bg-[var,--color-bg)] transition-colors">Create Account</a>
+                <a href="/login" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors"><?= htmlspecialchars(__('login')) ?></a>
+                <a href="/register" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-accent)] hover:bg-[var,--color-bg)] transition-colors"><?= htmlspecialchars(__('create_account')) ?></a>
                 <a href="/contact" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-[var,--color-text)] hover:bg-[var,--color-bg)] transition-colors">Contact Support</a>
 
                 <div class="mt-2 rounded-md border border-[var(--color-border)] bg-[var,--color-bg)] p-3">

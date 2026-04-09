@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'shopping_cart'       => 'Carrito de compras',
+    'cart_empty'          => 'Su carrito está vacío',
+    'continue_shopping'   => 'Seguir comprando',
+    'update_cart'         => 'Actualizar carrito',
+    'clear_cart'          => 'Vaciar carrito',
+    'subtotal'            => 'Subtotal',
+    'tax'                 => 'IVA',
+    'shipping'            => 'Envío',
+    'discount'            => 'Descuento',
+    'total'               => 'Total',
+    'apply_coupon'        => 'Aplicar cupón',
+    'coupon_code'         => 'Código de cupón',
+    'proceed_to_checkout' => 'Proceder al pago',
+    'item'                => 'Artículo',
+    'items'               => 'Artículos',
+    'cart_updated'        => 'Carrito actualizado correctamente',
+    'item_added'          => 'Artículo añadido al carrito',
+    'item_removed'        => 'Artículo eliminado del carrito',
+    'coupon_applied'      => 'Cupón aplicado correctamente',
+    'coupon_invalid'      => 'Código de cupón no válido',
+    'estimated_shipping'  => 'Gastos de envío estimados',
+    'free_shipping'       => 'Envío gratuito',
+    'order_total'         => 'Total del pedido',
+];

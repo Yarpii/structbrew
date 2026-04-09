@@ -9,6 +9,7 @@ use App\Core\Database;
 use App\Core\Response;
 use App\Core\Session;
 use App\Core\StoreResolver;
+use App\Core\Translator;
 use App\Core\Validator;
 use App\Data\CustomerPortal;
 use App\Data\Products;
@@ -22,6 +23,7 @@ final class AccountController extends BaseStorefrontController
 {
     public function index(): Response
     {
+        Translator::page('account');
         return $this->renderAccountPage('account.index', 'My Account');
     }
 

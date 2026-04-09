@@ -6,7 +6,9 @@ use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\Database;
+use App\Core\Seo;
 use App\Core\StoreResolver;
+use App\Core\Translator;
 use App\Data\Products;
 use Throwable;
 
@@ -17,6 +19,7 @@ final class ShopController extends Controller
      */
     public function index(Request $req): Response
     {
+        Translator::page('shop');
         $category = $req->input('category', '');
         $sort = $req->input('sort', 'default');
         $q = $req->input('q', '');
@@ -128,11 +131,25 @@ final class ShopController extends Controller
      */
     public function show(Request $req, string $slug): Response
     {
+        Translator::page('shop');
+        Translator::page('vehicles');
+
         $product = Products::findBySlug($slug);
         if (!$product) {
             return $this->text('Product not found', 404);
         }
         $related = Products::related($product['id']);
+
+        // SEO: product-specific meta + structured data
+        Seo::title($product['name']);
+        Seo::description(strip_tags($product['short_description'] ?? $product['description'] ?? ''));
+        Seo::type('product');
+        if (!empty($product['image'])) {
+            Seo::image($product['image']);
+        }
+        $productUrl = 'https://' . ($_SERVER['HTTP_HOST'] ?? '') . '/shop/' . $slug;
+        Seo::addJsonLd(Seo::productSchema($product, $productUrl));
+
         return $this->view('shop.show', [
             'title'   => $product['name'],
             'product' => $product,

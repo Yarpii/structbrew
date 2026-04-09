@@ -7,6 +7,7 @@ use App\Core\Database;
 use App\Core\Response;
 use App\Core\Session;
 use App\Core\StoreResolver;
+use App\Core\Translator;
 use App\Core\Validator;
 use App\Data\CustomerPortal;
 use App\Services\TurnstileService;
@@ -21,6 +22,7 @@ final class AuthController extends BaseStorefrontController
      */
     public function login(): Response
     {
+        Translator::page('auth');
         if (Auth::isLoggedIn()) {
             return $this->redirect('/account');
         }

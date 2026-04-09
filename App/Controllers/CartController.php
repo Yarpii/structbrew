@@ -7,6 +7,7 @@ use App\Core\Database;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\StoreResolver;
+use App\Core\Translator;
 use App\Data\Products;
 use App\Models\Order;
 use App\Services\WalletService;
@@ -19,6 +20,7 @@ final class CartController extends BaseStorefrontController
      */
     public function index(): Response
     {
+        Translator::page('cart');
         $creditsBalance = 0.0;
         $creditsEnabled = false;
 
