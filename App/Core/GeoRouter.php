@@ -196,6 +196,11 @@ final class GeoRouter
             return null;
         }
 
+        // Don't redirect search engine bots — they must crawl each domain independently
+        if (self::isBot()) {
+            return null;
+        }
+
         // Don't redirect admin, API, setup, or asset requests
         $uri = strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
         if (self::isExcludedPath((string) $uri)) {
@@ -403,9 +408,36 @@ final class GeoRouter
             || (str_contains($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json'));
     }
 
+    private static function isBot(): bool
+    {
+        $ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
+        if ($ua === '') {
+            return false;
+        }
+
+        // Major search engine crawlers that must index each domain independently
+        $bots = [
+            'Googlebot', 'Bingbot', 'Slurp', 'DuckDuckBot', 'Baiduspider',
+            'YandexBot', 'Sogou', 'facebookexternalhit', 'Twitterbot',
+            'LinkedInBot', 'WhatsApp', 'TelegramBot', 'Applebot',
+            'AhrefsBot', 'SemrushBot', 'MJ12bot', 'DotBot', 'PetalBot',
+            'Bytespider', 'GPTBot', 'ClaudeBot', 'anthropic-ai',
+            'ia_archiver', 'archive.org_bot',
+        ];
+
+        $uaLower = strtolower($ua);
+        foreach ($bots as $bot) {
+            if (str_contains($uaLower, strtolower($bot))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private static function isExcludedPath(string $uri): bool
     {
-        $excluded = ['/admin', '/api/', '/setup', '/assets/', '/storage/'];
+        $excluded = ['/admin', '/api/', '/setup', '/assets/', '/storage/', '/sitemap', '/robots.txt'];
         foreach ($excluded as $prefix) {
             if (str_starts_with($uri, $prefix)) {
                 return true;

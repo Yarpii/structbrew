@@ -57,6 +57,10 @@ final class Bootstrap
             View::share('isLoggedIn', Auth::isLoggedIn());
             View::share('currentCustomer', Auth::isLoggedIn() ? Auth::customer() : null);
 
+            // Initialize default SEO data (controllers can override per-page)
+            Seo::title('Scooter Dynamics');
+            Seo::description('Scooter parts and accessories for every rider.');
+
             // Initialize store resolver (multi-store domain mapping)
             try {
                 StoreResolver::resolve();
