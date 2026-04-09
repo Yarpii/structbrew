@@ -8,6 +8,7 @@ use App\Core\Controller;
 use App\Core\Database;
 use App\Core\Request;
 use App\Core\Response;
+use App\Core\Translator;
 use App\Data\Products;
 use Throwable;
 
@@ -18,6 +19,7 @@ final class HomeController extends Controller
      */
     public function index(Request $req): Response
     {
+        Translator::page('shop');
         return $this->view('home.index', [
             'title'       => 'Home',
             'featured'    => Products::featured(4),

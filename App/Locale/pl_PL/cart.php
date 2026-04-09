@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'shopping_cart'       => 'Koszyk zakupowy',
+    'cart_empty'          => 'Twój koszyk jest pusty',
+    'continue_shopping'   => 'Kontynuuj zakupy',
+    'update_cart'         => 'Zaktualizuj koszyk',
+    'clear_cart'          => 'Wyczyść koszyk',
+    'subtotal'            => 'Suma częściowa',
+    'tax'                 => 'VAT',
+    'shipping'            => 'Wysyłka',
+    'discount'            => 'Rabat',
+    'total'               => 'Razem',
+    'apply_coupon'        => 'Zastosuj kupon',
+    'coupon_code'         => 'Kod kuponu',
+    'proceed_to_checkout' => 'Przejdź do kasy',
+    'item'                => 'Przedmiot',
+    'items'               => 'Przedmioty',
+    'cart_updated'        => 'Koszyk zaktualizowany pomyślnie',
+    'item_added'          => 'Przedmiot dodany do koszyka',
+    'item_removed'        => 'Przedmiot usunięty z koszyka',
+    'coupon_applied'      => 'Kupon zastosowany pomyślnie',
+    'coupon_invalid'      => 'Nieprawidłowy kod kuponu',
+    'estimated_shipping'  => 'Szacowane koszty wysyłki',
+    'free_shipping'       => 'Darmowa wysyłka',
+    'order_total'         => 'Łączna kwota zamówienia',
+];

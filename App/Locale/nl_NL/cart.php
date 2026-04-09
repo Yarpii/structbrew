@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'shopping_cart'       => 'Winkelwagen',
+    'cart_empty'          => 'Uw winkelwagen is leeg',
+    'continue_shopping'   => 'Verder winkelen',
+    'update_cart'         => 'Winkelwagen bijwerken',
+    'clear_cart'          => 'Winkelwagen legen',
+    'subtotal'            => 'Subtotaal',
+    'tax'                 => 'BTW',
+    'shipping'            => 'Verzending',
+    'discount'            => 'Korting',
+    'total'               => 'Totaal',
+    'apply_coupon'        => 'Kortingscode toepassen',
+    'coupon_code'         => 'Kortingscode',
+    'proceed_to_checkout' => 'Doorgaan naar afrekenen',
+    'item'                => 'Artikel',
+    'items'               => 'Artikelen',
+    'cart_updated'        => 'Winkelwagen succesvol bijgewerkt',
+    'item_added'          => 'Artikel toegevoegd aan winkelwagen',
+    'item_removed'        => 'Artikel verwijderd uit winkelwagen',
+    'coupon_applied'      => 'Kortingscode succesvol toegepast',
+    'coupon_invalid'      => 'Ongeldige kortingscode',
+    'estimated_shipping'  => 'Geschatte verzendkosten',
+    'free_shipping'       => 'Gratis verzending',
+    'order_total'         => 'Totaalbedrag bestelling',
+];

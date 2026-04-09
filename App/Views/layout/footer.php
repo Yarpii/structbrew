@@ -7,7 +7,7 @@
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
                 </div>
                 <div>
-                    <p class="text-sm font-semibold text-[var(--color-text)]">Free Shipping</p>
+                    <p class="text-sm font-semibold text-[var(--color-text)]"><?= htmlspecialchars(__('free_shipping')) ?></p>
                     <p class="text-xs text-[var(--color-muted)]">On orders over $50</p>
                 </div>
             </div>
@@ -16,7 +16,7 @@
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </div>
                 <div>
-                    <p class="text-sm font-semibold text-[var(--color-text)]">Secure Payment</p>
+                    <p class="text-sm font-semibold text-[var(--color-text)]"><?= htmlspecialchars(__('secure_payment')) ?></p>
                     <p class="text-xs text-[var,--color-muted)]">SSL encrypted checkout</p>
                 </div>
             </div>
@@ -60,12 +60,12 @@
                 </div>
             </div>
             <div>
-                <h2 class="mb-2 text-base font-bold text-white">Subscribe</h2>
-                <p class="mb-3 text-[0.9375rem] text-gray-400">Get notified about new products, deals, and exclusive offers.</p>
+                <h2 class="mb-2 text-base font-bold text-white"><?= htmlspecialchars(__('subscribe')) ?></h2>
+                <p class="mb-3 text-[0.9375rem] text-gray-400"><?= htmlspecialchars(__('newsletter_signup')) ?></p>
                 <form class="flex flex-wrap gap-2" x-data="{ email: '' }" @submit.prevent="email = ''; alert('Thanks for subscribing!')">
-                    <input type="email" x-model="email" required placeholder="Enter your email"
+                    <input type="email" x-model="email" required placeholder="<?= htmlspecialchars(__('enter_email')) ?>"
                            class="min-w-[14rem] grow rounded-[var(--radius-input)] border border-white/20 bg-white/10 px-3.5 py-2.5 text-[0.9375rem] text-white placeholder-gray-400 focus:border-[var(--color-accent)] focus:ring-1 focus:ring-[var(--color-accent)]">
-                    <button type="submit" class="rounded-[var(--radius-button)] bg-[var(--color-accent)] px-4 py-2.5 text-[0.9375rem] font-semibold text-white transition hover:bg-[var(--color-accent-hover)]">Subscribe</button>
+                    <button type="submit" class="rounded-[var(--radius-button)] bg-[var(--color-accent)] px-4 py-2.5 text-[0.9375rem] font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"><?= htmlspecialchars(__('subscribe')) ?></button>
                 </form>
             </div>
         </div>
@@ -77,7 +77,7 @@
             <div class="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
                 <!-- Shop -->
                 <section>
-                    <h3 class="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-gray-500">Shop</h3>
+                    <h3 class="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-gray-500"><?= htmlspecialchars(__('shop')) ?></h3>
                     <ul class="grid gap-2.5 text-[0.9375rem]">
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop">All Products</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop?category=electronics">Electronics</a></li>
@@ -103,31 +103,31 @@
 
                 <!-- Account & Orders -->
                 <section>
-                    <h3 class="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-gray-500">Account & Orders</h3>
+                    <h3 class="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-gray-500"><?= htmlspecialchars(__('my_account')) ?></h3>
                     <ul class="grid gap-2.5 text-[0.9375rem]">
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/login">My Account</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/register">Create Account</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/cart">Shopping Cart</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/payment-methods">Payment Methods</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/login"><?= htmlspecialchars(__('my_account')) ?></a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/register"><?= htmlspecialchars(__('create_account')) ?></a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/cart"><?= htmlspecialchars(__('shopping_cart')) ?></a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/payment-methods"><?= htmlspecialchars(__('payment_methods')) ?></a></li>
                     </ul>
                 </section>
 
                 <!-- Support -->
                 <section>
-                    <h3 class="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-gray-500">Support</h3>
+                    <h3 class="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-gray-500"><?= htmlspecialchars(__('customer_service')) ?></h3>
                     <ul class="grid gap-2.5 text-[0.9375rem]">
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/support">Support Center</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/support"><?= htmlspecialchars(__('customer_service')) ?></a></li>
                         <?php if (!empty($isLoggedIn) && !empty($currentCustomer)): ?>
                             <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/account/tickets">My Tickets</a></li>
                             <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/account/tickets/create">Open Ticket</a></li>
                         <?php else: ?>
                             <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/login">Ticket Portal Login</a></li>
                         <?php endif; ?>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/contact">Contact Us</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/contact"><?= htmlspecialchars(__('contact_us')) ?></a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/returns-warranty">Returns & Warranty</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/order-issues">Order Issues Help</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/vat-invoices">VAT & Invoices</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/faq">FAQ Hub</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/faq"><?= htmlspecialchars(__('faq')) ?></a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/installation-guides">Installation Guides</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/compatibility">Compatibility Help</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/availability-restock">Availability & Restock</a></li>
@@ -184,14 +184,16 @@
     <div class="border-b border-white/10">
         <div class="mx-auto flex w-[92%] flex-col gap-4 py-4 text-sm sm:w-[90%] md:w-[88%] lg:w-[85%] lg:flex-row lg:items-center lg:justify-between">
             <div class="flex flex-wrap items-center gap-3 text-gray-500">
-                <span class="font-semibold text-white">Region</span>
-                <span class="text-gray-400">Worldwide</span>
-                <span class="font-semibold text-white">Currency</span>
-                <span class="text-gray-400">USD ($)</span>
+                <span class="font-semibold text-white"><?= htmlspecialchars(__('country')) ?></span>
+                <span class="text-gray-400"><?= htmlspecialchars($currentCountry ?? 'US') ?></span>
+                <span class="font-semibold text-white"><?= htmlspecialchars(__('currency')) ?></span>
+                <span class="text-gray-400"><?= htmlspecialchars(($currentCurrency ?? 'USD') . ' (' . ($currentCurrencySymbol ?? '$') . ')') ?></span>
+                <span class="font-semibold text-white"><?= htmlspecialchars(__('language')) ?></span>
+                <span class="text-gray-400"><?= htmlspecialchars($currentLanguage ?? 'en') ?></span>
             </div>
             <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-gray-400">
-                <a class="transition-colors hover:text-[var(--color-accent)]" href="/privacy-policy">Privacy</a>
-                <a class="transition-colors hover:text-[var(--color-accent)]" href="/terms-and-conditions">Terms</a>
+                <a class="transition-colors hover:text-[var(--color-accent)]" href="/privacy-policy"><?= htmlspecialchars(__('privacy_policy')) ?></a>
+                <a class="transition-colors hover:text-[var(--color-accent)]" href="/terms-and-conditions"><?= htmlspecialchars(__('terms_conditions')) ?></a>
                 <a class="transition-colors hover:text-[var(--color-accent)]" href="/cookie-policy">Cookies</a>
             </div>
         </div>
@@ -200,7 +202,7 @@
     <!-- Copyright + Payment -->
     <div class="py-4 text-sm text-gray-500">
         <div class="mx-auto flex w-[92%] flex-wrap items-center justify-between gap-4 sm:w-[90%] md:w-[88%] lg:w-[85%]">
-            <span>&copy; <?= date('Y') ?> Scooter Dynamics. All rights reserved. Powered by Structbrew Framework.</span>
+            <span>&copy; <?= date('Y') ?> Scooter Dynamics. <?= htmlspecialchars(__('copyright')) ?> Powered by Structbrew Framework.</span>
             <span class="inline-flex items-center gap-2">
                 <svg width="34" height="20" viewBox="0 0 34 20" aria-label="Visa"><rect width="34" height="20" rx="3" fill="#1e1e1e" stroke="rgba(255,255,255,0.16)"/><text x="17" y="13" font-size="8" font-weight="600" text-anchor="middle" fill="#a1a1aa">VISA</text></svg>
                 <svg width="34" height="20" viewBox="0 0 34 20" aria-label="Mastercard"><rect width="34" height="20" rx="3" fill="#1e1e1e" stroke="rgba(255,255,255,0.16)"/><circle cx="14" cy="10" r="5" fill="none" stroke="#a1a1aa" stroke-width="1.2"/><circle cx="20" cy="10" r="5" fill="none" stroke="#a1a1aa" stroke-width="1.2"/></svg>

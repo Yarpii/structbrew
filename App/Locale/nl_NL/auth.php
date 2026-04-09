@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'email'                => 'E-mailadres',
+    'password'             => 'Wachtwoord',
+    'confirm_password'     => 'Wachtwoord bevestigen',
+    'remember_me'          => 'Onthoud mij',
+    'forgot_password'      => 'Wachtwoord vergeten?',
+    'reset_password'       => 'Wachtwoord herstellen',
+    'create_account'       => 'Account aanmaken',
+    'already_have_account' => 'Heeft u al een account?',
+    'dont_have_account'    => 'Heeft u nog geen account?',
+    'sign_in'              => 'Inloggen',
+    'sign_up'              => 'Registreren',
+    'first_name'           => 'Voornaam',
+    'last_name'            => 'Achternaam',
+    'phone'                => 'Telefoon',
+    'address'              => 'Adres',
+    'city'                 => 'Stad',
+    'state'                => 'Provincie',
+    'zip_code'             => 'Postcode',
+    'country'              => 'Land',
+    'new_password'         => 'Nieuw wachtwoord',
+    'current_password'     => 'Huidig wachtwoord',
+];

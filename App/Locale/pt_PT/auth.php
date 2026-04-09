@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'email'                => 'E-mail',
+    'password'             => 'Palavra-passe',
+    'confirm_password'     => 'Confirmar palavra-passe',
+    'remember_me'          => 'Lembrar-me',
+    'forgot_password'      => 'Esqueceu a palavra-passe?',
+    'reset_password'       => 'Repor palavra-passe',
+    'create_account'       => 'Criar conta',
+    'already_have_account' => 'Já tem uma conta?',
+    'dont_have_account'    => 'Não tem uma conta?',
+    'sign_in'              => 'Iniciar sessão',
+    'sign_up'              => 'Registar-se',
+    'first_name'           => 'Nome próprio',
+    'last_name'            => 'Apelido',
+    'phone'                => 'Telefone',
+    'address'              => 'Morada',
+    'city'                 => 'Cidade',
+    'state'                => 'Distrito',
+    'zip_code'             => 'Código postal',
+    'country'              => 'País',
+    'new_password'         => 'Nova palavra-passe',
+    'current_password'     => 'Palavra-passe atual',
+];

@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'shopping_cart'       => 'Shopping Basket',
+    'cart_empty'          => 'Your basket is empty',
+    'continue_shopping'   => 'Continue Shopping',
+    'update_cart'         => 'Update Basket',
+    'clear_cart'          => 'Clear Basket',
+    'subtotal'            => 'Subtotal',
+    'tax'                 => 'VAT',
+    'shipping'            => 'Delivery',
+    'discount'            => 'Discount',
+    'total'               => 'Total',
+    'apply_coupon'        => 'Apply Voucher',
+    'coupon_code'         => 'Voucher Code',
+    'proceed_to_checkout' => 'Proceed to Checkout',
+    'item'                => 'Item',
+    'items'               => 'Items',
+    'cart_updated'        => 'Basket updated successfully',
+    'item_added'          => 'Item added to basket',
+    'item_removed'        => 'Item removed from basket',
+    'coupon_applied'      => 'Voucher applied successfully',
+    'coupon_invalid'      => 'Invalid voucher code',
+    'estimated_shipping'  => 'Estimated Delivery',
+    'free_shipping'       => 'Free Delivery',
+    'order_total'         => 'Order Total',
+];
