@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace App\Core;
 
+use App\Controllers\SetupController;
 use Throwable;
 
 final class Bootstrap
@@ -29,6 +30,27 @@ final class Bootstrap
 
             // Start session
             Session::start();
+
+            // Check if setup is needed (no .env file = new installation)
+            if (SetupController::needsSetup()) {
+                $uri = strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
+                $uri = rtrim($uri, '/') ?: '/';
+
+                // Allow setup routes and static assets through
+                if (!str_starts_with($uri, '/setup') && !str_starts_with($uri, '/assets')) {
+                    header('Location: /setup');
+                    exit;
+                }
+
+                // Run only the setup routes
+                $app = new App($rootPath, [
+                    'debug'       => true,
+                    'timezone'    => Config::get('app.timezone', 'UTC'),
+                    'routes_path' => $routesPath,
+                ]);
+                $app->run();
+                return;
+            }
 
             // Initialize store resolver (multi-store domain mapping)
             try {

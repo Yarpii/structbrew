@@ -58,6 +58,11 @@ class Database
         return self::$instance;
     }
 
+    public static function resetInstance(): void
+    {
+        self::$instance = null;
+    }
+
     public static function connect(): self
     {
         return self::getInstance();
