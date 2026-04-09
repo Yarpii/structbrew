@@ -858,25 +858,58 @@ final class AccountController extends BaseStorefrontController
         $customerId = (int) Auth::customerId();
         $customer = $db->table('customers')->where('id', $customerId)->first();
 
+        // Validate priority and type against allowed values
+        $allowedPriorities = ['low', 'normal', 'high', 'urgent'];
+        $priority = (string) $this->input('priority', 'normal');
+        $priority = in_array($priority, $allowedPriorities, true) ? $priority : 'normal';
+
+        $allowedTypes = ['general', 'order_support', 'product_inquiry', 'technical', 'billing', 'shipping', 'returns'];
+        $type = (string) $this->input('type', 'general');
+        $type = in_array($type, $allowedTypes, true) ? $type : 'general';
+
+        // Validate order_id belongs to the authenticated customer
+        $orderId = (int) $this->input('order_id', 0) ?: null;
+        if ($orderId) {
+            $order = $db->table('orders')
+                ->where('id', $orderId)
+                ->where('customer_id', $customerId)
+                ->first();
+            if (!$order) {
+                $orderId = null;
+            }
+        }
+
+        // Validate department_id exists and is active
+        $departmentId = (int) $this->input('department_id', 0) ?: null;
+        if ($departmentId) {
+            $dept = $db->table('ticket_departments')
+                ->where('id', $departmentId)
+                ->where('is_active', 1)
+                ->first();
+            if (!$dept) {
+                $departmentId = null;
+            }
+        }
+
         $now = date('Y-m-d H:i:s');
         $ticketId = $db->table('tickets')->insert([
             'ticket_number' => Ticket::generateNumber(),
             'subject' => $subject,
             'status' => 'open',
-            'priority' => (string) $this->input('priority', 'normal'),
-            'type' => (string) $this->input('type', 'general'),
+            'priority' => $priority,
+            'type' => $type,
             'source' => 'web',
             'requester_type' => 'customer',
             'customer_id' => $customerId,
             'guest_email' => null,
             'guest_name' => null,
             'assigned_agent_id' => null,
-            'department_id' => (int) $this->input('department_id', 0) ?: null,
+            'department_id' => $departmentId,
             'category_id' => (int) $this->input('category_id', 0) ?: null,
             'brand_id' => null,
             'website_id' => null,
             'store_view_id' => (int) (StoreResolver::storeViewId() ?? 0) ?: null,
-            'order_id' => (int) $this->input('order_id', 0) ?: null,
+            'order_id' => $orderId,
             'sla_policy_id' => null,
             'sla_first_response_due_at' => null,
             'sla_resolution_due_at' => null,
