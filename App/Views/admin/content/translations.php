@@ -84,7 +84,7 @@
                             <form x-show="editing === '<?= $fieldId ?>'" x-cloak
                                   method="POST" action="/admin/content/translations/update"
                                   class="flex gap-1">
-                                <input type="hidden" name="_token" value="<?= \App\Core\Session::csrfToken() ?>">
+                                <input type="hidden" name="_csrf_token" value="<?= \App\Core\Session::csrfToken() ?>">
                                 <input type="hidden" name="key_id" value="<?= $key['id'] ?>">
                                 <input type="hidden" name="store_view_id" value="<?= $sv['id'] ?>">
                                 <input type="text" name="value" value="<?= htmlspecialchars($value) ?>"
@@ -117,7 +117,7 @@
         </p>
         <div class="flex gap-1">
             <?php for ($i = 1; $i <= $pagination['last_page']; $i++): ?>
-            <a href="?page=<?= $i ?>&<?= http_build_query(array_diff_key($_GET, ['page' => ''])) ?>"
+            <a href="?page=<?= $i ?>&<?= htmlspecialchars(http_build_query(array_diff_key($_GET, ['page' => '']))) ?>"
                class="px-3 py-1.5 text-sm rounded-lg <?= $i === ($pagination['current_page'] ?? 1) ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' ?>">
                 <?= $i ?>
             </a>

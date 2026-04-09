@@ -17,21 +17,27 @@ class Session
 
         $config = Config::get('session', []);
 
+        // Default secure=true when not explicitly configured and HTTPS is detected
+        $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || (int) ($_SERVER['SERVER_PORT'] ?? 0) === 443
+            || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+        $secureCookie = $config['secure'] ?? $isHttps;
+
         session_set_cookie_params([
             'lifetime' => $config['lifetime'] ?? 7200,
             'path' => '/',
             'domain' => $config['domain'] ?? '',
-            'secure' => $config['secure'] ?? false,
+            'secure' => $secureCookie,
             'httponly' => true,
             'samesite' => 'Lax',
         ]);
 
         $savePath = $config['save_path'] ?? dirname(__DIR__, 2) . '/storage/sessions';
         if (!is_dir($savePath)) {
-            mkdir($savePath, 0755, true);
+            mkdir($savePath, 0700, true); // Restrictive permissions
         }
         session_save_path($savePath);
-        session_name($config['name'] ?? 'brew_session');
+        session_name($config['name'] ?? '__Host-brew_sess');
 
         session_start();
         self::$started = true;

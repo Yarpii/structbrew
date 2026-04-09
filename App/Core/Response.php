@@ -38,6 +38,16 @@ final class Response
     }
     public static function redirect(string $url, int $status = 302): self
     {
+        // Prevent open redirects: only allow relative paths or same-origin URLs
+        if (preg_match('#^https?://#i', $url)) {
+            $host = parse_url($url, PHP_URL_HOST);
+            $currentHost = $_SERVER['HTTP_HOST'] ?? '';
+            if ($host !== $currentHost) {
+                $url = '/';
+            }
+        }
+        // Prevent CRLF injection in redirect URL
+        $url = str_replace(["\r", "\n", "\0"], '', $url);
         return new self('', $status, [
             'Location' => $url,
         ]);
@@ -66,6 +76,9 @@ final class Response
         if (!headers_sent()) {
             http_response_code($this->status);
             foreach ($this->headers as $name => $value) {
+                // Prevent CRLF header injection
+                $name = str_replace(["\r", "\n", "\0"], '', (string) $name);
+                $value = str_replace(["\r", "\n", "\0"], '', (string) $value);
                 header("$name: $value");
             }
         }

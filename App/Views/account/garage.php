@@ -14,7 +14,8 @@
             <h1 class="text-2xl font-bold text-[var(--color-text)]">Add vehicle</h1>
             <p class="mt-1 text-sm text-[var(--color-muted)]">Save your scooters/mopeds once, then find matching parts faster.</p>
 
-            <form method="POST" action="/account/garage" class="mt-4 grid gap-4 md:grid-cols-4" x-data="{ vehicles: <?= htmlspecialchars((string) json_encode($garageVehicleOptions ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8') ?>, brandId: '', vehicleId: '' }">
+            <script type="application/json" id="garage-vehicle-options"><?= json_encode($garageVehicleOptions ?? [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE) ?></script>
+            <form method="POST" action="/account/garage" class="mt-4 grid gap-4 md:grid-cols-4" x-data="{ vehicles: JSON.parse(document.getElementById('garage-vehicle-options').textContent), brandId: '', vehicleId: '' }">
                 <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars((string) $csrfToken) ?>">
 
                 <div>

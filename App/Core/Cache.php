@@ -29,7 +29,13 @@ class Cache
         $file = self::file($key);
         if (!file_exists($file)) return $default;
 
-        $data = unserialize(file_get_contents($file));
+        $raw = file_get_contents($file);
+        if ($raw === false) return $default;
+        $data = json_decode($raw, true);
+        if (!is_array($data) || !array_key_exists('value', $data) || !array_key_exists('expires', $data)) {
+            unlink($file);
+            return $default;
+        }
         if ($data['expires'] !== 0 && $data['expires'] < time()) {
             unlink($file);
             return $default;
@@ -44,7 +50,7 @@ class Cache
             'value' => $value,
             'expires' => $ttl > 0 ? time() + $ttl : 0,
         ];
-        file_put_contents(self::file($key), serialize($data), LOCK_EX);
+        file_put_contents(self::file($key), json_encode($data, JSON_THROW_ON_ERROR), LOCK_EX);
     }
 
     public static function has(string $key): bool
@@ -83,7 +89,14 @@ class Cache
         $count = 0;
         $files = glob(self::path() . '/*.cache');
         foreach ($files as $file) {
-            $data = unserialize(file_get_contents($file));
+            $raw = file_get_contents($file);
+            if ($raw === false) continue;
+            $data = json_decode($raw, true);
+            if (!is_array($data) || !array_key_exists('expires', $data)) {
+                unlink($file);
+                $count++;
+                continue;
+            }
             if ($data['expires'] !== 0 && $data['expires'] < time()) {
                 unlink($file);
                 $count++;

@@ -24,6 +24,16 @@ class ApiController extends Controller
         $this->db = Database::getInstance();
     }
 
+    /**
+     * Verify CSRF token from header or body for state-changing API requests.
+     */
+    private function verifyCsrfToken(): bool
+    {
+        $token = $this->request->header('x-csrf-token')
+            ?? $this->request->input('_csrf_token', '');
+        return is_string($token) && $token !== '' && Session::verifyCsrf($token);
+    }
+
     // ─── Products ────────────────────────────────────────────
 
     public function products(Request $request): Response
@@ -269,6 +279,9 @@ class ApiController extends Controller
 
     public function addToCart(Request $request): Response
     {
+        if (!$this->verifyCsrfToken()) {
+            return $this->json(['success' => false, 'error' => 'Invalid security token'], 403);
+        }
         $productId = (int) $request->input('product_id');
         $qty = max(1, (int) ($request->input('qty', 1)));
 
@@ -324,6 +337,9 @@ class ApiController extends Controller
 
     public function updateCartItem(Request $request, string $id): Response
     {
+        if (!$this->verifyCsrfToken()) {
+            return $this->json(['success' => false, 'error' => 'Invalid security token'], 403);
+        }
         $qty = max(1, (int) $request->input('qty', 1));
         $cart = $this->getOrCreateCart();
 
@@ -351,6 +367,9 @@ class ApiController extends Controller
 
     public function removeCartItem(Request $request, string $id): Response
     {
+        if (!$this->verifyCsrfToken()) {
+            return $this->json(['success' => false, 'error' => 'Invalid security token'], 403);
+        }
         $cart = $this->getOrCreateCart();
 
         $this->db->table('cart_items')
@@ -365,6 +384,9 @@ class ApiController extends Controller
 
     public function applyCoupon(Request $request): Response
     {
+        if (!$this->verifyCsrfToken()) {
+            return $this->json(['success' => false, 'error' => 'Invalid security token'], 403);
+        }
         $code = trim($request->input('code', ''));
         $cart = $this->getOrCreateCart();
 
@@ -397,6 +419,9 @@ class ApiController extends Controller
 
     public function checkout(Request $request): Response
     {
+        if (!$this->verifyCsrfToken()) {
+            return $this->json(['success' => false, 'error' => 'Invalid security token'], 403);
+        }
         $validator = Validator::make($request->body(), [
             'billing_first_name' => 'required|string',
             'billing_last_name' => 'required|string',
@@ -522,9 +547,14 @@ class ApiController extends Controller
 
             // Increment coupon usage
             if ($cart['coupon_code']) {
-                $this->db->table('coupons')
+                $couponRow = $this->db->table('coupons')
                     ->where('code', $cart['coupon_code'])
-                    ->whereRaw('times_used = times_used + 1');
+                    ->first();
+                if ($couponRow) {
+                    $this->db->table('coupons')
+                        ->where('id', $couponRow['id'])
+                        ->update(['times_used' => (int) $couponRow['times_used'] + 1]);
+                }
             }
 
             $this->db->commit();
@@ -548,6 +578,9 @@ class ApiController extends Controller
 
     public function register(Request $request): Response
     {
+        if (!$this->verifyCsrfToken()) {
+            return $this->json(['success' => false, 'error' => 'Invalid security token'], 403);
+        }
         $validator = Validator::make($request->body(), [
             'email' => 'required|email|unique:customers,email',
             'password' => 'required|min:8',
@@ -583,6 +616,9 @@ class ApiController extends Controller
 
     public function login(Request $request): Response
     {
+        if (!$this->verifyCsrfToken()) {
+            return $this->json(['success' => false, 'error' => 'Invalid security token'], 403);
+        }
         $email = $request->input('email', '');
         $password = $request->input('password', '');
 

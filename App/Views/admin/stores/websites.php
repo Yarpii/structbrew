@@ -11,7 +11,7 @@
 <div id="add-website-form" class="hidden bg-white rounded-xl border border-gray-200 p-6 mb-6">
     <h3 class="font-semibold text-gray-800 mb-4">New Website</h3>
     <form method="POST" action="/admin/stores/websites" class="space-y-4">
-        <input type="hidden" name="_token" value="<?= \App\Core\Session::csrfToken() ?>">
+        <input type="hidden" name="_csrf_token" value="<?= \App\Core\Session::csrfToken() ?>">
         <div class="grid grid-cols-3 gap-4">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Code</label>

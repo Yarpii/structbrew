@@ -29,7 +29,11 @@ class Config
 
     private static function loadEnv(string $path): void
     {
+        if (!is_readable($path)) return;
+
         $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if ($lines === false) return;
+
         foreach ($lines as $line) {
             $line = trim($line);
             if ($line === '' || str_starts_with($line, '#')) continue;
@@ -38,10 +42,14 @@ class Config
             if (count($parts) !== 2) continue;
 
             $key = trim($parts[0]);
+            // Only allow safe alphanumeric key names (prevent LD_PRELOAD-style attacks)
+            if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $key)) continue;
+
             $value = trim($parts[1], " \t\n\r\0\x0B\"'");
 
             $_ENV[$key] = $value;
-            putenv("{$key}={$value}");
+            // Intentionally NOT using putenv() - it affects child processes and
+            // can be exploited via LD_PRELOAD, PATH, etc. if .env is compromised.
         }
     }
 

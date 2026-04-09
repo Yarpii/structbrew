@@ -22,7 +22,7 @@ class CsrfMiddleware implements MiddlewareInterface
                 return $next($request);
             }
 
-            $token = $request->input('_token', '');
+            $token = $request->input('_csrf_token', '');
 
             if (!is_string($token) || $token === '' || !Session::verifyCsrf($token)) {
                 return Response::html('403 Forbidden - Invalid CSRF token.', 403);

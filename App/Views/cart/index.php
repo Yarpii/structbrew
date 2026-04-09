@@ -14,10 +14,10 @@
         checkoutLoading: false,
         checkoutError: '',
         useCredits: false,
-        selectedPaymentMethod: <?= json_encode((string) ($defaultPaymentMethod ?? 'manual_checkout')) ?>,
-        paymentMethods: <?= json_encode(array_values($paymentMethods ?? [])) ?>,
+        selectedPaymentMethod: <?= json_encode((string) ($defaultPaymentMethod ?? 'manual_checkout'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+        paymentMethods: <?= json_encode(array_values($paymentMethods ?? []), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
         creditsEnabled: <?= !empty($creditsEnabled) ? 'true' : 'false' ?>,
-        creditsBalance: <?= json_encode((float) ($creditsBalance ?? 0.0)) ?>,
+        creditsBalance: <?= json_encode((float) ($creditsBalance ?? 0.0), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
         async checkout() {
             this.checkoutError = '';
             if ($store.cart.items.length === 0) {

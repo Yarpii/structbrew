@@ -403,6 +403,10 @@ class SetupController extends Controller
 
             // Check if database exists, create if not
             $dbName = $config['name'];
+            // Sanitize database name: only allow alphanumeric + underscore to prevent injection
+            if (!preg_match('/^[a-zA-Z0-9_]+$/', $dbName)) {
+                return 'Invalid database name. Use only letters, numbers, and underscores.';
+            }
             $stmt = $pdo->query("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = " . $pdo->quote($dbName));
             if (!$stmt->fetch()) {
                 $pdo->exec("CREATE DATABASE `{$dbName}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
