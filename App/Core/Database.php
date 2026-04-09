@@ -208,6 +208,9 @@ class Database
 
     public function count(string $column = '*'): int
     {
+        if ($column !== '*' && !preg_match('/^[a-zA-Z0-9_.]+$/', $column)) {
+            throw new \InvalidArgumentException('Invalid column name for count()');
+        }
         $this->selects = ["COUNT({$column}) as aggregate"];
         $sql = $this->buildSelect();
         $result = $this->query($sql, $this->bindings)->fetch();
@@ -216,6 +219,9 @@ class Database
 
     public function sum(string $column): float
     {
+        if (!preg_match('/^[a-zA-Z0-9_.]+$/', $column)) {
+            throw new \InvalidArgumentException('Invalid column name for sum()');
+        }
         $this->selects = ["SUM({$column}) as aggregate"];
         $sql = $this->buildSelect();
         $result = $this->query($sql, $this->bindings)->fetch();

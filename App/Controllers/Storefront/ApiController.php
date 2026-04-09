@@ -41,11 +41,11 @@ class ApiController extends Controller
         $storeViewId = StoreResolver::storeViewId();
         $page = (int) ($request->input('page', 1));
         $perPage = min((int) ($request->input('per_page', 20)), 100);
-        $category = $request->input('category');
-        $brand = $request->input('brand');
+        $category = $request->input('category') !== null ? (int) $request->input('category') : null;
+        $brand = $request->input('brand') !== null ? (int) $request->input('brand') : null;
         $sort = $request->input('sort', 'newest');
-        $minPrice = $request->input('min_price');
-        $maxPrice = $request->input('max_price');
+        $minPrice = $request->input('min_price') !== null ? (float) $request->input('min_price') : null;
+        $maxPrice = $request->input('max_price') !== null ? (float) $request->input('max_price') : null;
 
         $query = $this->db->table('products')
             ->select('products.id', 'products.sku', 'products.slug', 'products.brand_id',
@@ -182,7 +182,7 @@ class ApiController extends Controller
     public function search(Request $request): Response
     {
         $q = trim($request->input('q', ''));
-        if (strlen($q) < 2) {
+        if (strlen($q) < 2 || strlen($q) > 200) {
             return $this->json(['success' => true, 'data' => [], 'meta' => ['total' => 0]]);
         }
 
@@ -283,7 +283,7 @@ class ApiController extends Controller
             return $this->json(['success' => false, 'error' => 'Invalid security token'], 403);
         }
         $productId = (int) $request->input('product_id');
-        $qty = max(1, (int) ($request->input('qty', 1)));
+        $qty = max(1, min(9999, (int) ($request->input('qty', 1))));
 
         $product = $this->db->table('products')->where('id', $productId)->where('is_active', 1)->first();
         if (!$product) {
@@ -340,7 +340,7 @@ class ApiController extends Controller
         if (!$this->verifyCsrfToken()) {
             return $this->json(['success' => false, 'error' => 'Invalid security token'], 403);
         }
-        $qty = max(1, (int) $request->input('qty', 1));
+        $qty = max(1, min(9999, (int) $request->input('qty', 1)));
         $cart = $this->getOrCreateCart();
 
         $item = $this->db->table('cart_items')
@@ -388,6 +388,9 @@ class ApiController extends Controller
             return $this->json(['success' => false, 'error' => 'Invalid security token'], 403);
         }
         $code = trim($request->input('code', ''));
+        if ($code === '' || strlen($code) > 50) {
+            return $this->json(['success' => false, 'error' => 'Invalid coupon code'], 400);
+        }
         $cart = $this->getOrCreateCart();
 
         $coupon = $this->db->table('coupons')
@@ -423,15 +426,15 @@ class ApiController extends Controller
             return $this->json(['success' => false, 'error' => 'Invalid security token'], 403);
         }
         $validator = Validator::make($request->body(), [
-            'billing_first_name' => 'required|string',
-            'billing_last_name' => 'required|string',
-            'billing_street_1' => 'required|string',
-            'billing_city' => 'required|string',
-            'billing_postcode' => 'required|string',
+            'billing_first_name' => 'required|string|max:100',
+            'billing_last_name' => 'required|string|max:100',
+            'billing_street_1' => 'required|string|max:255',
+            'billing_city' => 'required|string|max:100',
+            'billing_postcode' => 'required|string|max:20',
             'billing_country_code' => 'required|string|min:2|max:2',
-            'customer_email' => 'required|email',
-            'payment_method' => 'required|string',
-            'shipping_method' => 'required|string',
+            'customer_email' => 'required|email|max:255',
+            'payment_method' => 'required|string|max:50',
+            'shipping_method' => 'required|string|max:50',
         ]);
 
         if ($validator->fails()) {
@@ -642,8 +645,11 @@ class ApiController extends Controller
             return $this->json(['success' => false, 'error' => 'Not authenticated'], 401);
         }
 
-        unset($customer['password_hash']);
-        return $this->json(['success' => true, 'data' => $customer]);
+        // Strip sensitive fields before returning customer data
+        $safeFields = ['id', 'email', 'first_name', 'last_name', 'store_view_id',
+                        'loyalty_points', 'created_at', 'last_login_at'];
+        $data = array_intersect_key($customer, array_flip($safeFields));
+        return $this->json(['success' => true, 'data' => $data]);
     }
 
     public function accountOrders(): Response
@@ -694,7 +700,7 @@ class ApiController extends Controller
 
     public function vehicles(Request $request): Response
     {
-        $brandId = $request->input('brand_id');
+        $brandId = $request->input('brand_id') !== null ? (int) $request->input('brand_id') : null;
 
         $query = $this->db->table('vehicles')
             ->select('vehicles.*', 'b.name as brand_name')
