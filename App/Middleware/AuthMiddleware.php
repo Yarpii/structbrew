@@ -1,0 +1,24 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Middleware;
+
+use App\Core\Auth;
+use App\Core\MiddlewareInterface;
+use App\Core\Request;
+use App\Core\Response;
+use App\Core\Session;
+
+class AuthMiddleware implements MiddlewareInterface
+{
+    public function handle(Request $request, callable $next): Response
+    {
+        if (!Auth::isLoggedIn()) {
+            Session::flash('error', 'Please log in to continue.');
+            return Response::redirect('/login');
+        }
+
+        return $next($request);
+    }
+}

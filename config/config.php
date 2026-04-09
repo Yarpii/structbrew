@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Brew\Core\Config;
+use App\Core\Config;
 
 return [
     // ─── Application ─────────────────────────────────────────
