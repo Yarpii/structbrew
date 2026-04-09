@@ -10,25 +10,60 @@ class StoreResolver
     private static ?array $currentStoreView = null;
     private static ?array $currentWebsite = null;
 
+    private static ?string $resolvedPathPrefix = null;
+
     public static function resolve(?string $host = null): void
     {
         $host = $host ?? ($_SERVER['HTTP_HOST'] ?? 'localhost');
         $host = strtolower(preg_replace('/:\d+$/', '', $host)); // Remove port
 
+        $uri = strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
+        $uri = '/' . ltrim((string) $uri, '/');
+
         $db = Database::getInstance();
 
-        // Look up the domain in store_domains
-        $domain = $db->table('store_domains')
+        // Fetch all active domains matching this host, ordered by longest path_prefix first
+        $domains = $db->table('store_domains')
             ->where('domain', $host)
             ->where('is_active', 1)
-            ->first();
+            ->orderBy('path_prefix', 'DESC')
+            ->get();
 
-        if ($domain) {
-            self::loadStoreView((int) $domain['store_view_id']);
+        $matched = null;
+        foreach ($domains as $domain) {
+            $prefix = $domain['path_prefix'] ?? '/';
+            // Match: URI starts with this path_prefix (longest prefix wins)
+            if ($prefix === '/' || str_starts_with($uri, rtrim($prefix, '/') . '/') || $uri === rtrim($prefix, '/')) {
+                $matched = $domain;
+                break;
+            }
+        }
+
+        // Fallback to root path_prefix domain if no prefix match
+        if ($matched === null) {
+            foreach ($domains as $domain) {
+                if (($domain['path_prefix'] ?? '/') === '/') {
+                    $matched = $domain;
+                    break;
+                }
+            }
+        }
+
+        if ($matched) {
+            self::$resolvedPathPrefix = $matched['path_prefix'] ?? '/';
+            self::loadStoreView((int) $matched['store_view_id']);
         } else {
-            // Fallback to default store view
+            self::$resolvedPathPrefix = '/';
             self::loadDefaultStoreView();
         }
+    }
+
+    /**
+     * Get the resolved path prefix for the current store view.
+     */
+    public static function pathPrefix(): string
+    {
+        return self::$resolvedPathPrefix ?? '/';
     }
 
     private static function loadStoreView(int $storeViewId): void

@@ -60,6 +60,17 @@ final class Bootstrap
             // Initialize store resolver (multi-store domain mapping)
             try {
                 StoreResolver::resolve();
+
+                // Geo-routing: redirect visitors to their country-specific domain
+                $geoRedirect = GeoRouter::check();
+                if ($geoRedirect !== null) {
+                    GeoRouter::setOverrideCookie();
+                    // Sanitize redirect URL (strip CRLF to prevent header injection)
+                    $geoRedirect = str_replace(["\r", "\n", "\0"], '', $geoRedirect);
+                    header('Location: ' . $geoRedirect, true, 302);
+                    exit;
+                }
+
                 // Set translator locale from store view
                 $locale = StoreResolver::locale();
                 Translator::setLocale($locale);
@@ -72,6 +83,7 @@ final class Bootstrap
                 View::share('currentCurrencySymbol', StoreResolver::currencySymbol());
                 View::share('currentCountry', StoreResolver::country());
                 View::share('currentStoreView', StoreResolver::storeView());
+                View::share('currentPathPrefix', StoreResolver::pathPrefix());
             } catch (Throwable $e) {
                 // Database might not be set up yet — continue without store resolution
             }

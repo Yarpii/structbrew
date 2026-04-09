@@ -346,16 +346,20 @@ class Seeder
                 $preferredViewIds[$languageCode] = (int) $viewId;
             }
 
-            if ($domain !== '' && $pathPrefix === '/' && !isset($domainAssigned[$domain])) {
-                $db->table('store_domains')->insert([
-                    'store_view_id' => (int) $viewId,
-                    'domain' => $domain,
-                    'is_active' => 1,
-                    'is_primary' => 1,
-                    'created_at' => $now,
-                    'updated_at' => $now,
-                ]);
-                $domainAssigned[$domain] = true;
+            if ($domain !== '') {
+                $domainPathKey = $domain . '|' . $pathPrefix;
+                if (!isset($domainAssigned[$domainPathKey])) {
+                    $db->table('store_domains')->insert([
+                        'store_view_id' => (int) $viewId,
+                        'domain' => $domain,
+                        'path_prefix' => $pathPrefix,
+                        'is_active' => 1,
+                        'is_primary' => ($pathPrefix === '/') ? 1 : 0,
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ]);
+                    $domainAssigned[$domainPathKey] = true;
+                }
             }
         }
 
