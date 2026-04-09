@@ -19,20 +19,20 @@ declare(strict_types=1);
 
 // Bootstrap
 $basePath = __DIR__;
-require_once $basePath . '/Brew/Core/Config.php';
+require_once $basePath . '/App/Core/Config.php';
 
-use Brew\Core\Config;
-use Brew\Core\Database;
-use Brew\Core\Migration;
-use Brew\Core\Auth;
-use Brew\Core\Cache;
+use App\Core\Config;
+use App\Core\Database;
+use App\Core\Migration;
+use App\Core\Auth;
+use App\Core\Cache;
 
 // Register autoloader
 spl_autoload_register(function (string $class) use ($basePath) {
-    $prefix = 'Brew\\';
+    $prefix = 'App\\';
     if (!str_starts_with($class, $prefix)) return;
     $relative = substr($class, strlen($prefix));
-    $file = $basePath . '/Brew/' . str_replace('\\', '/', $relative) . '.php';
+    $file = $basePath . '/App/' . str_replace('\\', '/', $relative) . '.php';
     if (file_exists($file)) require_once $file;
 });
 
@@ -82,9 +82,9 @@ try {
             break;
 
         case 'db:seed':
-            require_once $basePath . '/Brew/Data/Seeder.php';
+            require_once $basePath . '/App/Data/Seeder.php';
             echo "Seeding database...\n";
-            \Brew\Data\Seeder::run();
+            \App\Data\Seeder::run();
             echo "Database seeded successfully.\n";
             break;
 
