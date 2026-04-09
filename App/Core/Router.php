@@ -51,6 +51,13 @@ final class Router
                     throw new RuntimeException("Controller not found: $controllerName");
                 }
                 $controller = new $controllerName();
+
+                // Check if the constructor set an early response (e.g. auth redirect)
+                if (method_exists($controller, 'getResponse') && $controller->getResponse() !== null) {
+                    $this->sendResponse($controller->getResponse());
+                    return;
+                }
+
                 if (!method_exists($controller, $method)) {
                     throw new RuntimeException("Controller method not found: $controllerName::$method");
                 }

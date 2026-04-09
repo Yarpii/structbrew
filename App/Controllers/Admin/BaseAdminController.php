@@ -19,6 +19,13 @@ abstract class BaseAdminController extends Controller
     {
         parent::__construct($request);
 
+        // Enforce admin authentication - redirect if not logged in
+        if (!Auth::isAdmin()) {
+            Session::flash('error', 'Please log in to access the admin panel.');
+            $this->response = Response::redirect('/admin/login');
+            return;
+        }
+
         View::setDefaultLayout('admin/layout/app');
 
         $adminUser = Auth::admin();
