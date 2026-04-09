@@ -7,6 +7,7 @@ use App\Core\Database;
 use App\Core\Response;
 use App\Core\Session;
 use App\Core\Validator;
+use App\Data\CustomerPortal;
 
 final class CustomerController extends BaseAdminController
 {
@@ -19,7 +20,7 @@ final class CustomerController extends BaseAdminController
 
         $page    = $this->page();
         $perPage = 20;
-        $search  = (string) $this->request->query('search');
+        $search  = (string) ($this->request->query('q') ?: $this->request->query('search'));
 
         $query = $db->table('customers')
             ->select('customers.*')
@@ -27,7 +28,7 @@ final class CustomerController extends BaseAdminController
 
         if ($search !== '') {
             $query->whereRaw(
-                "(customers.email LIKE :search_0 OR customers.first_name LIKE :search_1 OR customers.last_name LIKE :search_2)",
+                '(customers.email LIKE :search_0 OR customers.first_name LIKE :search_1 OR customers.last_name LIKE :search_2)',
                 [
                     ':search_0' => "%{$search}%",
                     ':search_1' => "%{$search}%",
@@ -47,13 +48,16 @@ final class CustomerController extends BaseAdminController
                 ->where('customer_id', $customer['id'])
                 ->whereIn('status', ['processing', 'shipped', 'delivered'])
                 ->sum('grand_total');
+            $customer['customer_group_label'] = CustomerPortal::label($customer['customer_group'] ?? 'retail');
         }
         unset($customer);
 
         return $this->adminView('admin/customers/index', [
-            'title'     => 'Customers',
+            'title' => 'Customers',
             'customers' => $customers,
-            'search'    => $search,
+            'search' => $search,
+            'customerGroups' => CustomerPortal::groups(),
+            'supportsCustomerGroups' => CustomerPortal::supportsCustomerGroups(),
         ]);
     }
 
@@ -81,6 +85,9 @@ final class CustomerController extends BaseAdminController
             ->where('customer_id', $id)
             ->get();
 
+        $billingAddresses = array_values(array_filter($addresses, static fn (array $address): bool => ($address['type'] ?? '') === 'billing'));
+        $shippingAddresses = array_values(array_filter($addresses, static fn (array $address): bool => ($address['type'] ?? '') === 'shipping'));
+
         // Store view name
         $storeView = null;
         if ($customer['store_view_id']) {
@@ -93,19 +100,27 @@ final class CustomerController extends BaseAdminController
         $orderCount = count($orders);
         $totalSpent = 0.0;
         foreach ($orders as $order) {
-            if (in_array($order['status'], ['processing', 'shipped', 'delivered'])) {
+            if (in_array($order['status'], ['processing', 'shipped', 'delivered'], true)) {
                 $totalSpent += (float) $order['grand_total'];
             }
         }
 
+        $customer['store_name'] = $storeView['name'] ?? '—';
+        $customer['order_count'] = $orderCount;
+        $customer['total_spent'] = number_format($totalSpent, 2);
+        $customer['customer_group_label'] = CustomerPortal::label($customer['customer_group'] ?? 'retail');
+
         return $this->adminView('admin/customers/show', [
-            'title'      => 'Customer: ' . trim(($customer['first_name'] ?? '') . ' ' . ($customer['last_name'] ?? '')),
-            'customer'   => $customer,
-            'orders'     => $orders,
-            'addresses'  => $addresses,
-            'storeView'  => $storeView,
+            'title' => 'Customer: ' . trim(($customer['first_name'] ?? '') . ' ' . ($customer['last_name'] ?? '')),
+            'customer' => $customer,
+            'orders' => $orders,
+            'addresses' => $addresses,
+            'billingAddresses' => $billingAddresses,
+            'shippingAddresses' => $shippingAddresses,
+            'storeView' => $storeView,
             'orderCount' => $orderCount,
             'totalSpent' => $totalSpent,
+            'supportsCustomerGroups' => CustomerPortal::supportsCustomerGroups(),
         ]);
     }
 
@@ -123,8 +138,10 @@ final class CustomerController extends BaseAdminController
         }
 
         return $this->adminView('admin/customers/edit', [
-            'title'    => 'Edit Customer',
+            'title' => 'Edit Customer',
             'customer' => $customer,
+            'customerGroups' => CustomerPortal::groups(),
+            'supportsCustomerGroups' => CustomerPortal::supportsCustomerGroups(),
         ]);
     }
 
@@ -147,19 +164,20 @@ final class CustomerController extends BaseAdminController
         }
 
         $data = [
-            'first_name'    => (string) $this->input('first_name', ''),
-            'last_name'     => (string) $this->input('last_name', ''),
-            'email'         => (string) $this->input('email', ''),
-            'phone'         => $this->input('phone'),
+            'first_name' => (string) $this->input('first_name', ''),
+            'last_name' => (string) $this->input('last_name', ''),
+            'email' => (string) $this->input('email', ''),
+            'phone' => $this->input('phone'),
             'date_of_birth' => $this->input('date_of_birth'),
-            'gender'        => $this->input('gender'),
-            'is_active'     => $this->input('is_active', '0'),
+            'gender' => $this->input('gender'),
+            'is_active' => $this->input('is_active', '0'),
+            'customer_group' => CustomerPortal::normalizeGroup((string) $this->input('customer_group', 'retail')),
         ];
 
         $validator = Validator::make($data, [
             'first_name' => 'required|max:255',
-            'last_name'  => 'required|max:255',
-            'email'      => 'required|email|unique:customers,email,' . $id,
+            'last_name' => 'required|max:255',
+            'email' => 'required|email|unique:customers,email,' . $id,
         ]);
 
         if ($validator->fails()) {
@@ -168,17 +186,20 @@ final class CustomerController extends BaseAdminController
         }
 
         $updateData = [
-            'first_name'    => $data['first_name'],
-            'last_name'     => $data['last_name'],
-            'email'         => $data['email'],
-            'phone'         => $data['phone'] ?: null,
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'] ?: null,
             'date_of_birth' => $data['date_of_birth'] ?: null,
-            'gender'        => $data['gender'] ?: null,
-            'is_active'     => (int) $data['is_active'],
-            'updated_at'    => date('Y-m-d H:i:s'),
+            'gender' => $data['gender'] ?: null,
+            'is_active' => (int) $data['is_active'],
+            'updated_at' => date('Y-m-d H:i:s'),
         ];
 
-        // If a new password was provided, hash it
+        if (CustomerPortal::supportsCustomerGroups()) {
+            $updateData['customer_group'] = $data['customer_group'];
+        }
+
         $newPassword = (string) $this->input('password', '');
         if ($newPassword !== '') {
             $updateData['password_hash'] = password_hash($newPassword, PASSWORD_BCRYPT, ['cost' => 12]);

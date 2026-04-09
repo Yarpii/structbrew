@@ -83,7 +83,7 @@ class Product extends Model
 
         return $db->table('product_images')
             ->where('product_id', $this->getId())
-            ->orderBy('sort_order', 'ASC')
+            ->orderBy('position', 'ASC')
             ->get();
     }
 
@@ -96,7 +96,7 @@ class Product extends Model
 
         return $db->table('product_images')
             ->where('product_id', $this->getId())
-            ->orderBy('sort_order', 'ASC')
+            ->orderBy('position', 'ASC')
             ->first();
     }
 

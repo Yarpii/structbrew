@@ -49,6 +49,7 @@
                     <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Order</th>
                     <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Customer</th>
                     <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Store</th>
+                    <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase">Payment</th>
                     <th class="text-center px-6 py-3 text-xs font-medium text-gray-500 uppercase">Status</th>
                     <th class="text-center px-6 py-3 text-xs font-medium text-gray-500 uppercase">Items</th>
                     <th class="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase">Total</th>
@@ -69,6 +70,7 @@
                             <p class="text-gray-900"><?= htmlspecialchars($order['customer_email']) ?></p>
                         </td>
                         <td class="px-6 py-3 text-gray-500"><?= htmlspecialchars($order['store_name'] ?? '—') ?></td>
+                        <td class="px-6 py-3 text-gray-500"><?= htmlspecialchars($order['payment_method_label'] ?? $order['payment_method'] ?? '—') ?></td>
                         <td class="px-6 py-3 text-center">
                             <span class="inline-block px-2.5 py-1 text-xs font-medium rounded-full
                                 <?= match($order['status']) {
@@ -94,7 +96,7 @@
                     </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <tr><td colspan="8" class="px-6 py-12 text-center text-gray-400">No orders found</td></tr>
+                    <tr><td colspan="9" class="px-6 py-12 text-center text-gray-400">No orders found</td></tr>
                 <?php endif; ?>
             </tbody>
         </table>

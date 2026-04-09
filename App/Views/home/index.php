@@ -9,7 +9,6 @@ $dir = __DIR__ . '/partials';
 
 <?php include $dir . '/_hero.php'; ?>
 <?php include $dir . '/_trust-bar.php'; ?>
-<?php include $dir . '/_categories.php'; ?>
 <?php include $dir . '/_featured.php'; ?>
 <?php include $dir . '/_ad-find-setup.php'; ?>
 <?php include $dir . '/_trending.php'; ?>

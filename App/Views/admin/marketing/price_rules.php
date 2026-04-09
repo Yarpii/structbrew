@@ -53,8 +53,8 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
-                <?php if (!empty($priceRules)): ?>
-                    <?php foreach ($priceRules as $rule): ?>
+                <?php if (!empty($priceRules['data'])): ?>
+                    <?php foreach ($priceRules['data'] as $rule): ?>
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-3">
                             <a href="/admin/marketing/price-rules/<?= $rule['id'] ?>/edit" class="font-medium text-gray-900 hover:text-blue-600">
@@ -116,15 +116,15 @@
     </div>
 
     <!-- Pagination -->
-    <?php if (($pagination['last_page'] ?? 1) > 1): ?>
+    <?php if (($priceRules['last_page'] ?? 1) > 1): ?>
     <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
         <p class="text-sm text-gray-500">
-            Showing <?= $pagination['from'] ?? 0 ?> to <?= $pagination['to'] ?? 0 ?> of <?= $pagination['total'] ?? 0 ?> rules
+            Showing <?= $priceRules['from'] ?? 0 ?> to <?= $priceRules['to'] ?? 0 ?> of <?= $priceRules['total'] ?? 0 ?> rules
         </p>
         <div class="flex gap-1">
-            <?php for ($i = 1; $i <= $pagination['last_page']; $i++): ?>
+            <?php for ($i = 1; $i <= $priceRules['last_page']; $i++): ?>
             <a href="?page=<?= $i ?>&<?= http_build_query(array_diff_key($_GET, ['page' => ''])) ?>"
-               class="px-3 py-1.5 text-sm rounded-lg <?= $i === ($pagination['current_page'] ?? 1) ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' ?>">
+               class="px-3 py-1.5 text-sm rounded-lg <?= $i === ($priceRules['current_page'] ?? 1) ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' ?>">
                 <?= $i ?>
             </a>
             <?php endfor; ?>

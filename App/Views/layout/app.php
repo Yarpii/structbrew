@@ -105,6 +105,34 @@
                 get total() { return this.items.reduce((s, i) => s + (i.sale_price || i.price) * i.qty, 0); },
                 persist() { localStorage.setItem('cart', JSON.stringify(this.items)); }
             });
+            Alpine.store('garageGuest', {
+                vehicles: JSON.parse(localStorage.getItem('garage_guest_vehicles') || '[]'),
+                selectedId: localStorage.getItem('garage_guest_selected') || '',
+                add(vehicle) {
+                    const id = vehicle.id || ('guest-' + Date.now().toString(36));
+                    this.vehicles.push({ ...vehicle, id });
+                    this.selectedId = id;
+                    this.persist();
+                },
+                remove(id) {
+                    this.vehicles = this.vehicles.filter(v => v.id !== id);
+                    if (this.selectedId === id) {
+                        this.selectedId = this.vehicles[0]?.id || '';
+                    }
+                    this.persist();
+                },
+                select(id) {
+                    this.selectedId = id;
+                    this.persist();
+                },
+                get selectedVehicle() {
+                    return this.vehicles.find(v => v.id === this.selectedId) || null;
+                },
+                persist() {
+                    localStorage.setItem('garage_guest_vehicles', JSON.stringify(this.vehicles));
+                    localStorage.setItem('garage_guest_selected', this.selectedId || '');
+                }
+            });
         });
     </script>
 

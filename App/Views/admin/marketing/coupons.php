@@ -55,8 +55,8 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
-                <?php if (!empty($coupons)): ?>
-                    <?php foreach ($coupons as $coupon): ?>
+                <?php if (!empty($coupons['data'])): ?>
+                    <?php foreach ($coupons['data'] as $coupon): ?>
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-3">
                             <div class="flex items-center gap-2">
@@ -109,15 +109,15 @@
     </div>
 
     <!-- Pagination -->
-    <?php if (($pagination['last_page'] ?? 1) > 1): ?>
+    <?php if (($coupons['last_page'] ?? 1) > 1): ?>
     <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
         <p class="text-sm text-gray-500">
-            Showing <?= $pagination['from'] ?? 0 ?> to <?= $pagination['to'] ?? 0 ?> of <?= $pagination['total'] ?? 0 ?> coupons
+            Showing <?= $coupons['from'] ?? 0 ?> to <?= $coupons['to'] ?? 0 ?> of <?= $coupons['total'] ?? 0 ?> coupons
         </p>
         <div class="flex gap-1">
-            <?php for ($i = 1; $i <= $pagination['last_page']; $i++): ?>
+            <?php for ($i = 1; $i <= $coupons['last_page']; $i++): ?>
             <a href="?page=<?= $i ?>&<?= http_build_query(array_diff_key($_GET, ['page' => ''])) ?>"
-               class="px-3 py-1.5 text-sm rounded-lg <?= $i === ($pagination['current_page'] ?? 1) ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' ?>">
+               class="px-3 py-1.5 text-sm rounded-lg <?= $i === ($coupons['current_page'] ?? 1) ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' ?>">
                 <?= $i ?>
             </a>
             <?php endfor; ?>

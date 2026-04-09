@@ -39,6 +39,17 @@ final class ConfigController extends BaseAdminController
                 'checkout/guest_checkout'           => ['label' => 'Allow Guest Checkout', 'type' => 'boolean'],
                 'checkout/min_order_amount'         => ['label' => 'Minimum Order Amount', 'type' => 'number'],
                 'checkout/terms_and_conditions'     => ['label' => 'Require Terms & Conditions', 'type' => 'boolean'],
+                'checkout/default_payment_method'   => ['label' => 'Default Payment Method (code)', 'type' => 'text'],
+                'checkout/payment_method_manual_checkout' => ['label' => 'Enable Manual Checkout', 'type' => 'boolean'],
+                'checkout/payment_method_ideal' => ['label' => 'Enable iDEAL', 'type' => 'boolean'],
+                'checkout/payment_method_paypal' => ['label' => 'Enable PayPal', 'type' => 'boolean'],
+                'checkout/payment_method_bank_transfer' => ['label' => 'Enable Bank Transfer', 'type' => 'boolean'],
+                'checkout/payment_method_cash_on_delivery' => ['label' => 'Enable Cash on Delivery', 'type' => 'boolean'],
+                'checkout/payment_instruction_manual_checkout' => ['label' => 'Manual Checkout Instructions', 'type' => 'textarea'],
+                'checkout/payment_instruction_ideal' => ['label' => 'iDEAL Instructions', 'type' => 'textarea'],
+                'checkout/payment_instruction_paypal' => ['label' => 'PayPal Instructions', 'type' => 'textarea'],
+                'checkout/payment_instruction_bank_transfer' => ['label' => 'Bank Transfer Instructions', 'type' => 'textarea'],
+                'checkout/payment_instruction_cash_on_delivery' => ['label' => 'Cash on Delivery Instructions', 'type' => 'textarea'],
             ],
         ],
         'shipping' => [
@@ -75,6 +86,32 @@ final class ConfigController extends BaseAdminController
                 'seo/default_meta_description' => ['label' => 'Default Meta Description', 'type' => 'textarea'],
                 'seo/enable_sitemap'          => ['label' => 'Enable Sitemap', 'type' => 'boolean'],
                 'seo/robots_txt'              => ['label' => 'Robots.txt Content', 'type' => 'textarea'],
+            ],
+        ],
+        'loyalty' => [
+            'label' => 'Loyalty Program',
+            'fields' => [
+                'loyalty/enabled' => ['label' => 'Enable Loyalty Program', 'type' => 'boolean'],
+                'loyalty/signup_points' => ['label' => 'Signup Bonus Points', 'type' => 'number'],
+                'loyalty/order_points_fixed' => ['label' => 'Fixed Points Per Order', 'type' => 'number'],
+                'loyalty/order_points_per_currency' => ['label' => 'Points Per Currency Unit', 'type' => 'number'],
+                'loyalty/birthday_points' => ['label' => 'Birthday Bonus Points', 'type' => 'number'],
+            ],
+        ],
+        'credits' => [
+            'label' => 'Store Credits',
+            'fields' => [
+                'credits/enabled' => ['label' => 'Enable Store Credits', 'type' => 'boolean'],
+                'credits/min_purchase_amount' => ['label' => 'Minimum Credit Purchase Amount', 'type' => 'number'],
+            ],
+        ],
+        'security' => [
+            'label' => 'Security',
+            'fields' => [
+                'security/customer_two_factor_enabled' => ['label' => 'Allow Customer 2FA', 'type' => 'boolean'],
+                'security/turnstile_enabled' => ['label' => 'Enable Cloudflare Turnstile', 'type' => 'boolean'],
+                'security/turnstile_site_key' => ['label' => 'Turnstile Site Key', 'type' => 'text'],
+                'security/turnstile_secret_key' => ['label' => 'Turnstile Secret Key', 'type' => 'text'],
             ],
         ],
     ];

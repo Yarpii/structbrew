@@ -49,6 +49,14 @@ return [
         'from_name' => Config::env('MAIL_FROM_NAME', 'StructBrew'),
     ],
 
+    // ─── Security / CAPTCHA ──────────────────────────────────
+    'security' => [
+        'customer_two_factor_enabled' => Config::env('CUSTOMER_TWO_FACTOR_ENABLED', true),
+        'turnstile_enabled' => Config::env('TURNSTILE_ENABLED', true),
+        'turnstile_site_key' => Config::env('TURNSTILE_SITE_KEY', ''),
+        'turnstile_secret_key' => Config::env('TURNSTILE_SECRET_KEY', ''),
+    ],
+
     // ─── Uploads ─────────────────────────────────────────────
     'uploads' => [
         'path' => dirname(__DIR__) . '/public/uploads',

@@ -19,6 +19,9 @@ class Customer extends Model
         'phone',
         'date_of_birth',
         'gender',
+        'customer_group',
+        'loyalty_points',
+        'credits_balance',
         'is_active',
     ];
     protected static array $hidden = [

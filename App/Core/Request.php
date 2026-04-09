@@ -63,9 +63,13 @@ final class Request
     {
         return $this->path;
     }
-    public function query(): array
+    public function query(?string $key = null, mixed $default = null): mixed
     {
-        return $this->query;
+        if ($key === null) {
+            return $this->query;
+        }
+
+        return $this->query[$key] ?? $default;
     }
     public function body(): array
     {

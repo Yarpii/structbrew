@@ -52,6 +52,11 @@ final class Bootstrap
                 return;
             }
 
+            // Share auth state and CSRF token with all frontend views
+            View::share('csrfToken', Session::csrfToken());
+            View::share('isLoggedIn', Auth::isLoggedIn());
+            View::share('currentCustomer', Auth::isLoggedIn() ? Auth::customer() : null);
+
             // Initialize store resolver (multi-store domain mapping)
             try {
                 StoreResolver::resolve();

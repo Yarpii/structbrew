@@ -1,3 +1,33 @@
+<?php $ad = $ads['home_find_setup'] ?? null; ?>
+
+<?php if (!empty($ad)): ?>
+<?php $adClickUrl = '/ad/click/' . (int) ($ad['id'] ?? 0); ?>
+<section class="relative overflow-hidden text-white" style="background: <?= htmlspecialchars((string) ($ad['background_value'] ?: 'linear-gradient(135deg,#0f172a,#1f2937)')) ?>;">
+    <div class="relative mx-auto w-[92%] sm:w-[90%] md:w-[88%] lg:w-[85%] py-14">
+        <div class="grid gap-6 md:grid-cols-[1.4fr_1fr] items-center">
+            <div>
+                <span class="inline-flex items-center rounded-md bg-white/10 border border-white/20 px-3 py-1 text-xs font-medium mb-4">Sponsored</span>
+                <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight"><?= htmlspecialchars((string) ($ad['title'] ?? 'Featured Promotion')) ?></h2>
+                <?php if (!empty($ad['subtitle'])): ?>
+                    <p class="mt-3 text-white/85 leading-relaxed max-w-xl"><?= htmlspecialchars((string) $ad['subtitle']) ?></p>
+                <?php endif; ?>
+                <?php if (!empty($ad['cta_url']) && !empty($ad['cta_label'])): ?>
+                    <div class="mt-6">
+                        <a href="<?= htmlspecialchars($adClickUrl) ?>" class="inline-flex h-10 items-center rounded-md bg-white text-slate-900 px-5 text-sm font-semibold transition hover:bg-gray-100">
+                            <?= htmlspecialchars((string) $ad['cta_label']) ?>
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </div>
+            <?php if (!empty($ad['image_url'])): ?>
+                <div class="hidden md:block">
+                    <img src="<?= htmlspecialchars((string) $ad['image_url']) ?>" alt="<?= htmlspecialchars((string) ($ad['title'] ?? 'Ad')) ?>" class="w-full max-h-56 object-cover rounded-md border border-white/20">
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>
+<?php else: ?>
 <!-- Ad Banner: Find Your Setup -->
 <section class="relative overflow-hidden bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 text-white">
     <div class="absolute inset-0 opacity-15">
@@ -60,3 +90,4 @@
         </div>
     </div>
 </section>
+<?php endif; ?>

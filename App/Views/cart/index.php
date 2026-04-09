@@ -9,8 +9,75 @@
     </div>
 </div>
 
-<div class="mx-auto w-[92%] sm:w-[90%] md:w-[88%] lg:w-[85%] py-8">
+<div class="mx-auto w-[92%] sm:w-[90%] md:w-[88%] lg:w-[85%] py-8"
+     x-data="{
+        checkoutLoading: false,
+        checkoutError: '',
+        useCredits: false,
+        selectedPaymentMethod: <?= json_encode((string) ($defaultPaymentMethod ?? 'manual_checkout')) ?>,
+        paymentMethods: <?= json_encode(array_values($paymentMethods ?? [])) ?>,
+        creditsEnabled: <?= !empty($creditsEnabled) ? 'true' : 'false' ?>,
+        creditsBalance: <?= json_encode((float) ($creditsBalance ?? 0.0)) ?>,
+        async checkout() {
+            this.checkoutError = '';
+            if ($store.cart.items.length === 0) {
+                this.checkoutError = 'Your cart is empty.';
+                return;
+            }
+
+            if (!this.useCredits && !this.selectedPaymentMethod) {
+                this.checkoutError = 'Please select a payment method.';
+                return;
+            }
+
+            const orderTotal = $store.cart.total + ($store.cart.total >= 50 ? 0 : 4.99);
+            if (this.useCredits && orderTotal > this.creditsBalance + 0.00001) {
+                this.checkoutError = 'Insufficient credits balance for this order.';
+                return;
+            }
+
+            this.checkoutLoading = true;
+            try {
+                const response = await fetch('/cart/checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        _csrf_token: '<?= htmlspecialchars((string) ($csrfToken ?? \App\Core\Session::csrfToken())) ?>',
+                        items: $store.cart.items,
+                        use_credits: this.useCredits,
+                        payment_method: this.selectedPaymentMethod
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok || !data.success) {
+                    this.checkoutError = data.message || 'Checkout failed. Please try again.';
+                    if (data.redirect) {
+                        window.location.href = data.redirect;
+                    }
+                    return;
+                }
+
+                $store.cart.clear();
+                window.location.href = data.redirect || '/account/orders';
+            } catch (e) {
+                this.checkoutError = 'Could not reach checkout service. Please try again.';
+            } finally {
+                this.checkoutLoading = false;
+            }
+        }
+     }">
     <h1 class="text-2xl font-bold text-[var(--color-text)] mb-6">Shopping Cart</h1>
+
+    <?php if (!empty($ads['cart_page'])): ?>
+        <div class="mb-6">
+            <?php $ad = $ads['cart_page']; include dirname(__DIR__) . '/partials/_managed-ad.php'; ?>
+        </div>
+    <?php endif; ?>
+
+    <div x-show="checkoutError" x-cloak class="mb-4 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700" x-text="checkoutError"></div>
 
     <!-- Empty cart -->
     <template x-if="$store.cart.items.length === 0">
@@ -51,7 +118,7 @@
                                     <span class="text-xs text-[var(--color-muted)] line-through" x-text="'$' + item.price.toFixed(2)"></span>
                                 </template>
                                 <template x-if="!item.sale_price">
-                                    <span class="text-sm font-bold text-[var(--color-text)]" x-text="'$' + item.price.toFixed(2)"></span>
+                                    <span class="text-sm font-bold text-[var,--color-text)]" x-text="'$' + item.price.toFixed(2)"></span>
                                 </template>
                             </div>
                         </div>
@@ -60,15 +127,15 @@
                             <button @click="$store.cart.update(item.id, item.qty - 1)" class="h-9 w-9 flex items-center justify-center text-[var(--color-text)] hover:text-[var(--color-accent)]">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
                             </button>
-                            <span class="w-8 text-center text-sm font-semibold text-[var(--color-text)]" x-text="item.qty"></span>
-                            <button @click="$store.cart.update(item.id, item.qty + 1)" class="h-9 w-9 flex items-center justify-center text-[var(--color-text)] hover:text-[var(--color-accent)]">
+                            <span class="w-8 text-center text-sm font-semibold text-[var,--color-text)]" x-text="item.qty"></span>
+                            <button @click="$store.cart.update(item.id, item.qty + 1)" class="h-9 w-9 flex items-center justify-center text-[var(--color-text)] hover:text-[var,--color-accent)]">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                             </button>
                         </div>
                         <!-- Subtotal + Remove -->
                         <div class="text-right shrink-0">
-                            <p class="text-sm font-bold text-[var(--color-text)]" x-text="'$' + ((item.sale_price || item.price) * item.qty).toFixed(2)"></p>
-                            <button @click="$store.cart.remove(item.id)" class="mt-1 text-xs text-[var(--color-muted)] hover:text-[var(--color-accent)] transition-colors">Remove</button>
+                            <p class="text-sm font-bold text-[var,--color-text)]" x-text="'$' + ((item.sale_price || item.price) * item.qty).toFixed(2)"></p>
+                            <button @click="$store.cart.remove(item.id)" class="mt-1 text-xs text-[var(--color-muted)] hover:text-[var,--color-accent] transition-colors">Remove</button>
                         </div>
                     </div>
                 </template>
@@ -76,29 +143,68 @@
 
             <!-- Order Summary -->
             <div class="lg:sticky lg:top-24 self-start">
-                <div class="rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] p-5" style="box-shadow: var(--shadow-sm)">
-                    <h2 class="text-lg font-bold text-[var(--color-text)] mb-4">Order Summary</h2>
+                <div class="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-5" style="box-shadow: var(--shadow-sm)">
+                    <h2 class="text-lg font-bold text-[var,--color-text)] mb-4">Order Summary</h2>
                     <div class="space-y-2.5 text-sm">
                         <div class="flex justify-between">
                             <span class="text-[var(--color-muted)]">Subtotal</span>
-                            <span class="font-semibold text-[var(--color-text)]" x-text="'$' + $store.cart.total.toFixed(2)"></span>
+                            <span class="font-semibold text-[var,--color-text)]" x-text="'$' + $store.cart.total.toFixed(2)"></span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-[var(--color-muted)]">Shipping</span>
                             <span class="font-semibold text-emerald-600" x-text="$store.cart.total >= 50 ? 'Free' : '$4.99'"></span>
                         </div>
                         <div class="border-t border-[var(--color-border)] pt-2.5 flex justify-between">
-                            <span class="font-bold text-[var(--color-text)]">Total</span>
-                            <span class="text-lg font-extrabold text-[var(--color-text)]" x-text="'$' + ($store.cart.total + ($store.cart.total >= 50 ? 0 : 4.99)).toFixed(2)"></span>
+                            <span class="font-bold text-[var,--color-text)]">Total</span>
+                            <span class="text-lg font-extrabold text-[var,--color-text)]" x-text="'$' + ($store.cart.total + ($store.cart.total >= 50 ? 0 : 4.99)).toFixed(2)"></span>
                         </div>
                     </div>
+
+                    <?php if (!empty($isLoggedIn) && !empty($creditsEnabled)): ?>
+                        <div class="mt-4 rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] p-3">
+                            <label class="flex items-start gap-2 text-sm text-[var,--color-text)]">
+                                <input type="checkbox"
+                                       class="mt-0.5 h-4 w-4 rounded border-[var(--color-border)]"
+                                       x-model="useCredits"
+                                       :disabled="($store.cart.total + ($store.cart.total >= 50 ? 0 : 4.99)) > creditsBalance + 0.00001">
+                                <span>
+                                    Pay with account credits
+                                    <span class="block text-xs text-[var(--color-muted)]">Balance: $<?= number_format((float) ($creditsBalance ?? 0), 2) ?></span>
+                                </span>
+                            </label>
+                            <p x-show="($store.cart.total + ($store.cart.total >= 50 ? 0 : 4.99)) > creditsBalance + 0.00001" x-cloak class="mt-2 text-xs text-amber-600">
+                                Your credits are not enough for this order.
+                            </p>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="mt-4 rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] p-3" x-show="!useCredits" x-cloak>
+                        <p class="text-sm font-semibold text-[var,--color-text)] mb-2">Payment Method</p>
+                        <template x-if="paymentMethods.length === 0">
+                            <p class="text-xs text-[var(--color-muted)]">No payment methods are enabled.</p>
+                        </template>
+                        <div class="space-y-2" x-show="paymentMethods.length > 0">
+                            <template x-for="method in paymentMethods" :key="method.code">
+                                <label class="flex items-center gap-2 text-sm text-[var,--color-text)]">
+                                    <input type="radio" name="payment_method" :value="method.code" x-model="selectedPaymentMethod"
+                                           class="h-4 w-4 border-[var(--color-border)]">
+                                    <span x-text="method.label"></span>
+                                </label>
+                            </template>
+                        </div>
+                    </div>
+
                     <template x-if="$store.cart.total < 50">
-                        <p class="mt-3 text-xs text-[var(--color-muted)] bg-[var(--color-bg)] rounded-lg p-2.5 border border-[var(--color-border)]">
+                        <p class="mt-3 text-xs text-[var(--color-muted)] bg-[var(--color-bg)] rounded-md p-2.5 border border-[var(--color-border)]">
                             Add <span class="font-semibold text-[var(--color-accent)]" x-text="'$' + (50 - $store.cart.total).toFixed(2)"></span> more for free shipping!
                         </p>
                     </template>
-                    <button class="mt-4 w-full h-11 rounded-[var(--radius-button)] bg-[var(--color-accent)] text-sm font-semibold text-white transition hover:bg-[var(--color-accent-hover)]" @click="alert('Checkout is a demo feature')">
-                        Proceed to Checkout
+
+                    <button class="mt-4 w-full h-11 rounded-md bg-[var(--color-accent)] text-sm font-semibold text-white transition hover:bg-[var(--color-accent-hover)] disabled:opacity-70 disabled:cursor-not-allowed"
+                            :disabled="checkoutLoading"
+                            @click="checkout">
+                        <span x-show="!checkoutLoading">Proceed to Checkout</span>
+                        <span x-show="checkoutLoading" x-cloak>Processing...</span>
                     </button>
                     <a href="/shop" class="mt-2 block text-center text-sm text-[var(--color-accent)] hover:underline">Continue Shopping</a>
                 </div>

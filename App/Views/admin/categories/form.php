@@ -1,5 +1,6 @@
 <form method="POST" action="<?= $formAction ?? '/admin/categories' ?>" enctype="multipart/form-data" class="space-y-6">
     <input type="hidden" name="_token" value="<?= \App\Core\Session::csrfToken() ?>">
+    <input type="hidden" name="_csrf_token" value="<?= \App\Core\Session::csrfToken() ?>">
 
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <!-- Main Content -->
@@ -120,6 +121,28 @@
                            class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                     <span class="text-sm text-gray-700">Active</span>
                 </label>
+            </div>
+
+            <!-- Attributes -->
+            <div class="bg-white rounded-xl border border-gray-200 p-6">
+                <h3 class="font-semibold text-gray-800 mb-4">Attributes</h3>
+                <?php if (!empty($attributes)): ?>
+                <div class="space-y-2 max-h-64 overflow-y-auto">
+                    <?php foreach ($attributes as $attribute): ?>
+                    <label class="flex items-start gap-2">
+                        <input type="checkbox" name="attribute_ids[]" value="<?= $attribute['id'] ?>"
+                               <?= in_array((int) $attribute['id'], $selectedAttributes ?? [], true) ? 'checked' : '' ?>
+                               class="mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <span class="text-sm text-gray-700">
+                            <?= htmlspecialchars($attribute['label']) ?>
+                            <span class="text-xs text-gray-400">(<?= htmlspecialchars($attribute['code']) ?>)</span>
+                        </span>
+                    </label>
+                    <?php endforeach; ?>
+                </div>
+                <?php else: ?>
+                    <p class="text-sm text-gray-500">No active attributes yet. Create them first in Catalog → Attributes.</p>
+                <?php endif; ?>
             </div>
 
             <!-- Info -->

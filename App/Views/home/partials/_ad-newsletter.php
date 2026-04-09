@@ -1,3 +1,29 @@
+<?php $ad = $ads['home_newsletter'] ?? null; ?>
+
+<?php if (!empty($ad)): ?>
+<?php $adClickUrl = '/ad/click/' . (int) ($ad['id'] ?? 0); ?>
+<section class="relative overflow-hidden border-y border-[var(--color-border)] text-[var(--color-text)]" style="background: <?= htmlspecialchars((string) ($ad['background_value'] ?: 'var(--color-surface)')) ?>;">
+    <div class="relative mx-auto w-[92%] sm:w-[90%] md:w-[88%] lg:w-[85%] py-14 text-center">
+        <div class="max-w-2xl mx-auto">
+            <span class="inline-flex items-center rounded-md bg-[var(--color-accent)]/10 border border-[var(--color-accent)]/30 px-3 py-1 text-xs font-medium text-[var(--color-accent)] mb-4">Sponsored</span>
+            <h2 class="text-2xl font-bold"><?= htmlspecialchars((string) ($ad['title'] ?? 'Stay in the Loop')) ?></h2>
+            <?php if (!empty($ad['subtitle'])): ?>
+                <p class="mt-2 text-sm text-[var(--color-muted)] leading-relaxed"><?= htmlspecialchars((string) $ad['subtitle']) ?></p>
+            <?php endif; ?>
+            <?php if (!empty($ad['cta_url']) && !empty($ad['cta_label'])): ?>
+                <div class="mt-6">
+                    <a href="<?= htmlspecialchars($adClickUrl) ?>" class="inline-flex h-11 items-center justify-center rounded-md bg-[var(--color-accent)] px-6 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-hover)]">
+                        <?= htmlspecialchars((string) $ad['cta_label']) ?>
+                    </a>
+                </div>
+            <?php endif; ?>
+            <?php if (!empty($ad['image_url'])): ?>
+                <img src="<?= htmlspecialchars((string) $ad['image_url']) ?>" alt="<?= htmlspecialchars((string) ($ad['title'] ?? 'Ad')) ?>" class="mx-auto mt-6 max-h-48 w-auto rounded-md border border-[var(--color-border)]">
+            <?php endif; ?>
+        </div>
+    </div>
+</section>
+<?php else: ?>
 <!-- Ad Banner: Newsletter / Seasonal -->
 <section class="relative overflow-hidden bg-[var(--color-surface)] border-y border-[var(--color-border)]">
     <div class="absolute inset-0 opacity-5">
@@ -23,3 +49,4 @@
         </div>
     </div>
 </section>
+<?php endif; ?>

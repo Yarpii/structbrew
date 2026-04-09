@@ -8,6 +8,7 @@ use App\Core\Database;
 use App\Core\Response;
 use App\Core\Session;
 use App\Core\Validator;
+use App\Services\PaymentMethodService;
 
 final class OrderController extends BaseAdminController
 {
@@ -44,6 +45,7 @@ final class OrderController extends BaseAdminController
         }
 
         $orders = $query->paginate($perPage, $page);
+        $paymentMethods = new PaymentMethodService();
 
         // Enrich each order with store view name
         foreach ($orders['data'] as &$order) {
@@ -51,6 +53,7 @@ final class OrderController extends BaseAdminController
                 ->where('id', $order['store_view_id'])
                 ->first();
             $order['store_view_name'] = $sv['name'] ?? 'N/A';
+            $order['payment_method_label'] = $paymentMethods->label((string) ($order['payment_method'] ?? ''));
         }
         unset($order);
 
@@ -122,6 +125,10 @@ final class OrderController extends BaseAdminController
         $storeView = $db->table('store_views')
             ->where('id', $order['store_view_id'])
             ->first();
+
+        $paymentMethods = new PaymentMethodService();
+        $order['payment_method_label'] = $paymentMethods->label((string) ($order['payment_method'] ?? ''));
+        $order['payment_instruction'] = $paymentMethods->instruction((string) ($order['payment_method'] ?? ''));
 
         $statuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded'];
 

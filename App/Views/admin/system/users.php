@@ -46,8 +46,8 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
-                <?php if (!empty($users)): ?>
-                    <?php foreach ($users as $user): ?>
+                <?php if (!empty($users['data'])): ?>
+                    <?php foreach ($users['data'] as $user): ?>
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-3">
                             <div class="flex items-center gap-3">
@@ -62,7 +62,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-3 text-gray-500"><?= htmlspecialchars($user['email']) ?></td>
+                        <td class="px-6 py-3 text-gray-500"><?= htmlspecialchars($user['email'] ?? '') ?></td>
                         <td class="px-6 py-3">
                             <span class="inline-block px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded-full font-medium">
                                 <?= htmlspecialchars($user['role_name'] ?? '—') ?>
@@ -97,15 +97,15 @@
     </div>
 
     <!-- Pagination -->
-    <?php if (($pagination['last_page'] ?? 1) > 1): ?>
+    <?php if (($users['last_page'] ?? 1) > 1): ?>
     <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
         <p class="text-sm text-gray-500">
-            Showing <?= $pagination['from'] ?? 0 ?> to <?= $pagination['to'] ?? 0 ?> of <?= $pagination['total'] ?? 0 ?> users
+            Showing <?= $users['from'] ?? 0 ?> to <?= $users['to'] ?? 0 ?> of <?= $users['total'] ?? 0 ?> users
         </p>
         <div class="flex gap-1">
-            <?php for ($i = 1; $i <= $pagination['last_page']; $i++): ?>
+            <?php for ($i = 1; $i <= $users['last_page']; $i++): ?>
             <a href="?page=<?= $i ?>&<?= http_build_query(array_diff_key($_GET, ['page' => ''])) ?>"
-               class="px-3 py-1.5 text-sm rounded-lg <?= $i === ($pagination['current_page'] ?? 1) ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' ?>">
+               class="px-3 py-1.5 text-sm rounded-lg <?= $i === ($users['current_page'] ?? 1) ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' ?>">
                 <?= $i ?>
             </a>
             <?php endfor; ?>

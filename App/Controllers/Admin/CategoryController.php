@@ -18,7 +18,7 @@ final class CategoryController extends BaseAdminController
         $db = Database::getInstance();
 
         $categories = $db->table('categories')
-            ->orderBy('position', 'ASC')
+            ->orderBy('id', 'ASC')
             ->get();
 
         // Build a lookup of parent names and translations
@@ -47,6 +47,9 @@ final class CategoryController extends BaseAdminController
                 ->where('category_id', $category['id'])
                 ->count();
             $category['product_count'] = $productCount;
+            $category['attribute_count'] = $db->table('category_attributes')
+                ->where('category_id', $category['id'])
+                ->count();
         }
         unset($category);
 
@@ -65,19 +68,27 @@ final class CategoryController extends BaseAdminController
 
         $parentCategories = $db->table('categories')
             ->whereNull('parent_id')
-            ->orderBy('position', 'ASC')
+            ->orderBy('id', 'ASC')
             ->get();
 
         foreach ($parentCategories as &$cat) {
             $cat['translation'] = $db->table('category_translations')
                 ->where('category_id', $cat['id'])
                 ->first();
+            $cat['name'] = $cat['translation']['name'] ?? $cat['slug'];
         }
         unset($cat);
 
-        return $this->adminView('admin/categories/create', [
-            'title'            => 'Create Category',
-            'parentCategories' => $parentCategories,
+        $attributes = $this->fetchActiveAttributes($db);
+
+        return $this->adminView('admin/categories/form', [
+            'title'              => 'Create Category',
+            'formAction'         => '/admin/categories',
+            'category'           => [],
+            'parentCategories'   => $parentCategories,
+            'translations'       => [],
+            'attributes'         => $attributes,
+            'selectedAttributes' => [],
         ]);
     }
 
@@ -141,11 +152,13 @@ final class CategoryController extends BaseAdminController
                 }
             }
 
+            $this->syncCategoryAttributes($db, $categoryId, $this->input('attribute_ids', []));
+
             $db->commit();
 
             $this->logActivity('create', 'category', $categoryId, null, $data);
             Session::flash('success', 'Category created successfully.');
-            return $this->redirect('/admin/categories');
+            return $this->redirect('/admin/categories/' . $categoryId . '/edit');
 
         } catch (\Throwable $e) {
             $db->rollback();
@@ -170,13 +183,14 @@ final class CategoryController extends BaseAdminController
         $parentCategories = $db->table('categories')
             ->whereNull('parent_id')
             ->where('id', '!=', $id)
-            ->orderBy('position', 'ASC')
+            ->orderBy('id', 'ASC')
             ->get();
 
         foreach ($parentCategories as &$cat) {
             $cat['translation'] = $db->table('category_translations')
                 ->where('category_id', $cat['id'])
                 ->first();
+            $cat['name'] = $cat['translation']['name'] ?? $cat['slug'];
         }
         unset($cat);
 
@@ -189,11 +203,24 @@ final class CategoryController extends BaseAdminController
             $translations[(int) $row['store_view_id']] = $row;
         }
 
-        return $this->adminView('admin/categories/edit', [
-            'title'            => 'Edit Category',
-            'category'         => $category,
-            'parentCategories' => $parentCategories,
-            'translations'     => $translations,
+        $category['product_count'] = $db->table('product_categories')
+            ->where('category_id', $id)
+            ->count();
+
+        $attributes = $this->fetchActiveAttributes($db);
+        $selectedAttributeIds = array_map(
+            static fn($value) => (int) $value,
+            array_column($db->table('category_attributes')->where('category_id', $id)->get(), 'attribute_id')
+        );
+
+        return $this->adminView('admin/categories/form', [
+            'title'              => 'Edit Category',
+            'formAction'         => '/admin/categories/' . $id,
+            'category'           => $category,
+            'parentCategories'   => $parentCategories,
+            'translations'       => $translations,
+            'attributes'         => $attributes,
+            'selectedAttributes' => $selectedAttributeIds,
         ]);
     }
 
@@ -277,6 +304,8 @@ final class CategoryController extends BaseAdminController
                 }
             }
 
+            $this->syncCategoryAttributes($db, $id, $this->input('attribute_ids', []));
+
             $db->commit();
 
             $this->logActivity('update', 'category', $id, $category, $data);
@@ -319,6 +348,7 @@ final class CategoryController extends BaseAdminController
 
         try {
             $db->table('product_categories')->where('category_id', $id)->delete();
+            $db->table('category_attributes')->where('category_id', $id)->delete();
             $db->table('category_translations')->where('category_id', $id)->delete();
             $db->table('categories')->where('id', $id)->delete();
 
@@ -333,5 +363,38 @@ final class CategoryController extends BaseAdminController
         }
 
         return $this->redirect('/admin/categories');
+    }
+
+    private function fetchActiveAttributes(Database $db): array
+    {
+        return $db->table('attributes')
+            ->where('is_active', 1)
+            ->orderBy('sort_order', 'ASC')
+            ->orderBy('label', 'ASC')
+            ->get();
+    }
+
+    private function syncCategoryAttributes(Database $db, int $categoryId, mixed $attributeIds): void
+    {
+        $db->table('category_attributes')->where('category_id', $categoryId)->delete();
+
+        if (!is_array($attributeIds)) {
+            return;
+        }
+
+        $cleanIds = [];
+        foreach ($attributeIds as $attributeId) {
+            $id = (int) $attributeId;
+            if ($id > 0) {
+                $cleanIds[$id] = true;
+            }
+        }
+
+        foreach (array_keys($cleanIds) as $attributeId) {
+            $db->table('category_attributes')->insert([
+                'category_id' => $categoryId,
+                'attribute_id' => $attributeId,
+            ]);
+        }
     }
 }

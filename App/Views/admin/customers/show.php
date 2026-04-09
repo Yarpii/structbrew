@@ -144,6 +144,10 @@
                         <span class="text-sm text-gray-900"><?= ($customer['is_active'] ?? 1) ? 'Active' : 'Inactive' ?></span>
                     </span>
                 </div>
+                <div class="flex justify-between">
+                    <span class="text-sm text-gray-500">Group</span>
+                    <span class="text-sm text-gray-900"><?= htmlspecialchars((string) ($customer['customer_group_label'] ?? 'Normal Client')) ?></span>
+                </div>
                 <?php if (!empty($customer['phone'])): ?>
                 <div class="flex justify-between">
                     <span class="text-sm text-gray-500">Phone</span>

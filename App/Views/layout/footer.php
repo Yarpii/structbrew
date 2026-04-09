@@ -17,7 +17,7 @@
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-[var(--color-text)]">Secure Payment</p>
-                    <p class="text-xs text-[var(--color-muted)]">SSL encrypted checkout</p>
+                    <p class="text-xs text-[var,--color-muted)]">SSL encrypted checkout</p>
                 </div>
             </div>
             <div class="flex items-start gap-3 p-3 rounded-card border border-[var(--color-border)] bg-[var(--color-bg)]">
@@ -26,16 +26,16 @@
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-[var(--color-text)]">Easy Returns</p>
-                    <p class="text-xs text-[var(--color-muted)]">30-day return policy</p>
+                    <p class="text-xs text-[var,--color-muted)]">30-day return policy</p>
                 </div>
             </div>
-            <div class="flex items-start gap-3 p-3 rounded-card border border-[var(--color-border)] bg-[var(--color-bg)]">
-                <div class="shrink-0 w-9 h-9 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center text-[var(--color-accent)]">
+            <div class="flex items-start gap-3 p-3 rounded-card border border-[var(--color-border)] bg-[var,--color-bg)]">
+                <div class="shrink-0 w-9 h-9 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center text-[var,--color-accent)]">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72"/></svg>
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-[var,--color-text)]">24/7 Support</p>
-                    <p class="text-xs text-[var(--color-muted)]">Dedicated help center</p>
+                    <p class="text-xs text-[var,--color-muted)]">Dedicated help center</p>
                 </div>
             </div>
         </div>
@@ -83,7 +83,7 @@
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop?category=electronics">Electronics</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop?category=audio">Audio</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop?category=accessories">Accessories</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop?category=gaming">Gaming</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var,--color-accent)]" href="/shop?category=gaming">Gaming</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop?category=wearables">Wearables</a></li>
                     </ul>
                 </section>
@@ -94,7 +94,7 @@
                     <ul class="grid gap-2.5 text-[0.9375rem]">
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/wholesale-partnerships">Wholesale</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/dealer-onboarding">Dealer Onboarding</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var,--color-accent)]" href="/b2b-contact">B2B Contact & Intake</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/b2b-contact">B2B Contact & Intake</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/advertise">Advertise with Us</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/priority-support">Priority Support</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/bulk-ordering">Bulk Ordering Guide</a></li>
@@ -109,9 +109,6 @@
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/register">Create Account</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/cart">Shopping Cart</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/payment-methods">Payment Methods</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/returns-warranty">Returns & Warranty</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/order-issues">Order Issues Help</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/vat-invoices">VAT & Invoices</a></li>
                     </ul>
                 </section>
 
@@ -119,7 +116,17 @@
                 <section>
                     <h3 class="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-gray-500">Support</h3>
                     <ul class="grid gap-2.5 text-[0.9375rem]">
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/support">Support Center</a></li>
+                        <?php if (!empty($isLoggedIn) && !empty($currentCustomer)): ?>
+                            <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/account/tickets">My Tickets</a></li>
+                            <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/account/tickets/create">Open Ticket</a></li>
+                        <?php else: ?>
+                            <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/login">Ticket Portal Login</a></li>
+                        <?php endif; ?>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/contact">Contact Us</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/returns-warranty">Returns & Warranty</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/order-issues">Order Issues Help</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/vat-invoices">VAT & Invoices</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/faq">FAQ Hub</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/installation-guides">Installation Guides</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/compatibility">Compatibility Help</a></li>
@@ -134,7 +141,7 @@
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shipping-by-country">Shipping by Country</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/incoterms">Incoterms: DAP & DDP</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/customs-duties">Customs & Duties FAQ</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var,--color-accent)]" href="/international-returns">International Returns</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/international-returns">International Returns</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/customs-checklist">Customs Checklist</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shipping-restrictions">Shipping Restrictions</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/exchange-policy-international">International Exchange Policy</a></li>

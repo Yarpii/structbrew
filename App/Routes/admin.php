@@ -36,6 +36,14 @@ $this->get('/admin/brands/{id}/edit', ['App\Controllers\Admin\BrandController', 
 $this->post('/admin/brands/{id}', ['App\Controllers\Admin\BrandController', 'update']);
 $this->post('/admin/brands/{id}/delete', ['App\Controllers\Admin\BrandController', 'delete']);
 
+// ─── Attributes ──────────────────────────────────────────────
+$this->get('/admin/attributes', ['App\Controllers\Admin\AttributeController', 'index']);
+$this->get('/admin/attributes/create', ['App\Controllers\Admin\AttributeController', 'create']);
+$this->post('/admin/attributes', ['App\Controllers\Admin\AttributeController', 'store']);
+$this->get('/admin/attributes/{id}/edit', ['App\Controllers\Admin\AttributeController', 'edit']);
+$this->post('/admin/attributes/{id}', ['App\Controllers\Admin\AttributeController', 'update']);
+$this->post('/admin/attributes/{id}/delete', ['App\Controllers\Admin\AttributeController', 'delete']);
+
 // ─── Vehicles ────────────────────────────────────────────────
 $this->get('/admin/vehicles', ['App\Controllers\Admin\VehicleController', 'index']);
 $this->get('/admin/vehicles/create', ['App\Controllers\Admin\VehicleController', 'create']);
@@ -66,6 +74,10 @@ $this->get('/admin/marketing/coupons/create', ['App\Controllers\Admin\MarketingC
 $this->post('/admin/marketing/coupons', ['App\Controllers\Admin\MarketingController', 'storeCoupon']);
 $this->get('/admin/marketing/coupons/{id}/edit', ['App\Controllers\Admin\MarketingController', 'editCoupon']);
 $this->post('/admin/marketing/coupons/{id}', ['App\Controllers\Admin\MarketingController', 'updateCoupon']);
+$this->get('/admin/marketing/ads', ['App\Controllers\Admin\MarketingController', 'ads']);
+$this->post('/admin/marketing/ads', ['App\Controllers\Admin\MarketingController', 'storeAd']);
+$this->post('/admin/marketing/ads/{id}', ['App\Controllers\Admin\MarketingController', 'updateAd']);
+$this->post('/admin/marketing/ads/{id}/delete', ['App\Controllers\Admin\MarketingController', 'deleteAd']);
 
 // ─── Content ─────────────────────────────────────────────────
 $this->get('/admin/content/pages', ['App\Controllers\Admin\ContentController', 'pages']);
@@ -103,3 +115,47 @@ $this->get('/admin/system/users/{id}/edit', ['App\Controllers\Admin\SystemContro
 $this->post('/admin/system/users/{id}', ['App\Controllers\Admin\SystemController', 'updateUser']);
 $this->post('/admin/system/users/{id}/delete', ['App\Controllers\Admin\SystemController', 'deleteUser']);
 $this->get('/admin/system/activity', ['App\Controllers\Admin\SystemController', 'activity']);
+
+// ─── Support Tickets ─────────────────────────────────────────────────────────
+$this->get('/admin/tickets', ['App\Controllers\Admin\TicketController', 'index']);
+$this->get('/admin/tickets/export', ['App\Controllers\Admin\TicketController', 'export']);
+$this->get('/admin/tickets/create', ['App\Controllers\Admin\TicketController', 'create']);
+$this->post('/admin/tickets', ['App\Controllers\Admin\TicketController', 'store']);
+
+// Departments (static — must be before /{id})
+$this->get('/admin/tickets/departments', ['App\Controllers\Admin\TicketController', 'departments']);
+$this->post('/admin/tickets/departments', ['App\Controllers\Admin\TicketController', 'storeDepartment']);
+$this->post('/admin/tickets/departments/{id}', ['App\Controllers\Admin\TicketController', 'updateDepartment']);
+$this->post('/admin/tickets/departments/{id}/delete', ['App\Controllers\Admin\TicketController', 'deleteDepartment']);
+
+// Mailboxes (static — must be before /{id})
+$this->get('/admin/tickets/mailboxes', ['App\Controllers\Admin\TicketController', 'mailboxes']);
+$this->post('/admin/tickets/mailboxes', ['App\Controllers\Admin\TicketController', 'storeMailbox']);
+$this->post('/admin/tickets/mailboxes/smtp', ['App\Controllers\Admin\TicketController', 'saveMailboxSmtp']);
+$this->post('/admin/tickets/mailboxes/{id}', ['App\Controllers\Admin\TicketController', 'updateMailbox']);
+$this->post('/admin/tickets/mailboxes/{id}/delete', ['App\Controllers\Admin\TicketController', 'deleteMailbox']);
+
+// Categories (static — must be before /{id})
+$this->get('/admin/tickets/categories', ['App\Controllers\Admin\TicketController', 'categories']);
+$this->post('/admin/tickets/categories', ['App\Controllers\Admin\TicketController', 'storeCategory']);
+$this->post('/admin/tickets/categories/{id}', ['App\Controllers\Admin\TicketController', 'updateCategory']);
+$this->post('/admin/tickets/categories/{id}/delete', ['App\Controllers\Admin\TicketController', 'deleteCategory']);
+
+// SLA Policies (static — must be before /{id})
+$this->get('/admin/tickets/sla', ['App\Controllers\Admin\TicketController', 'sla']);
+$this->post('/admin/tickets/sla', ['App\Controllers\Admin\TicketController', 'storeSla']);
+$this->post('/admin/tickets/sla/{id}', ['App\Controllers\Admin\TicketController', 'updateSla']);
+$this->post('/admin/tickets/sla/{id}/delete', ['App\Controllers\Admin\TicketController', 'deleteSla']);
+
+// Canned Responses (static — must be before /{id})
+$this->get('/admin/tickets/canned', ['App\Controllers\Admin\TicketController', 'canned']);
+$this->post('/admin/tickets/canned', ['App\Controllers\Admin\TicketController', 'storeCanned']);
+$this->post('/admin/tickets/canned/{id}', ['App\Controllers\Admin\TicketController', 'updateCanned']);
+$this->post('/admin/tickets/canned/{id}/delete', ['App\Controllers\Admin\TicketController', 'deleteCanned']);
+
+// Dynamic ticket routes (after all static ones)
+$this->get('/admin/tickets/{id}', ['App\Controllers\Admin\TicketController', 'show']);
+$this->post('/admin/tickets/{id}/update', ['App\Controllers\Admin\TicketController', 'update']);
+$this->post('/admin/tickets/{id}/reply', ['App\Controllers\Admin\TicketController', 'reply']);
+$this->post('/admin/tickets/{id}/escalate', ['App\Controllers\Admin\TicketController', 'escalate']);
+$this->post('/admin/tickets/{id}/merge', ['App\Controllers\Admin\TicketController', 'merge']);

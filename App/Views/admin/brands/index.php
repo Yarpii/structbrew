@@ -44,8 +44,8 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
-                <?php if (!empty($brands)): ?>
-                    <?php foreach ($brands as $brand): ?>
+                <?php if (!empty($brands['data'])): ?>
+                    <?php foreach ($brands['data'] as $brand): ?>
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-3">
                             <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
@@ -99,15 +99,15 @@
     </div>
 
     <!-- Pagination -->
-    <?php if (($pagination['last_page'] ?? 1) > 1): ?>
+    <?php if (($brands['last_page'] ?? 1) > 1): ?>
     <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
         <p class="text-sm text-gray-500">
-            Showing <?= $pagination['from'] ?? 0 ?> to <?= $pagination['to'] ?? 0 ?> of <?= $pagination['total'] ?? 0 ?> brands
+            Showing <?= $brands['from'] ?? 0 ?> to <?= $brands['to'] ?? 0 ?> of <?= $brands['total'] ?? 0 ?> brands
         </p>
         <div class="flex gap-1">
-            <?php for ($i = 1; $i <= $pagination['last_page']; $i++): ?>
+            <?php for ($i = 1; $i <= $brands['last_page']; $i++): ?>
             <a href="?page=<?= $i ?>&<?= http_build_query(array_diff_key($_GET, ['page' => ''])) ?>"
-               class="px-3 py-1.5 text-sm rounded-lg <?= $i === ($pagination['current_page'] ?? 1) ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' ?>">
+               class="px-3 py-1.5 text-sm rounded-lg <?= $i === ($brands['current_page'] ?? 1) ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' ?>">
                 <?= $i ?>
             </a>
             <?php endfor; ?>

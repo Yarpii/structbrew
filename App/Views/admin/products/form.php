@@ -1,5 +1,6 @@
 <form method="POST" action="<?= $formAction ?? '/admin/products' ?>" enctype="multipart/form-data" class="space-y-6">
     <input type="hidden" name="_token" value="<?= \App\Core\Session::csrfToken() ?>">
+    <input type="hidden" name="_csrf_token" value="<?= \App\Core\Session::csrfToken() ?>">
 
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <!-- Main Content -->
@@ -34,6 +35,63 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Attributes -->
+            <?php if (!empty($attributes)): ?>
+            <div class="bg-white rounded-xl border border-gray-200 p-6">
+                <h3 class="font-semibold text-gray-800 mb-4">Attributes</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <?php foreach ($attributes as $attribute): ?>
+                        <?php
+                            $code = $attribute['code'];
+                            $value = $productAttributes[$code] ?? '';
+                            $inputType = $attribute['input_type'] ?? 'text';
+                            $options = $attribute['options'] ?? [];
+                        ?>
+                        <div class="<?= $inputType === 'textarea' ? 'md:col-span-2' : '' ?>">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <?= htmlspecialchars($attribute['label']) ?>
+                                <?php if ((int) ($attribute['is_required'] ?? 0) === 1): ?>
+                                    <span class="text-red-500">*</span>
+                                <?php endif; ?>
+                            </label>
+
+                            <?php if ($inputType === 'textarea'): ?>
+                                <textarea name="attributes[<?= (int) $attribute['id'] ?>]" rows="3"
+                                          class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"><?= htmlspecialchars((string) $value) ?></textarea>
+                            <?php elseif ($inputType === 'number'): ?>
+                                <input type="number" step="0.01" name="attributes[<?= (int) $attribute['id'] ?>]"
+                                       value="<?= htmlspecialchars((string) $value) ?>"
+                                       class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <?php elseif ($inputType === 'boolean'): ?>
+                                <select name="attributes[<?= (int) $attribute['id'] ?>]"
+                                        class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="">-- Select --</option>
+                                    <option value="1" <?= (string) $value === '1' ? 'selected' : '' ?>>Yes</option>
+                                    <option value="0" <?= (string) $value === '0' ? 'selected' : '' ?>>No</option>
+                                </select>
+                            <?php elseif ($inputType === 'select'): ?>
+                                <select name="attributes[<?= (int) $attribute['id'] ?>]"
+                                        class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="">-- Select --</option>
+                                    <?php foreach ($options as $option): ?>
+                                        <option value="<?= htmlspecialchars((string) $option) ?>" <?= (string) $value === (string) $option ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars((string) $option) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            <?php else: ?>
+                                <input type="text" name="attributes[<?= (int) $attribute['id'] ?>]"
+                                       value="<?= htmlspecialchars((string) $value) ?>"
+                                       class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <?php endif; ?>
+
+                            <p class="mt-1 text-xs text-gray-400 font-mono"><?= htmlspecialchars($code) ?></p>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endif; ?>
 
             <!-- Translations (per store view) -->
             <div class="bg-white rounded-xl border border-gray-200 p-6" x-data="{ activeTab: '<?= $storeViews[0]['id'] ?? 0 ?>' }">

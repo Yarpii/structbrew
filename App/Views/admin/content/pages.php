@@ -43,8 +43,8 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
-                <?php if (!empty($pages)): ?>
-                    <?php foreach ($pages as $page): ?>
+                <?php if (!empty($pages['data'])): ?>
+                    <?php foreach ($pages['data'] as $page): ?>
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-3">
                             <a href="/admin/content/pages/<?= $page['id'] ?>/edit" class="font-mono text-sm text-gray-900 hover:text-blue-600">
@@ -52,7 +52,7 @@
                             </a>
                         </td>
                         <td class="px-6 py-3">
-                            <span class="text-gray-700"><?= htmlspecialchars($page['title'] ?? '—') ?></span>
+                            <span class="text-gray-700"><?= htmlspecialchars($page['translation']['title'] ?? $page['title'] ?? '—') ?></span>
                         </td>
                         <td class="px-6 py-3 text-center">
                             <span class="inline-block px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
@@ -86,15 +86,15 @@
     </div>
 
     <!-- Pagination -->
-    <?php if (($pagination['last_page'] ?? 1) > 1): ?>
+    <?php if (($pages['last_page'] ?? 1) > 1): ?>
     <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
         <p class="text-sm text-gray-500">
-            Showing <?= $pagination['from'] ?? 0 ?> to <?= $pagination['to'] ?? 0 ?> of <?= $pagination['total'] ?? 0 ?> pages
+            Showing <?= $pages['from'] ?? 0 ?> to <?= $pages['to'] ?? 0 ?> of <?= $pages['total'] ?? 0 ?> pages
         </p>
         <div class="flex gap-1">
-            <?php for ($i = 1; $i <= $pagination['last_page']; $i++): ?>
+            <?php for ($i = 1; $i <= $pages['last_page']; $i++): ?>
             <a href="?page=<?= $i ?>&<?= http_build_query(array_diff_key($_GET, ['page' => ''])) ?>"
-               class="px-3 py-1.5 text-sm rounded-lg <?= $i === ($pagination['current_page'] ?? 1) ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' ?>">
+               class="px-3 py-1.5 text-sm rounded-lg <?= $i === ($pages['current_page'] ?? 1) ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' ?>">
                 <?= $i ?>
             </a>
             <?php endfor; ?>

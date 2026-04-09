@@ -101,7 +101,7 @@ final class ProductController extends BaseAdminController
         $db = Database::getInstance();
 
         $brands     = $db->table('brands')->orderBy('name', 'ASC')->get();
-        $categories = $db->table('categories')->orderBy('position', 'ASC')->get();
+        $categories = $db->table('categories')->orderBy('id', 'ASC')->get();
         $vehicles   = $db->table('vehicles')
             ->leftJoin('brands', 'vehicles.brand_id', '=', 'brands.id')
             ->select('vehicles.*', 'brands.name as brand_name')
@@ -114,14 +114,25 @@ final class ProductController extends BaseAdminController
             $category['translation'] = $db->table('category_translations')
                 ->where('category_id', $category['id'])
                 ->first();
+            $category['name'] = $category['translation']['name'] ?? $category['slug'];
         }
         unset($category);
 
-        return $this->adminView('admin/products/create', [
-            'title'      => 'Create Product',
-            'brands'     => $brands,
-            'categories' => $categories,
-            'vehicles'   => $vehicles,
+        $attributes = $this->fetchActiveAttributes($db);
+
+        return $this->adminView('admin/products/form', [
+            'title'              => 'Create Product',
+            'formAction'         => '/admin/products',
+            'brands'             => $brands,
+            'categories'         => $categories,
+            'vehicles'           => $vehicles,
+            'selectedCategories' => [],
+            'selectedVehicles'   => [],
+            'translations'       => [],
+            'pricingData'        => [],
+            'images'             => [],
+            'attributes'         => $attributes,
+            'productAttributes'  => [],
         ]);
     }
 
@@ -217,7 +228,7 @@ final class ProductController extends BaseAdminController
             }
 
             // Attach categories
-            $categoryIds = $this->input('category_ids', []);
+            $categoryIds = $this->input('category_ids', $this->input('categories', []));
             if (is_array($categoryIds)) {
                 foreach ($categoryIds as $catId) {
                     $db->table('product_categories')->insert([
@@ -228,7 +239,7 @@ final class ProductController extends BaseAdminController
             }
 
             // Attach vehicles
-            $vehicleIds = $this->input('vehicle_ids', []);
+            $vehicleIds = $this->input('vehicle_ids', $this->input('vehicles', []));
             if (is_array($vehicleIds)) {
                 foreach ($vehicleIds as $vId) {
                     $db->table('product_vehicles')->insert([
@@ -237,6 +248,8 @@ final class ProductController extends BaseAdminController
                     ]);
                 }
             }
+
+            $this->syncProductAttributes($db, $productId, $this->input('attributes', []));
 
             $db->commit();
 
@@ -265,7 +278,7 @@ final class ProductController extends BaseAdminController
         }
 
         $brands     = $db->table('brands')->orderBy('name', 'ASC')->get();
-        $categories = $db->table('categories')->orderBy('position', 'ASC')->get();
+        $categories = $db->table('categories')->orderBy('id', 'ASC')->get();
         $vehicles   = $db->table('vehicles')
             ->leftJoin('brands', 'vehicles.brand_id', '=', 'brands.id')
             ->select('vehicles.*', 'brands.name as brand_name')
@@ -278,6 +291,7 @@ final class ProductController extends BaseAdminController
             $category['translation'] = $db->table('category_translations')
                 ->where('category_id', $category['id'])
                 ->first();
+            $category['name'] = $category['translation']['name'] ?? $category['slug'];
         }
         unset($category);
 
@@ -314,20 +328,34 @@ final class ProductController extends BaseAdminController
         // Load images
         $images = $db->table('product_images')
             ->where('product_id', $id)
-            ->orderBy('sort_order', 'ASC')
+            ->orderBy('position', 'ASC')
             ->get();
 
-        return $this->adminView('admin/products/edit', [
-            'title'               => 'Edit Product',
-            'product'             => $product,
-            'brands'              => $brands,
-            'categories'          => $categories,
-            'vehicles'            => $vehicles,
-            'translations'        => $translations,
-            'pricingData'         => $pricingData,
-            'attachedCategoryIds' => $attachedCategoryIds,
-            'attachedVehicleIds'  => $attachedVehicleIds,
-            'images'              => $images,
+        $attributes = $this->fetchActiveAttributes($db);
+        $productAttributes = [];
+        $productAttributeRows = $db->table('product_attributes')
+            ->where('product_id', $id)
+            ->whereNull('store_view_id')
+            ->get();
+
+        foreach ($productAttributeRows as $row) {
+            $productAttributes[$row['attribute_key']] = $row['attribute_value'];
+        }
+
+        return $this->adminView('admin/products/form', [
+            'title'              => 'Edit Product',
+            'formAction'         => '/admin/products/' . $id,
+            'product'            => $product,
+            'brands'             => $brands,
+            'categories'         => $categories,
+            'vehicles'           => $vehicles,
+            'translations'       => $translations,
+            'pricingData'        => $pricingData,
+            'selectedCategories' => $attachedCategoryIds,
+            'selectedVehicles'   => $attachedVehicleIds,
+            'images'             => $images,
+            'attributes'         => $attributes,
+            'productAttributes'  => $productAttributes,
         ]);
     }
 
@@ -458,7 +486,7 @@ final class ProductController extends BaseAdminController
 
             // Sync categories
             $db->table('product_categories')->where('product_id', $id)->delete();
-            $categoryIds = $this->input('category_ids', []);
+            $categoryIds = $this->input('category_ids', $this->input('categories', []));
             if (is_array($categoryIds)) {
                 foreach ($categoryIds as $catId) {
                     $db->table('product_categories')->insert([
@@ -470,7 +498,7 @@ final class ProductController extends BaseAdminController
 
             // Sync vehicles
             $db->table('product_vehicles')->where('product_id', $id)->delete();
-            $vehicleIds = $this->input('vehicle_ids', []);
+            $vehicleIds = $this->input('vehicle_ids', $this->input('vehicles', []));
             if (is_array($vehicleIds)) {
                 foreach ($vehicleIds as $vId) {
                     $db->table('product_vehicles')->insert([
@@ -479,6 +507,8 @@ final class ProductController extends BaseAdminController
                     ]);
                 }
             }
+
+            $this->syncProductAttributes($db, $id, $this->input('attributes', []));
 
             $db->commit();
 
@@ -534,5 +564,96 @@ final class ProductController extends BaseAdminController
         }
 
         return $this->redirect('/admin/products');
+    }
+
+    private function fetchActiveAttributes(Database $db): array
+    {
+        $attributes = $db->table('attributes')
+            ->where('is_active', 1)
+            ->orderBy('sort_order', 'ASC')
+            ->orderBy('label', 'ASC')
+            ->get();
+
+        foreach ($attributes as &$attribute) {
+            $attribute['options'] = [];
+            if (!empty($attribute['options_json'])) {
+                $decoded = json_decode((string) $attribute['options_json'], true);
+                if (is_array($decoded)) {
+                    $attribute['options'] = $decoded;
+                }
+            }
+        }
+        unset($attribute);
+
+        return $attributes;
+    }
+
+    private function syncProductAttributes(Database $db, int $productId, mixed $rawValues): void
+    {
+        $db->table('product_attributes')
+            ->where('product_id', $productId)
+            ->whereNull('store_view_id')
+            ->delete();
+
+        if (!is_array($rawValues) || empty($rawValues)) {
+            return;
+        }
+
+        $attributes = $this->fetchActiveAttributes($db);
+        $attributesById = [];
+        foreach ($attributes as $attribute) {
+            $attributesById[(int) $attribute['id']] = $attribute;
+        }
+
+        foreach ($rawValues as $attributeId => $value) {
+            $id = (int) $attributeId;
+            $attribute = $attributesById[$id] ?? null;
+            if (!$attribute) {
+                continue;
+            }
+
+            $normalized = $this->normalizeAttributeValue($attribute, $value);
+            if ($normalized === null) {
+                continue;
+            }
+
+            $db->table('product_attributes')->insert([
+                'product_id' => $productId,
+                'attribute_key' => $attribute['code'],
+                'attribute_value' => $normalized,
+                'store_view_id' => null,
+            ]);
+        }
+    }
+
+    private function normalizeAttributeValue(array $attribute, mixed $value): ?string
+    {
+        $type = (string) ($attribute['input_type'] ?? 'text');
+
+        if ($type === 'boolean') {
+            return in_array((string) $value, ['1', 'true', 'yes', 'on'], true) ? '1' : '0';
+        }
+
+        if ($value === null) {
+            return null;
+        }
+
+        $stringValue = trim((string) $value);
+        if ($stringValue === '') {
+            return null;
+        }
+
+        if ($type === 'number' && !is_numeric($stringValue)) {
+            return null;
+        }
+
+        if ($type === 'select') {
+            $allowed = $attribute['options'] ?? [];
+            if (!in_array($stringValue, $allowed, true)) {
+                return null;
+            }
+        }
+
+        return $stringValue;
     }
 }

@@ -116,7 +116,7 @@
                     </span>
                 </div>
                 <div class="flex justify-between"><span class="text-sm text-gray-500">Order Date</span><span class="text-sm text-gray-900"><?= $order['created_at'] ?></span></div>
-                <div class="flex justify-between"><span class="text-sm text-gray-500">Payment</span><span class="text-sm text-gray-900"><?= htmlspecialchars($order['payment_method'] ?? '—') ?></span></div>
+                <div class="flex justify-between"><span class="text-sm text-gray-500">Payment</span><span class="text-sm text-gray-900"><?= htmlspecialchars($order['payment_method_label'] ?? $order['payment_method'] ?? '—') ?></span></div>
                 <div class="flex justify-between"><span class="text-sm text-gray-500">Shipping</span><span class="text-sm text-gray-900"><?= htmlspecialchars($order['shipping_method'] ?? '—') ?></span></div>
                 <?php if (!empty($order['coupon_code'])): ?>
                 <div class="flex justify-between"><span class="text-sm text-gray-500">Coupon</span><span class="text-sm text-gray-900 font-mono"><?= htmlspecialchars($order['coupon_code']) ?></span></div>
@@ -124,6 +124,13 @@
                 <div class="flex justify-between"><span class="text-sm text-gray-500">IP</span><span class="text-sm text-gray-400"><?= htmlspecialchars($order['ip_address'] ?? '') ?></span></div>
             </div>
         </div>
+
+        <?php if (!empty($order['payment_instruction'])): ?>
+        <div class="bg-white rounded-xl border border-gray-200 p-6">
+            <h3 class="font-semibold text-gray-800 mb-3">Payment Instructions</h3>
+            <p class="text-sm text-gray-600 whitespace-pre-line"><?= htmlspecialchars((string) $order['payment_instruction']) ?></p>
+        </div>
+        <?php endif; ?>
 
         <!-- Customer Info -->
         <div class="bg-white rounded-xl border border-gray-200 p-6">
