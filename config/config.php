@@ -9,7 +9,7 @@ return [
     'app' => [
         'name' => Config::env('APP_NAME', 'StructBrew'),
         'url' => Config::env('APP_URL', 'http://localhost'),
-        'debug' => Config::env('APP_DEBUG', true),
+        'debug' => Config::env('APP_DEBUG', false),
         'timezone' => Config::env('APP_TIMEZONE', 'UTC'),
     ],
 
@@ -62,7 +62,8 @@ return [
         'path' => dirname(__DIR__) . '/public/uploads',
         'url' => '/uploads',
         'max_size' => 5 * 1024 * 1024, // 5MB
-        'allowed_types' => ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'],
+        // SVG intentionally excluded - SVGs can contain JavaScript (XSS vector)
+        'allowed_types' => ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
     ],
 
     // ─── Default Store ───────────────────────────────────────

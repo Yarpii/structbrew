@@ -264,22 +264,16 @@ class Seeder
             ]));
         }
 
-        // ─── Admin Role & User ───────────────────────────────
-        echo "  Seeding admin user...\n";
-        $roleId = $db->table('admin_roles')->insert([
+        // ─── Admin Role ──────────────────────────────────────
+        echo "  Seeding admin role...\n";
+        $db->table('admin_roles')->insert([
             'name' => 'Super Admin', 'permissions' => json_encode(['*']),
-            'created_at' => date('Y-m-d H;i:s'), 'updated_at' => date('Y-m-d H;i:s'),
+            'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'),
         ]);
 
-        $db->table('admin_users')->insert([
-            'role_id' => $roleId, 'email' => 'admin@structbrew.com',
-            'password_hash' => Auth::hashPassword('admin123'),
-            'first_name' => 'Admin', 'last_name' => 'User',
-            'is_active' => 1, 'is_superadmin' => 1,
-            'created_at' => date('Y-m-d H;i:s'), 'updated_at' => date('Y-m-d H;i:s'),
-        ]);
-
-        echo "  Done! Admin login: admin@structbrew.com / admin123\n";
+        // NOTE: Admin user must be created via `php brew admin:create` (interactive).
+        // Hardcoded default credentials are a security risk for production.
+        echo "  Done! Create an admin user with: php brew admin:create\n";
     }
 
     private static function seedMarketStructure(Database $db): array

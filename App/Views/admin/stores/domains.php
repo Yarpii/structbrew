@@ -11,7 +11,7 @@
 <div id="add-domain-form" class="hidden bg-white rounded-xl border border-gray-200 p-6 mb-6">
     <h3 class="font-semibold text-gray-800 mb-4">Add Domain Mapping</h3>
     <form method="POST" action="/admin/stores/domains" class="space-y-4">
-        <input type="hidden" name="_token" value="<?= \App\Core\Session::csrfToken() ?>">
+        <input type="hidden" name="_csrf_token" value="<?= \App\Core\Session::csrfToken() ?>">
         <div class="grid grid-cols-3 gap-4">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Domain</label>
@@ -58,7 +58,7 @@
                     <td class="px-6 py-3 text-center"><span class="w-2 h-2 rounded-full inline-block <?= $domain['is_active'] ? 'bg-green-500' : 'bg-gray-300' ?>"></span></td>
                     <td class="px-6 py-3 text-right">
                         <form method="POST" action="/admin/stores/domains/<?= $domain['id'] ?>/delete" class="inline" onsubmit="return confirm('Remove this domain?')">
-                            <input type="hidden" name="_token" value="<?= \App\Core\Session::csrfToken() ?>">
+                            <input type="hidden" name="_csrf_token" value="<?= \App\Core\Session::csrfToken() ?>">
                             <button type="submit" class="text-red-500 hover:text-red-700 text-xs">Remove</button>
                         </form>
                     </td>

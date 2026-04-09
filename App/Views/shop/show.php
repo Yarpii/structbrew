@@ -213,9 +213,10 @@
                         </button>
                     </div>
                     <button
-                        @click="for(let i = 0; i < qty; i++) { $store.cart.add({id: <?= $product['id'] ?>, name: '<?= addslashes($product['name']) ?>', price: <?= $product['price'] ?>, sale_price: <?= $product['sale_price'] ?? 'null' ?>, slug: '<?= $product['slug'] ?>'}); } added = true; qty = 1; setTimeout(() => added = false, 2000)"
+                        @click="for(let i = 0; i < qty; i++) { $store.cart.add(JSON.parse(document.getElementById('product-data').textContent)); } added = true; qty = 1; setTimeout(() => added = false, 2000)"
                         class="flex-1 inline-flex h-11 items-center justify-center gap-2 rounded-[var(--radius-button)] bg-[var(--color-accent)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"
                     >
+                    <script type="application/json" id="product-data"><?= json_encode(['id' => (int) $product['id'], 'name' => $product['name'], 'price' => (float) $product['price'], 'sale_price' => isset($product['sale_price']) ? (float) $product['sale_price'] : null, 'slug' => $product['slug']], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
                         <template x-if="!added">
                             <span class="inline-flex items-center gap-2">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>

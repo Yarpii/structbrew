@@ -195,9 +195,9 @@ $statusClasses = [
             $curPage    = $tickets['current_page'] ?? 1;
             $qs         = http_build_query(array_merge($_GET, ['page' => '__PAGE__']));
             for ($p = 1; $p <= $totalPages; $p++):
-                $url = '/admin/tickets?' . str_replace('__PAGE__', $p, $qs);
+                $url = '/admin/tickets?' . str_replace('__PAGE__', (string) $p, $qs);
             ?>
-            <a href="<?= $url ?>" class="px-3 py-1 rounded <?= $p == $curPage ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700' ?>"><?= $p ?></a>
+            <a href="<?= htmlspecialchars($url) ?>" class="px-3 py-1 rounded <?= $p == $curPage ? 'bg-blue-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700' ?>"><?= $p ?></a>
             <?php endfor; ?>
         </div>
     </div>

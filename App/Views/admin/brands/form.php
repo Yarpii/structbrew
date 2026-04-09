@@ -1,5 +1,5 @@
 <form method="POST" action="<?= $formAction ?? '/admin/brands' ?>" enctype="multipart/form-data" class="space-y-6">
-    <input type="hidden" name="_token" value="<?= \App\Core\Session::csrfToken() ?>">
+    <input type="hidden" name="_csrf_token" value="<?= \App\Core\Session::csrfToken() ?>">
 
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <!-- Main Content -->

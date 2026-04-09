@@ -48,7 +48,7 @@ final class AuthController extends Controller
 
         $validator = Validator::make($data, [
             'email'    => 'required|email',
-            'password' => 'required|min:6',
+            'password' => 'required|min:8',
         ]);
 
         if ($validator->fails()) {
@@ -70,6 +70,13 @@ final class AuthController extends Controller
      */
     public function logout(): Response
     {
+        // Verify CSRF token on logout to prevent CSRF logout attacks
+        $token = $this->input('_csrf_token', '');
+        if (!Session::verifyCsrf((string) $token)) {
+            Session::flash('error', 'Invalid security token.');
+            return $this->redirect('/admin');
+        }
+
         Auth::adminLogout();
         Session::flash('success', 'You have been logged out.');
         return $this->redirect('/admin/login');

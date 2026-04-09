@@ -43,9 +43,10 @@ final class App
             throw new ErrorException($message, 0, $severity, $file, $line);
         });
         set_exception_handler(function (Throwable $e): void {
-            http_response_code(500);
+            error_log("StructBrew: " . $e->getMessage() . "\n" . $e->getTraceAsString());
 
             if (!headers_sent()) {
+                http_response_code(500);
                 header('Content-Type: text/html; charset=utf-8');
             }
             echo '<h1>500 Internal Server Error</h1>';

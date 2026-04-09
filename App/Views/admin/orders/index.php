@@ -107,7 +107,7 @@
         <p class="text-sm text-gray-500">Showing <?= $orders['from'] ?> to <?= $orders['to'] ?> of <?= $orders['total'] ?></p>
         <div class="flex gap-1">
             <?php for ($i = 1; $i <= $orders['last_page']; $i++): ?>
-            <a href="?page=<?= $i ?>&<?= http_build_query(array_diff_key($_GET, ['page' => ''])) ?>"
+            <a href="?page=<?= $i ?>&<?= htmlspecialchars(http_build_query(array_diff_key($_GET, ['page' => '']))) ?>"
                class="px-3 py-1.5 text-sm rounded-lg <?= $i === $orders['current_page'] ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' ?>">
                 <?= $i ?>
             </a>

@@ -9,20 +9,54 @@ class Auth
     private static ?array $user = null;
     private static ?array $admin = null;
 
+    // ─── Brute-force protection ────────────────────────────────
+
+    private static function isRateLimited(string $key): bool
+    {
+        $attempts = Cache::get($key, 0);
+        return $attempts >= 5;
+    }
+
+    private static function incrementAttempts(string $key): void
+    {
+        $attempts = Cache::get($key, 0);
+        Cache::set($key, $attempts + 1, 900); // 15 min lockout window
+    }
+
+    private static function clearAttempts(string $key): void
+    {
+        Cache::forget($key);
+    }
+
     // ─── Customer Auth ───────────────────────────────────────
 
     public static function attempt(string $email, string $password): bool
     {
+        // Rate limit by email to prevent brute force
+        $rateLimitKey = 'login_attempts:' . hash('sha256', strtolower($email));
+        if (self::isRateLimited($rateLimitKey)) {
+            usleep(random_int(400000, 600000)); // Constant-ish delay
+            return false;
+        }
+
         $db = Database::getInstance();
         $customer = $db->table('customers')
             ->where('email', $email)
             ->where('is_active', 1)
             ->first();
 
-        if (!$customer || !password_verify($password, $customer['password_hash'])) {
+        // Constant-time comparison: always run password_verify to prevent timing attacks
+        $dummyHash = '$2y$12$StructBrewDummyHashForTimingAttackPreventionXXXXXXXXX';
+        $hash = $customer['password_hash'] ?? $dummyHash;
+        $valid = password_verify($password, $hash);
+
+        if (!$customer || !$valid) {
+            self::incrementAttempts($rateLimitKey);
+            usleep(random_int(200000, 500000)); // Add jitter to prevent timing analysis
             return false;
         }
 
+        self::clearAttempts($rateLimitKey);
         self::loginCustomer($customer);
         return true;
     }
@@ -76,16 +110,32 @@ class Auth
 
     public static function adminAttempt(string $email, string $password): bool
     {
+        // Rate limit admin login (stricter: 3 attempts)
+        $rateLimitKey = 'admin_login_attempts:' . hash('sha256', strtolower($email));
+        $attempts = Cache::get($rateLimitKey, 0);
+        if ($attempts >= 3) {
+            usleep(random_int(400000, 600000));
+            return false;
+        }
+
         $db = Database::getInstance();
         $admin = $db->table('admin_users')
             ->where('email', $email)
             ->where('is_active', 1)
             ->first();
 
-        if (!$admin || !password_verify($password, $admin['password_hash'])) {
+        // Constant-time: always run password_verify
+        $dummyHash = '$2y$12$StructBrewDummyHashForTimingAttackPreventionXXXXXXXXX';
+        $hash = $admin['password_hash'] ?? $dummyHash;
+        $valid = password_verify($password, $hash);
+
+        if (!$admin || !$valid) {
+            self::incrementAttempts($rateLimitKey);
+            usleep(random_int(200000, 500000));
             return false;
         }
 
+        self::clearAttempts($rateLimitKey);
         self::loginAdmin($admin);
         return true;
     }
@@ -164,6 +214,6 @@ class Auth
 
     public static function hashPassword(string $password): string
     {
-        return password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
+        return password_hash($password, PASSWORD_DEFAULT, ['cost' => 12]);
     }
 }

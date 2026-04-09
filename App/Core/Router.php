@@ -38,7 +38,7 @@ final class Router
                 return;
             }
         }
-        $this->sendResponse(Response::text("404 Not Found: $uri"), 404);
+        $this->sendResponse(Response::text("404 Not Found"), 404);
     }
     private function handle(callable|array $handler, Request $request, array $params): void
     {
@@ -51,6 +51,13 @@ final class Router
                     throw new RuntimeException("Controller not found: $controllerName");
                 }
                 $controller = new $controllerName();
+
+                // Check if the constructor set an early response (e.g. auth redirect)
+                if (method_exists($controller, 'getResponse') && $controller->getResponse() !== null) {
+                    $this->sendResponse($controller->getResponse());
+                    return;
+                }
+
                 if (!method_exists($controller, $method)) {
                     throw new RuntimeException("Controller method not found: $controllerName::$method");
                 }
@@ -74,11 +81,17 @@ final class Router
             }
             $this->sendResponse($response);
         } catch (Throwable $e) {
+            error_log("StructBrew Router: " . $e->getMessage() . "\n" . $e->getTraceAsString());
             if (!headers_sent()) {
                 http_response_code(500);
                 header('Content-Type: text/plain; charset=utf-8');
             }
-            echo "🔥 Internal Server Error\n\n" . $e->getMessage();
+            $debug = Config::get('app.debug', false);
+            if ($debug) {
+                echo "Internal Server Error\n\n" . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
+            } else {
+                echo "Internal Server Error";
+            }
         }
     }
     private function resolveControllerName(string $controllerName): string

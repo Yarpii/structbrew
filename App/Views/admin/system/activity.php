@@ -108,14 +108,14 @@
         </p>
         <div class="flex gap-1">
             <?php for ($i = 1; $i <= min($activities['last_page'], 10); $i++): ?>
-            <a href="?page=<?= $i ?>&<?= http_build_query(array_diff_key($_GET, ['page' => ''])) ?>"
+            <a href="?page=<?= $i ?>&<?= htmlspecialchars(http_build_query(array_diff_key($_GET, ['page' => '']))) ?>"
                class="px-3 py-1.5 text-sm rounded-lg <?= $i === ($activities['current_page'] ?? 1) ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' ?>">
                 <?= $i ?>
             </a>
             <?php endfor; ?>
             <?php if (($activities['last_page'] ?? 1) > 10): ?>
             <span class="px-2 py-1.5 text-sm text-gray-400">...</span>
-            <a href="?page=<?= $activities['last_page'] ?>&<?= http_build_query(array_diff_key($_GET, ['page' => ''])) ?>"
+            <a href="?page=<?= $activities['last_page'] ?>&<?= htmlspecialchars(http_build_query(array_diff_key($_GET, ['page' => '']))) ?>"
                class="px-3 py-1.5 text-sm rounded-lg text-gray-600 hover:bg-gray-100">
                 <?= $activities['last_page'] ?>
             </a>

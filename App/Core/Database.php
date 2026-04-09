@@ -46,7 +46,8 @@ class Database
                 PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$charset}",
             ]);
         } catch (PDOException $e) {
-            throw new PDOException("Database connection failed: " . $e->getMessage());
+            error_log("Database connection failed: " . $e->getMessage());
+            throw new PDOException("Database connection failed. Check server configuration.");
         }
     }
 
@@ -401,10 +402,10 @@ class Database
     {
         $sql = '';
         if ($this->limit !== null) {
-            $sql .= " LIMIT {$this->limit}";
+            $sql .= " LIMIT " . (int) $this->limit;
         }
         if ($this->offset !== null) {
-            $sql .= " OFFSET {$this->offset}";
+            $sql .= " OFFSET " . (int) $this->offset;
         }
         return $sql;
     }

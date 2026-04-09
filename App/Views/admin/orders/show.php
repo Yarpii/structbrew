@@ -147,7 +147,7 @@
         <div class="bg-white rounded-xl border border-gray-200 p-6">
             <h3 class="font-semibold text-gray-800 mb-3">Update Status</h3>
             <form method="POST" action="/admin/orders/<?= $order['id'] ?>/status" class="space-y-3">
-                <input type="hidden" name="_token" value="<?= \App\Core\Session::csrfToken() ?>">
+                <input type="hidden" name="_csrf_token" value="<?= \App\Core\Session::csrfToken() ?>">
                 <select name="status" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                     <?php foreach (['pending','processing','shipped','delivered','cancelled','refunded'] as $s): ?>
                     <option value="<?= $s ?>" <?= $order['status'] === $s ? 'selected' : '' ?>><?= ucfirst($s) ?></option>

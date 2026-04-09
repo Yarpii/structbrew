@@ -30,25 +30,34 @@ final class View
     {
         $path = self::resolvePath($view);
         if (!is_file($path)) {
-            throw new RuntimeException("View not found: $view (searched in: $path)");
+            throw new RuntimeException("View not found: " . basename($view));
         }
         $data = array_merge(self::$sharedData, $data);
-        extract($data, EXTR_SKIP);
-        ob_start();
-        try {
-            include $path;
-        } catch (Throwable $e) {
-            ob_end_clean();
-            throw $e;
-        }
-        $content = ob_get_clean() ?: '';
+
+        // Render in isolated closure scope to prevent variable pollution
+        $content = self::renderFile($path, $data);
+
         if (self::$defaultLayout && self::exists(self::$defaultLayout)) {
             $layoutPath = self::resolvePath(self::$defaultLayout);
-            ob_start();
-            include $layoutPath;
-            return ob_get_clean() ?: $content;
+            return self::renderFile($layoutPath, $data + ['content' => $content]);
         }
         return $content;
+    }
+    private static function renderFile(string $__path, array $__data): string
+    {
+        // Use closure to isolate variable scope from the rest of the application
+        $__render = static function (string $__file, array $__vars): string {
+            extract($__vars, EXTR_SKIP);
+            ob_start();
+            try {
+                include $__file;
+            } catch (Throwable $e) {
+                ob_end_clean();
+                throw $e;
+            }
+            return ob_get_clean() ?: '';
+        };
+        return $__render($__path, $__data);
     }
     private static function resolvePath(string $view): string
     {

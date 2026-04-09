@@ -43,7 +43,8 @@
             </div>
             <?php if ($product['in_stock']): ?>
                 <button
-                    @click="$store.cart.add({id: <?= $product['id'] ?>, name: '<?= addslashes($product['name']) ?>', price: <?= $product['price'] ?>, sale_price: <?= $product['sale_price'] ?? 'null' ?>, slug: '<?= $product['slug'] ?>'})"
+                    @click="$store.cart.add(JSON.parse(this.dataset.product))"
+                    data-product="<?= htmlspecialchars(json_encode(['id' => (int) $product['id'], 'name' => $product['name'], 'price' => (float) $product['price'], 'sale_price' => isset($product['sale_price']) ? (float) $product['sale_price'] : null, 'slug' => $product['slug']], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8') ?>"
                     class="inline-flex h-8 w-8 items-center justify-center rounded-[var(--radius-button)] bg-[var(--color-accent)] text-white transition hover:bg-[var(--color-accent-hover)]"
                     title="Add to cart"
                 >

@@ -26,7 +26,7 @@
             <?php endif; ?>
 
             <form method="POST" action="/admin/login" class="space-y-5">
-                <input type="hidden" name="_token" value="<?= \App\Core\Session::csrfToken() ?>">
+                <input type="hidden" name="_csrf_token" value="<?= \App\Core\Session::csrfToken() ?>">
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>

@@ -77,7 +77,7 @@ final class Bootstrap
             }
 
             $app = new App($rootPath, [
-                'debug'       => Config::get('app.debug', true),
+                'debug'       => Config::get('app.debug', false),
                 'timezone'    => Config::get('app.timezone', 'Europe/Amsterdam'),
                 'routes_path' => $routesPath,
             ]);
@@ -88,9 +88,18 @@ final class Bootstrap
     }
     private static function handleFatal(Throwable $e): void
     {
+        error_log("StructBrew Fatal: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+
         http_response_code(500);
         header('Content-Type: text/plain; charset=utf-8');
-        echo "Fatal error in Structbrew bootstrap:\n\n";
-        echo $e->getMessage() . "\n\n" . $e->getTraceAsString();
+
+        $debug = Config::get('app.debug', false);
+        if ($debug) {
+            echo "Fatal error in Structbrew bootstrap:\n\n";
+            echo htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . "\n\n";
+            echo htmlspecialchars($e->getTraceAsString(), ENT_QUOTES, 'UTF-8');
+        } else {
+            echo "An internal error occurred. Please try again later.";
+        }
     }
 }

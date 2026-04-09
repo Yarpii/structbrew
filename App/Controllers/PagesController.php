@@ -14,6 +14,16 @@ final class PagesController extends Controller
      */
     public function show(string $slug): Response
     {
+        // Whitelist validation: only allow known page slugs to prevent path traversal
+        if (!isset(self::TITLES[$slug])) {
+            return $this->text('404 Not Found', 404);
+        }
+
+        // Double-check: reject any slug with path traversal characters
+        if (preg_match('/[\/\\\\.]+/', $slug)) {
+            return $this->text('404 Not Found', 404);
+        }
+
         $viewFile = __DIR__ . '/../Views/pages/' . $slug . '.php';
 
         if (!is_file($viewFile)) {
@@ -21,7 +31,7 @@ final class PagesController extends Controller
         }
 
         return $this->view('pages.' . $slug, [
-            'title' => self::TITLES[$slug] ?? ucwords(str_replace('-', ' ', $slug)),
+            'title' => self::TITLES[$slug],
         ]);
     }
 
