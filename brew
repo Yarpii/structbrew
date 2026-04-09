@@ -1,0 +1,171 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * StructBrew CLI Tool
+ *
+ * Usage:
+ *   php brew migrate           - Run pending migrations
+ *   php brew migrate:rollback  - Rollback last batch
+ *   php brew migrate:reset     - Rollback all migrations
+ *   php brew migrate:fresh     - Drop all & re-migrate
+ *   php brew migrate:status    - Show migration status
+ *   php brew db:seed           - Seed the database
+ *   php brew cache:clear       - Clear file cache
+ *   php brew admin:create      - Create admin user
+ */
+
+declare(strict_types=1);
+
+// Bootstrap
+$basePath = __DIR__;
+require_once $basePath . '/Brew/Core/Config.php';
+
+use Brew\Core\Config;
+use Brew\Core\Database;
+use Brew\Core\Migration;
+use Brew\Core\Auth;
+use Brew\Core\Cache;
+
+// Register autoloader
+spl_autoload_register(function (string $class) use ($basePath) {
+    $prefix = 'Brew\\';
+    if (!str_starts_with($class, $prefix)) return;
+    $relative = substr($class, strlen($prefix));
+    $file = $basePath . '/Brew/' . str_replace('\\', '/', $relative) . '.php';
+    if (file_exists($file)) require_once $file;
+});
+
+// Load config
+Config::load($basePath . '/config');
+
+$command = $argv[1] ?? 'help';
+
+try {
+    switch ($command) {
+        case 'migrate':
+            $migration = new Migration();
+            $result = $migration->run();
+            echo $result['message'] . "\n";
+            foreach ($result['migrations'] as $m) echo "  ✓ {$m}\n";
+            break;
+
+        case 'migrate:rollback':
+            $migration = new Migration();
+            $result = $migration->rollback();
+            echo $result['message'] . "\n";
+            foreach ($result['migrations'] as $m) echo "  ↩ {$m}\n";
+            break;
+
+        case 'migrate:reset':
+            $migration = new Migration();
+            $result = $migration->reset();
+            echo $result['message'] . "\n";
+            break;
+
+        case 'migrate:fresh':
+            $migration = new Migration();
+            $result = $migration->fresh();
+            echo $result['message'] . "\n";
+            foreach ($result['migrations'] as $m) echo "  ✓ {$m}\n";
+            break;
+
+        case 'migrate:status':
+            $migration = new Migration();
+            $statuses = $migration->status();
+            echo str_pad('Migration', 50) . "Status\n";
+            echo str_repeat('─', 60) . "\n";
+            foreach ($statuses as $s) {
+                $icon = $s['status'] === 'Ran' ? '✓' : '○';
+                echo "  {$icon} " . str_pad($s['migration'], 48) . $s['status'] . "\n";
+            }
+            break;
+
+        case 'db:seed':
+            require_once $basePath . '/Brew/Data/Seeder.php';
+            echo "Seeding database...\n";
+            \Brew\Data\Seeder::run();
+            echo "Database seeded successfully.\n";
+            break;
+
+        case 'cache:clear':
+            Cache::flush();
+            echo "Cache cleared.\n";
+            break;
+
+        case 'admin:create':
+            echo "Create Admin User\n";
+            echo str_repeat('─', 30) . "\n";
+
+            echo "Email: ";
+            $email = trim(fgets(STDIN));
+
+            echo "Password: ";
+            system('stty -echo');
+            $password = trim(fgets(STDIN));
+            system('stty echo');
+            echo "\n";
+
+            echo "First name: ";
+            $firstName = trim(fgets(STDIN));
+
+            echo "Last name: ";
+            $lastName = trim(fgets(STDIN));
+
+            // Create default role if it doesn't exist
+            $db = Database::getInstance();
+            $role = $db->table('admin_roles')->where('name', 'Super Admin')->first();
+            if (!$role) {
+                $roleId = $db->table('admin_roles')->insert([
+                    'name' => 'Super Admin',
+                    'permissions' => json_encode(['*']),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ]);
+            } else {
+                $roleId = $role['id'];
+            }
+
+            $db->table('admin_users')->insert([
+                'role_id' => $roleId,
+                'email' => $email,
+                'password_hash' => Auth::hashPassword($password),
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'is_active' => 1,
+                'is_superadmin' => 1,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+
+            echo "\n✓ Admin user created: {$email}\n";
+            break;
+
+        case 'help':
+        default:
+            echo <<<HELP
+            StructBrew CLI
+
+            Usage: php brew <command>
+
+            Commands:
+              migrate              Run pending migrations
+              migrate:rollback     Rollback last batch
+              migrate:reset        Rollback all migrations
+              migrate:fresh        Drop all tables & re-migrate
+              migrate:status       Show migration status
+              db:seed              Seed the database with sample data
+              cache:clear          Clear file cache
+              admin:create         Create an admin user (interactive)
+              help                 Show this help message
+
+            HELP;
+            break;
+    }
+} catch (\Throwable $e) {
+    echo "Error: " . $e->getMessage() . "\n";
+    if (Config::get('app.debug')) {
+        echo $e->getTraceAsString() . "\n";
+    }
+    exit(1);
+}

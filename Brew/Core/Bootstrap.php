@@ -24,9 +24,34 @@ final class Bootstrap
             }
         });
         try {
+            // Load configuration
+            Config::load($rootPath . '/config');
+
+            // Start session
+            Session::start();
+
+            // Initialize store resolver (multi-store domain mapping)
+            try {
+                StoreResolver::resolve();
+                // Set translator locale from store view
+                $locale = StoreResolver::locale();
+                Translator::setLocale($locale);
+                Translator::loadFromDatabase();
+
+                // Share store data with all views
+                View::share('currentLocale', $locale);
+                View::share('currentLanguage', StoreResolver::language());
+                View::share('currentCurrency', StoreResolver::currency());
+                View::share('currentCurrencySymbol', StoreResolver::currencySymbol());
+                View::share('currentCountry', StoreResolver::country());
+                View::share('currentStoreView', StoreResolver::storeView());
+            } catch (Throwable $e) {
+                // Database might not be set up yet — continue without store resolution
+            }
+
             $app = new App($rootPath, [
-                'debug'       => true,
-                'timezone'    => 'Europe/Amsterdam',
+                'debug'       => Config::get('app.debug', true),
+                'timezone'    => Config::get('app.timezone', 'Europe/Amsterdam'),
                 'routes_path' => $routesPath,
             ]);
             $app->run();
