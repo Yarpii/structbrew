@@ -23,21 +23,21 @@
                     </div>
                     <div class="text-sm text-gray-500">x<?= $item['qty'] ?></div>
                     <div class="text-sm font-medium text-right w-24">
-                        <?= $order['currency_code'] ?> <?= number_format((float)$item['row_total'], 2) ?>
+                        <?= htmlspecialchars($order['currency_code'] ?? '') ?> <?= number_format((float)$item['row_total'], 2) ?>
                     </div>
                 </div>
                 <?php endforeach; ?>
             </div>
             <div class="px-6 py-4 bg-gray-50 space-y-2 border-t border-gray-200">
-                <div class="flex justify-between text-sm"><span class="text-gray-500">Subtotal</span><span><?= $order['currency_code'] ?> <?= number_format((float)$order['subtotal'], 2) ?></span></div>
-                <div class="flex justify-between text-sm"><span class="text-gray-500">Shipping</span><span><?= $order['currency_code'] ?> <?= number_format((float)$order['shipping_amount'], 2) ?></span></div>
-                <div class="flex justify-between text-sm"><span class="text-gray-500">Tax</span><span><?= $order['currency_code'] ?> <?= number_format((float)$order['tax_amount'], 2) ?></span></div>
+                <div class="flex justify-between text-sm"><span class="text-gray-500">Subtotal</span><span><?= htmlspecialchars($order['currency_code'] ?? '') ?> <?= number_format((float)$order['subtotal'], 2) ?></span></div>
+                <div class="flex justify-between text-sm"><span class="text-gray-500">Shipping</span><span><?= htmlspecialchars($order['currency_code'] ?? '') ?> <?= number_format((float)$order['shipping_amount'], 2) ?></span></div>
+                <div class="flex justify-between text-sm"><span class="text-gray-500">Tax</span><span><?= htmlspecialchars($order['currency_code'] ?? '') ?> <?= number_format((float)$order['tax_amount'], 2) ?></span></div>
                 <?php if ((float)($order['discount_amount'] ?? 0) > 0): ?>
-                <div class="flex justify-between text-sm"><span class="text-gray-500">Discount</span><span class="text-red-600">-<?= $order['currency_code'] ?> <?= number_format((float)$order['discount_amount'], 2) ?></span></div>
+                <div class="flex justify-between text-sm"><span class="text-gray-500">Discount</span><span class="text-red-600">-<?= htmlspecialchars($order['currency_code'] ?? '') ?> <?= number_format((float)$order['discount_amount'], 2) ?></span></div>
                 <?php endif; ?>
                 <div class="flex justify-between text-base font-semibold pt-2 border-t border-gray-200">
                     <span>Grand Total</span>
-                    <span><?= $order['currency_code'] ?> <?= number_format((float)$order['grand_total'], 2) ?></span>
+                    <span><?= htmlspecialchars($order['currency_code'] ?? '') ?> <?= number_format((float)$order['grand_total'], 2) ?></span>
                 </div>
             </div>
         </div>
@@ -137,7 +137,7 @@
             <h3 class="font-semibold text-gray-800 mb-3">Customer</h3>
             <p class="text-sm text-gray-900"><?= htmlspecialchars($order['customer_email']) ?></p>
             <?php if (!empty($order['customer_id'])): ?>
-            <a href="/admin/customers/<?= $order['customer_id'] ?>" class="text-xs text-blue-600 hover:text-blue-700 mt-1 inline-block">View customer profile</a>
+            <a href="/admin/customers/<?= (int) $order['customer_id'] ?>" class="text-xs text-blue-600 hover:text-blue-700 mt-1 inline-block">View customer profile</a>
             <?php else: ?>
             <p class="text-xs text-gray-400 mt-1">Guest order</p>
             <?php endif; ?>
@@ -146,7 +146,7 @@
         <!-- Update Status -->
         <div class="bg-white rounded-xl border border-gray-200 p-6">
             <h3 class="font-semibold text-gray-800 mb-3">Update Status</h3>
-            <form method="POST" action="/admin/orders/<?= $order['id'] ?>/status" class="space-y-3">
+            <form method="POST" action="/admin/orders/<?= (int) $order['id'] ?>/status" class="space-y-3">
                 <input type="hidden" name="_csrf_token" value="<?= \App\Core\Session::csrfToken() ?>">
                 <select name="status" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                     <?php foreach (['pending','processing','shipped','delivered','cancelled','refunded'] as $s): ?>

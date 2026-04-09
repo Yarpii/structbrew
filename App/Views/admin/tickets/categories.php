@@ -41,7 +41,7 @@
                     <div class="flex items-center justify-end gap-2">
                         <button onclick="openEditCat(<?= htmlspecialchars(json_encode($cat), ENT_QUOTES) ?>)"
                                 class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-md">Edit</button>
-                        <form method="POST" action="/admin/tickets/categories/<?= $cat['id'] ?>/delete" onsubmit="return confirm('Delete category?')">
+                        <form method="POST" action="/admin/tickets/categories/<?= (int) $cat['id'] ?>/delete" onsubmit="return confirm('Delete category?')">
                             <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
                             <button type="submit" class="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-medium rounded-md">Delete</button>
                         </form>
@@ -76,7 +76,7 @@
                 <select name="department_id" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                     <option value="">None</option>
                     <?php foreach ($departments as $d): ?>
-                    <option value="<?= $d['id'] ?>"><?= htmlspecialchars($d['name']) ?></option>
+                    <option value="<?= (int) $d['id'] ?>"><?= htmlspecialchars($d['name']) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -113,7 +113,7 @@
                 <select name="department_id" id="editCatDept" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                     <option value="">None</option>
                     <?php foreach ($departments as $d): ?>
-                    <option value="<?= $d['id'] ?>"><?= htmlspecialchars($d['name']) ?></option>
+                    <option value="<?= (int) $d['id'] ?>"><?= htmlspecialchars($d['name']) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>

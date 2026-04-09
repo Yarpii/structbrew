@@ -67,7 +67,7 @@ $sources   = ['web','email','phone','api','chat','admin'];
                     <select name="department_id" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                         <option value="">None</option>
                         <?php foreach ($departments as $d): ?>
-                        <option value="<?= $d['id'] ?>"><?= htmlspecialchars($d['name']) ?></option>
+                        <option value="<?= (int) $d['id'] ?>"><?= htmlspecialchars($d['name']) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -76,7 +76,7 @@ $sources   = ['web','email','phone','api','chat','admin'];
                     <select name="category_id" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                         <option value="">None</option>
                         <?php foreach ($categories as $c): ?>
-                        <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
+                        <option value="<?= (int) $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -87,7 +87,7 @@ $sources   = ['web','email','phone','api','chat','admin'];
                 <select name="assigned_agent_id" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                     <option value="">Unassigned</option>
                     <?php foreach ($agents as $a): ?>
-                    <option value="<?= $a['id'] ?>"><?= htmlspecialchars(trim($a['first_name'] . ' ' . $a['last_name'])) ?></option>
+                    <option value="<?= (int) $a['id'] ?>"><?= htmlspecialchars(trim($a['first_name'] . ' ' . $a['last_name'])) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -110,7 +110,7 @@ $sources   = ['web','email','phone','api','chat','admin'];
                 <select name="customer_id" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                     <option value="">Select customer...</option>
                     <?php foreach ($customers as $cust): ?>
-                    <option value="<?= $cust['id'] ?>"><?= htmlspecialchars($cust['email']) ?> — <?= htmlspecialchars(($cust['first_name'] ?? '') . ' ' . ($cust['last_name'] ?? '')) ?></option>
+                    <option value="<?= (int) $cust['id'] ?>"><?= htmlspecialchars($cust['email']) ?> — <?= htmlspecialchars(($cust['first_name'] ?? '') . ' ' . ($cust['last_name'] ?? '')) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>

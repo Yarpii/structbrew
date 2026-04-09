@@ -62,7 +62,7 @@
             <div class="ml-6 py-2 border-l-2 border-gray-200 pl-4 mb-2">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-medium text-gray-800"><?= htmlspecialchars($store['name']) ?> <span class="text-gray-400 font-mono text-xs">(<?= $store['code'] ?>)</span></p>
+                        <p class="text-sm font-medium text-gray-800"><?= htmlspecialchars($store['name']) ?> <span class="text-gray-400 font-mono text-xs">(<?= htmlspecialchars($store['code'] ?? '') ?>)</span></p>
                     </div>
                 </div>
                 <!-- Store Views under this store -->
@@ -72,7 +72,7 @@
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
                                 <p class="text-sm text-gray-600"><?= htmlspecialchars($view['name']) ?></p>
-                                <span class="text-xs text-gray-400"><?= $view['locale'] ?> / <?= $view['currency_code'] ?></span>
+                                <span class="text-xs text-gray-400"><?= htmlspecialchars($view['locale'] ?? '') ?> / <?= htmlspecialchars($view['currency_code'] ?? '') ?></span>
                                 <?php if ($view['is_default']): ?>
                                 <span class="px-1.5 py-0.5 bg-green-100 text-green-700 text-[10px] rounded">Default</span>
                                 <?php endif; ?>

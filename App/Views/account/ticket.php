@@ -71,13 +71,13 @@ $statusClasses = [
         <?php if (!in_array($ticket['status'], ['closed', 'resolved'])): ?>
         <div class="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
             <h3 class="text-sm font-semibold text-[var(--color-text)] mb-3">Reply</h3>
-            <form method="POST" action="/account/tickets/<?= $ticket['id'] ?>/reply">
+            <form method="POST" action="/account/tickets/<?= (int) $ticket['id'] ?>/reply">
                 <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
                 <textarea name="body" rows="5" placeholder="Type your message..."
                           class="w-full rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] px-3.5 py-2.5 text-sm text-[var(--color-text)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)] resize-y"
                           required></textarea>
                 <div class="mt-3 flex items-center justify-between">
-                    <form method="POST" action="/account/tickets/<?= $ticket['id'] ?>/close" class="inline">
+                    <form method="POST" action="/account/tickets/<?= (int) $ticket['id'] ?>/close" class="inline">
                         <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
                         <button type="submit" onclick="return confirm('Mark this ticket as resolved?')"
                                 class="text-sm text-[var(--color-muted)] hover:text-[var(--color-text)] underline transition">
@@ -90,15 +90,15 @@ $statusClasses = [
                     </button>
                 </div>
             </form>
-            <form id="replyForm" method="POST" action="/account/tickets/<?= $ticket['id'] ?>/reply" class="hidden">
+            <form id="replyForm" method="POST" action="/account/tickets/<?= (int) $ticket['id'] ?>/reply" class="hidden">
                 <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
             </form>
         </div>
         <?php else: ?>
         <div class="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-5 text-center">
-            <p class="text-sm text-[var(--color-muted)]">This ticket is <?= $ticket['status'] ?>.</p>
+            <p class="text-sm text-[var(--color-muted)]">This ticket is <?= htmlspecialchars($ticket['status'] ?? '') ?>.</p>
             <?php if ($ticket['status'] === 'resolved' || $ticket['status'] === 'closed'): ?>
-            <form method="POST" action="/account/tickets/<?= $ticket['id'] ?>/reopen" class="mt-3">
+            <form method="POST" action="/account/tickets/<?= (int) $ticket['id'] ?>/reopen" class="mt-3">
                 <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
                 <button type="submit" class="inline-flex h-9 items-center rounded-md border border-[var(--color-border)] px-4 text-sm font-medium text-[var(--color-text)] transition hover:bg-[var(--color-surface)]">
                     Reopen Ticket

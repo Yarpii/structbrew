@@ -46,7 +46,7 @@
                     <?php foreach ($storeViews ?? [] as $sv): ?>
                     <th class="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
                         <?= htmlspecialchars($sv['name']) ?>
-                        <span class="block text-[10px] text-gray-400 font-normal"><?= $sv['locale'] ?></span>
+                        <span class="block text-[10px] text-gray-400 font-normal"><?= htmlspecialchars($sv['locale'] ?? '') ?></span>
                     </th>
                     <?php endforeach; ?>
                 </tr>
@@ -85,8 +85,8 @@
                                   method="POST" action="/admin/content/translations/update"
                                   class="flex gap-1">
                                 <input type="hidden" name="_csrf_token" value="<?= \App\Core\Session::csrfToken() ?>">
-                                <input type="hidden" name="key_id" value="<?= $key['id'] ?>">
-                                <input type="hidden" name="store_view_id" value="<?= $sv['id'] ?>">
+                                <input type="hidden" name="key_id" value="<?= (int) $key['id'] ?>">
+                                <input type="hidden" name="store_view_id" value="<?= (int) $sv['id'] ?>">
                                 <input type="text" name="value" value="<?= htmlspecialchars($value) ?>"
                                        x-ref="input_<?= $fieldId ?>"
                                        @keydown.escape="editing = null"

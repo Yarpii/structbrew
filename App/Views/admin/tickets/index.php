@@ -70,7 +70,7 @@ $statusClasses = [
             <select name="department_id" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                 <option value="">All Departments</option>
                 <?php foreach ($departments as $d): ?>
-                <option value="<?= $d['id'] ?>" <?= ($deptId ?? 0) == $d['id'] ? 'selected' : '' ?>><?= htmlspecialchars($d['name']) ?></option>
+                <option value="<?= (int) $d['id'] ?>" <?= ($deptId ?? 0) == $d['id'] ? 'selected' : '' ?>><?= htmlspecialchars($d['name']) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -79,7 +79,7 @@ $statusClasses = [
             <select name="agent_id" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                 <option value="">All Agents</option>
                 <?php foreach ($agents as $a): ?>
-                <option value="<?= $a['id'] ?>" <?= ($agentId ?? 0) == $a['id'] ? 'selected' : '' ?>><?= htmlspecialchars(trim($a['first_name'] . ' ' . $a['last_name'])) ?></option>
+                <option value="<?= (int) $a['id'] ?>" <?= ($agentId ?? 0) == $a['id'] ? 'selected' : '' ?>><?= htmlspecialchars(trim($a['first_name'] . ' ' . $a['last_name'])) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -117,7 +117,7 @@ $statusClasses = [
                                 <span title="Escalated" class="mt-0.5 inline-flex w-2 h-2 rounded-full bg-red-500 flex-shrink-0"></span>
                                 <?php endif; ?>
                                 <div>
-                                    <a href="/admin/tickets/<?= $t['id'] ?>" class="font-semibold text-gray-900 hover:text-blue-600 transition-colors">
+                                    <a href="/admin/tickets/<?= (int) $t['id'] ?>" class="font-semibold text-gray-900 hover:text-blue-600 transition-colors">
                                         <?= htmlspecialchars($t['subject']) ?>
                                     </a>
                                     <p class="text-xs text-gray-400 mt-0.5"><?= htmlspecialchars($t['ticket_number']) ?></p>
@@ -167,7 +167,7 @@ $statusClasses = [
                             <?php endif; ?>
                         </td>
                         <td class="px-5 py-3 text-right">
-                            <a href="/admin/tickets/<?= $t['id'] ?>" class="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-medium rounded-md transition-colors">
+                            <a href="/admin/tickets/<?= (int) $t['id'] ?>" class="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-medium rounded-md transition-colors">
                                 View
                             </a>
                         </td>

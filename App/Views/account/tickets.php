@@ -41,7 +41,7 @@ $priorityDot = [
         <?php if (!empty($tickets)): ?>
         <div class="space-y-2">
             <?php foreach ($tickets as $t): ?>
-            <a href="/account/tickets/<?= $t['id'] ?>"
+            <a href="/account/tickets/<?= (int) $t['id'] ?>"
                class="block rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4 transition hover:border-[var(--color-accent)]/40">
                 <div class="flex items-start justify-between gap-4">
                     <div class="min-w-0">

@@ -21,7 +21,7 @@
                             <select name="parent_id" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                 <option value="">None (Root Category)</option>
                                 <?php foreach ($parentCategories ?? [] as $parent): ?>
-                                <option value="<?= $parent['id'] ?>" <?= ($category['parent_id'] ?? '') == $parent['id'] ? 'selected' : '' ?>>
+                                <option value="<?= (int) $parent['id'] ?>" <?= ($category['parent_id'] ?? '') == $parent['id'] ? 'selected' : '' ?>>
                                     <?= str_repeat('— ', $parent['depth'] ?? 0) ?><?= htmlspecialchars($parent['name'] ?? $parent['slug']) ?>
                                 </option>
                                 <?php endforeach; ?>
@@ -43,11 +43,11 @@
                 <!-- Store View Tabs -->
                 <div class="flex gap-1 border-b border-gray-200 mb-4 overflow-x-auto">
                     <?php foreach ($storeViews ?? [] as $sv): ?>
-                    <button type="button" @click="activeTab = '<?= $sv['id'] ?>'"
-                            :class="activeTab === '<?= $sv['id'] ?>' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                    <button type="button" @click="activeTab = '<?= (int) $sv['id'] ?>'"
+                            :class="activeTab === '<?= (int) $sv['id'] ?>' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
                             class="px-4 py-2 text-sm font-medium border-b-2 whitespace-nowrap transition-colors">
                         <?= htmlspecialchars($sv['name']) ?>
-                        <span class="text-xs text-gray-400">(<?= $sv['locale'] ?>)</span>
+                        <span class="text-xs text-gray-400">(<?= htmlspecialchars($sv['locale'] ?? '') ?>)</span>
                     </button>
                     <?php endforeach; ?>
                 </div>
@@ -55,29 +55,29 @@
                 <?php foreach ($storeViews ?? [] as $sv):
                     $trans = $translations[$sv['id']] ?? [];
                 ?>
-                <div x-show="activeTab === '<?= $sv['id'] ?>'" x-cloak class="space-y-4">
+                <div x-show="activeTab === '<?= (int) $sv['id'] ?>'" x-cloak class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Name <span class="text-red-500">*</span></label>
-                        <input type="text" name="translations[<?= $sv['id'] ?>][name]"
+                        <input type="text" name="translations[<?= (int) $sv['id'] ?>][name]"
                                value="<?= htmlspecialchars($trans['name'] ?? '') ?>"
                                class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                        <textarea name="translations[<?= $sv['id'] ?>][description]" rows="4"
+                        <textarea name="translations[<?= (int) $sv['id'] ?>][description]" rows="4"
                                   class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"><?= htmlspecialchars($trans['description'] ?? '') ?></textarea>
                     </div>
                     <!-- SEO -->
                     <div class="grid grid-cols-2 gap-4 pt-2 border-t border-gray-100">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
-                            <input type="text" name="translations[<?= $sv['id'] ?>][meta_title]"
+                            <input type="text" name="translations[<?= (int) $sv['id'] ?>][meta_title]"
                                    value="<?= htmlspecialchars($trans['meta_title'] ?? '') ?>"
                                    class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
-                            <input type="text" name="translations[<?= $sv['id'] ?>][meta_description]"
+                            <input type="text" name="translations[<?= (int) $sv['id'] ?>][meta_description]"
                                    value="<?= htmlspecialchars($trans['meta_description'] ?? '') ?>"
                                    class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         </div>
@@ -130,7 +130,7 @@
                 <div class="space-y-2 max-h-64 overflow-y-auto">
                     <?php foreach ($attributes as $attribute): ?>
                     <label class="flex items-start gap-2">
-                        <input type="checkbox" name="attribute_ids[]" value="<?= $attribute['id'] ?>"
+                        <input type="checkbox" name="attribute_ids[]" value="<?= (int) $attribute['id'] ?>"
                                <?= in_array((int) $attribute['id'], $selectedAttributes ?? [], true) ? 'checked' : '' ?>
                                class="mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                         <span class="text-sm text-gray-700">
@@ -152,7 +152,7 @@
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
                         <span class="text-gray-500">ID</span>
-                        <span class="text-gray-900"><?= $category['id'] ?></span>
+                        <span class="text-gray-900"><?= (int) $category['id'] ?></span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-500">Products</span>

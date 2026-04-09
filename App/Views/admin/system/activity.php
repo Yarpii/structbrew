@@ -17,7 +17,7 @@
             <select name="admin_user" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="">All Users</option>
                 <?php foreach ($adminUsers ?? [] as $au): ?>
-                <option value="<?= $au['id'] ?>" <?= ($_GET['admin_user'] ?? '') == $au['id'] ? 'selected' : '' ?>>
+                <option value="<?= (int) $au['id'] ?>" <?= ($_GET['admin_user'] ?? '') == $au['id'] ? 'selected' : '' ?>>
                     <?= htmlspecialchars(($au['first_name'] ?? '') . ' ' . ($au['last_name'] ?? '')) ?>
                 </option>
                 <?php endforeach; ?>

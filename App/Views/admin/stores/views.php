@@ -17,7 +17,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Store</label>
                 <select name="store_id" required class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                     <?php foreach ($stores ?? [] as $store): ?>
-                    <option value="<?= $store['id'] ?>"><?= htmlspecialchars($store['name']) ?></option>
+                    <option value="<?= (int) $store['id'] ?>"><?= htmlspecialchars($store['name']) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -89,13 +89,13 @@
                     <td class="px-6 py-3 font-medium text-gray-900"><?= htmlspecialchars($view['name']) ?></td>
                     <td class="px-6 py-3 text-gray-500 font-mono text-xs"><?= htmlspecialchars($view['code']) ?></td>
                     <td class="px-6 py-3 text-gray-500"><?= htmlspecialchars($view['store_name'] ?? '—') ?></td>
-                    <td class="px-6 py-3"><span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded"><?= $view['locale'] ?></span></td>
-                    <td class="px-6 py-3"><span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded"><?= $view['currency_code'] ?></span></td>
+                    <td class="px-6 py-3"><span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded"><?= htmlspecialchars($view['locale'] ?? '') ?></span></td>
+                    <td class="px-6 py-3"><span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded"><?= htmlspecialchars($view['currency_code'] ?? '') ?></span></td>
                     <td class="px-6 py-3 text-gray-500"><?= htmlspecialchars($view['theme']) ?></td>
                     <td class="px-6 py-3 text-center"><?= $view['is_default'] ? '<span class="text-blue-600">Yes</span>' : '—' ?></td>
                     <td class="px-6 py-3 text-center"><span class="w-2 h-2 rounded-full inline-block <?= $view['is_active'] ? 'bg-green-500' : 'bg-gray-300' ?>"></span></td>
                     <td class="px-6 py-3 text-right">
-                        <a href="/admin/stores/views/<?= $view['id'] ?>/edit" class="text-blue-600 hover:text-blue-700 text-xs">Edit</a>
+                        <a href="/admin/stores/views/<?= (int) $view['id'] ?>/edit" class="text-blue-600 hover:text-blue-700 text-xs">Edit</a>
                     </td>
                 </tr>
                 <?php endforeach; ?>

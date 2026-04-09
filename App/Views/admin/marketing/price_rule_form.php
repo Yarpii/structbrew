@@ -67,12 +67,12 @@
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     <?php foreach ($storeViews ?? [] as $sv): ?>
                     <label class="flex items-center gap-2 p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors cursor-pointer">
-                        <input type="checkbox" name="store_view_ids[]" value="<?= $sv['id'] ?>"
+                        <input type="checkbox" name="store_view_ids[]" value="<?= (int) $sv['id'] ?>"
                                <?= in_array($sv['id'], $selectedStoreViews ?? []) ? 'checked' : '' ?>
                                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                         <div>
                             <span class="text-sm text-gray-700"><?= htmlspecialchars($sv['name']) ?></span>
-                            <span class="block text-[10px] text-gray-400"><?= $sv['locale'] ?> / <?= $sv['currency_code'] ?></span>
+                            <span class="block text-[10px] text-gray-400"><?= htmlspecialchars($sv['locale'] ?? '') ?> / <?= htmlspecialchars($sv['currency_code'] ?? '') ?></span>
                         </div>
                     </label>
                     <?php endforeach; ?>
@@ -108,7 +108,7 @@
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
                         <span class="text-gray-500">ID</span>
-                        <span class="text-gray-900"><?= $rule['id'] ?></span>
+                        <span class="text-gray-900"><?= (int) $rule['id'] ?></span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-500">Times Used</span>

@@ -36,7 +36,7 @@ $types = [
                     <label class="block text-xs font-semibold text-[var(--color-text)] mb-1.5">Category</label>
                     <select name="type" class="w-full h-11 rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] px-3.5 text-sm text-[var(--color-text)]">
                         <?php foreach ($types as $key => $label): ?>
-                        <option value="<?= $key ?>" <?= (($_POST['type'] ?? '') === $key) ? 'selected' : '' ?>><?= $label ?></option>
+                        <option value="<?= htmlspecialchars($key) ?>" <?= (($_POST['type'] ?? '') === $key) ? 'selected' : '' ?>><?= htmlspecialchars($label) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -47,7 +47,7 @@ $types = [
                     <select name="department_id" class="w-full h-11 rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] px-3.5 text-sm text-[var(--color-text)]">
                         <option value="">Select department (optional)</option>
                         <?php foreach ($departments as $d): ?>
-                        <option value="<?= $d['id'] ?>"><?= htmlspecialchars($d['name']) ?></option>
+                        <option value="<?= (int) $d['id'] ?>"><?= htmlspecialchars($d['name']) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -73,7 +73,7 @@ $types = [
                     <select name="order_id" class="w-full h-11 rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] px-3.5 text-sm text-[var(--color-text)]">
                         <option value="">No related order</option>
                         <?php foreach ($orders as $order): ?>
-                        <option value="<?= $order['id'] ?>">#<?= htmlspecialchars($order['order_number']) ?> — <?= date('d M Y', strtotime($order['created_at'])) ?></option>
+                        <option value="<?= (int) $order['id'] ?>">#<?= htmlspecialchars($order['order_number']) ?> — <?= date('d M Y', strtotime($order['created_at'])) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>

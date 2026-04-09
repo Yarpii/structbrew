@@ -47,7 +47,7 @@
                     <div class="flex items-center justify-end gap-2">
                         <button onclick="openEditDept(<?= htmlspecialchars(json_encode($dept), ENT_QUOTES) ?>)"
                                 class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-md transition-colors">Edit</button>
-                        <form method="POST" action="/admin/tickets/departments/<?= $dept['id'] ?>/delete" onsubmit="return confirm('Delete this department?')">
+                        <form method="POST" action="/admin/tickets/departments/<?= (int) $dept['id'] ?>/delete" onsubmit="return confirm('Delete this department?')">
                             <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
                             <button type="submit" class="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-medium rounded-md transition-colors">Delete</button>
                         </form>
