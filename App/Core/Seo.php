@@ -260,8 +260,7 @@ final class Seo
      */
     private static function organizationSchema(): array
     {
-        $currentHost = $_SERVER['HTTP_HOST'] ?? 'scooterdynamics.com';
-        $currentHost = preg_replace('/:\d+$/', '', $currentHost);
+        $currentHost = self::trustedHost();
 
         return [
             '@context' => 'https://schema.org',
@@ -341,8 +340,7 @@ final class Seo
     private static function currentUrl(): string
     {
         $scheme = self::isSecure() ? 'https' : 'http';
-        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        $host = preg_replace('/:\d+$/', '', $host);
+        $host = self::trustedHost();
         $uri = strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
         return $scheme . '://' . $host . $uri;
     }
@@ -371,5 +369,44 @@ final class Seo
         return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
             || ($_SERVER['SERVER_PORT'] ?? 0) == 443
             || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https';
+    }
+
+    /**
+     * Resolve host from trusted sources (active store domains / APP_URL fallback).
+     */
+    private static function trustedHost(): string
+    {
+        $fallback = 'localhost';
+        $appUrl = (string) Config::get('app.url', '');
+        if ($appUrl !== '') {
+            $parsed = parse_url($appUrl, PHP_URL_HOST);
+            if (is_string($parsed) && $parsed !== '') {
+                $fallback = strtolower($parsed);
+            }
+        }
+
+        $requestHost = strtolower((string) preg_replace('/:\d+$/', '', (string) ($_SERVER['HTTP_HOST'] ?? '')));
+        if ($requestHost === '') {
+            return $fallback;
+        }
+
+        try {
+            $db = Database::getInstance();
+            $domains = $db->table('store_domains')
+                ->select('domain')
+                ->where('is_active', 1)
+                ->get();
+
+            foreach ($domains as $domainRow) {
+                $allowed = strtolower((string) ($domainRow['domain'] ?? ''));
+                if ($allowed !== '' && hash_equals($allowed, $requestHost)) {
+                    return $requestHost;
+                }
+            }
+        } catch (\Throwable $e) {
+            // ignore and use fallback
+        }
+
+        return $fallback;
     }
 }

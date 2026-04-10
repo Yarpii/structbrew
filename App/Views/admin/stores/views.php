@@ -35,7 +35,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Locale</label>
                 <select name="locale" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                     <?php foreach (['en_US','en_GB','nl_NL','de_DE','fr_FR','es_ES','it_IT','pt_PT','pl_PL','sv_SE','da_DK','nb_NO','fi_FI','cs_CZ','hu_HU','ro_RO','bg_BG','hr_HR','sk_SK','sl_SI','el_GR','tr_TR'] as $loc): ?>
-                    <option value="<?= $loc ?>"><?= $loc ?></option>
+                    <option value="<?= htmlspecialchars($loc) ?>"><?= htmlspecialchars($loc) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -43,7 +43,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Currency</label>
                 <select name="currency_code" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                     <?php foreach (['EUR','USD','GBP','CHF','SEK','NOK','DKK','PLN','CZK','HUF','RON','BGN','HRK','TRY'] as $cur): ?>
-                    <option value="<?= $cur ?>"><?= $cur ?></option>
+                    <option value="<?= htmlspecialchars($cur) ?>"><?= htmlspecialchars($cur) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -92,8 +92,8 @@
                     <td class="px-6 py-3"><span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded"><?= htmlspecialchars($view['locale'] ?? '') ?></span></td>
                     <td class="px-6 py-3"><span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded"><?= htmlspecialchars($view['currency_code'] ?? '') ?></span></td>
                     <td class="px-6 py-3 text-gray-500"><?= htmlspecialchars($view['theme']) ?></td>
-                    <td class="px-6 py-3 text-center"><?= $view['is_default'] ? '<span class="text-blue-600">Yes</span>' : '—' ?></td>
-                    <td class="px-6 py-3 text-center"><span class="w-2 h-2 rounded-full inline-block <?= $view['is_active'] ? 'bg-green-500' : 'bg-gray-300' ?>"></span></td>
+                    <td class="px-6 py-3 text-center"><?= !empty($view['is_default']) ? '<span class="text-blue-600">Yes</span>' : '—' ?></td>
+                    <td class="px-6 py-3 text-center"><span class="w-2 h-2 rounded-full inline-block <?= !empty($view['is_active']) ? 'bg-green-500' : 'bg-gray-300' ?>"></span></td>
                     <td class="px-6 py-3 text-right">
                         <a href="/admin/stores/views/<?= (int) $view['id'] ?>/edit" class="text-blue-600 hover:text-blue-700 text-xs">Edit</a>
                     </td>

@@ -22,7 +22,7 @@
                     <p class="text-sm text-[var(--color-muted)] leading-relaxed mb-4">"<?= htmlspecialchars($t['text']) ?>"</p>
                     <div class="flex items-center gap-3">
                         <div class="w-9 h-9 rounded-full bg-[var(--color-accent)]/10 flex items-center justify-center text-[var(--color-accent)] text-sm font-bold">
-                            <?= $t['name'][0] ?>
+                            <?= htmlspecialchars(substr((string) ($t['name'] ?? ''), 0, 1)) ?>
                         </div>
                         <div>
                             <p class="text-sm font-semibold text-[var(--color-text)]"><?= htmlspecialchars($t['name']) ?></p>

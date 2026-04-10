@@ -21,7 +21,7 @@
                         <p class="text-sm font-medium text-gray-900"><?= htmlspecialchars($item['name']) ?></p>
                         <p class="text-xs text-gray-500">SKU: <?= htmlspecialchars($item['sku']) ?></p>
                     </div>
-                    <div class="text-sm text-gray-500">x<?= $item['qty'] ?></div>
+                    <div class="text-sm text-gray-500">x<?= (int) ($item['qty'] ?? 0) ?></div>
                     <div class="text-sm font-medium text-right w-24">
                         <?= htmlspecialchars($order['currency_code'] ?? '') ?> <?= number_format((float)$item['row_total'], 2) ?>
                     </div>
@@ -83,12 +83,12 @@
                     <div class="w-2 h-2 rounded-full bg-blue-500 mt-2 flex-shrink-0"></div>
                     <div>
                         <p class="text-sm font-medium text-gray-900">
-                            Status changed to <span class="font-semibold"><?= ucfirst($history['status']) ?></span>
+                            Status changed to <span class="font-semibold"><?= htmlspecialchars(ucfirst((string) ($history['status'] ?? 'unknown'))) ?></span>
                         </p>
                         <?php if (!empty($history['comment'])): ?>
                         <p class="text-sm text-gray-500 mt-0.5"><?= htmlspecialchars($history['comment']) ?></p>
                         <?php endif; ?>
-                        <p class="text-xs text-gray-400 mt-1"><?= $history['created_at'] ?> by <?= htmlspecialchars($history['created_by'] ?? 'system') ?></p>
+                        <p class="text-xs text-gray-400 mt-1"><?= htmlspecialchars((string) ($history['created_at'] ?? '')) ?> by <?= htmlspecialchars($history['created_by'] ?? 'system') ?></p>
                     </div>
                 </div>
                 <?php endforeach; ?>
@@ -112,10 +112,10 @@
                             'cancelled' => 'bg-red-100 text-red-700',
                             default => 'bg-gray-100 text-gray-700',
                         } ?>">
-                        <?= ucfirst($order['status']) ?>
+                        <?= htmlspecialchars(ucfirst((string) ($order['status'] ?? 'unknown'))) ?>
                     </span>
                 </div>
-                <div class="flex justify-between"><span class="text-sm text-gray-500">Order Date</span><span class="text-sm text-gray-900"><?= $order['created_at'] ?></span></div>
+                <div class="flex justify-between"><span class="text-sm text-gray-500">Order Date</span><span class="text-sm text-gray-900"><?= htmlspecialchars((string) ($order['created_at'] ?? '')) ?></span></div>
                 <div class="flex justify-between"><span class="text-sm text-gray-500">Payment</span><span class="text-sm text-gray-900"><?= htmlspecialchars($order['payment_method_label'] ?? $order['payment_method'] ?? '—') ?></span></div>
                 <div class="flex justify-between"><span class="text-sm text-gray-500">Shipping</span><span class="text-sm text-gray-900"><?= htmlspecialchars($order['shipping_method'] ?? '—') ?></span></div>
                 <?php if (!empty($order['coupon_code'])): ?>
@@ -150,7 +150,7 @@
                 <input type="hidden" name="_csrf_token" value="<?= \App\Core\Session::csrfToken() ?>">
                 <select name="status" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                     <?php foreach (['pending','processing','shipped','delivered','cancelled','refunded'] as $s): ?>
-                    <option value="<?= $s ?>" <?= $order['status'] === $s ? 'selected' : '' ?>><?= ucfirst($s) ?></option>
+                    <option value="<?= htmlspecialchars((string) $s) ?>" <?= $order['status'] === $s ? 'selected' : '' ?>><?= htmlspecialchars(ucfirst((string) $s)) ?></option>
                     <?php endforeach; ?>
                 </select>
                 <textarea name="comment" rows="2" placeholder="Add a comment (optional)"

@@ -4,7 +4,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm text-gray-500">Total Revenue</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1"><?= $stats['revenue'] ?? '0.00' ?></p>
+                <p class="text-2xl font-bold text-gray-900 mt-1"><?= htmlspecialchars((string) ($stats['revenue'] ?? '0.00')) ?></p>
             </div>
             <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                 <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -22,7 +22,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm text-gray-500">Orders</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1"><?= $stats['orders'] ?? 0 ?></p>
+                <p class="text-2xl font-bold text-gray-900 mt-1"><?= (int) ($stats['orders'] ?? 0) ?></p>
             </div>
             <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
                 <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -37,7 +37,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm text-gray-500">Products</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1"><?= $stats['products'] ?? 0 ?></p>
+                <p class="text-2xl font-bold text-gray-900 mt-1"><?= (int) ($stats['products'] ?? 0) ?></p>
             </div>
             <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
                 <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -52,7 +52,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm text-gray-500">Customers</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1"><?= $stats['customers'] ?? 0 ?></p>
+                <p class="text-2xl font-bold text-gray-900 mt-1"><?= (int) ($stats['customers'] ?? 0) ?></p>
             </div>
             <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
                 <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,7 +93,7 @@
                                 default => 'bg-gray-100 text-gray-700',
                             };
                             ?>">
-                            <?= ucfirst($order['status']) ?>
+                            <?= htmlspecialchars(ucfirst((string) ($order['status'] ?? 'unknown'))) ?>
                         </span>
                     </div>
                 </div>
@@ -119,7 +119,7 @@
                         <p class="text-xs text-gray-500"><?= htmlspecialchars($product['name'] ?? $product['sku']) ?></p>
                     </div>
                     <span class="inline-block px-2 py-0.5 text-xs rounded-full <?= $product['stock_qty'] <= 0 ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700' ?>">
-                        <?= $product['stock_qty'] ?> in stock
+                        <?= (int) ($product['stock_qty'] ?? 0) ?> in stock
                     </span>
                 </div>
                 <?php endforeach; ?>
@@ -151,8 +151,8 @@
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-3 font-medium text-gray-900"><?= htmlspecialchars($store['name']) ?></td>
                         <td class="px-6 py-3 text-gray-500"><?= htmlspecialchars($store['locale']) ?></td>
-                        <td class="px-6 py-3 text-right text-gray-900"><?= $store['order_count'] ?? 0 ?></td>
-                        <td class="px-6 py-3 text-right font-medium text-gray-900"><?= $store['revenue'] ?? '0.00' ?></td>
+                        <td class="px-6 py-3 text-right text-gray-900"><?= (int) ($store['order_count'] ?? 0) ?></td>
+                        <td class="px-6 py-3 text-right font-medium text-gray-900"><?= htmlspecialchars((string) ($store['revenue'] ?? '0.00')) ?></td>
                     </tr>
                     <?php endforeach; ?>
                 <?php else: ?>

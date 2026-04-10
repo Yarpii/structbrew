@@ -16,7 +16,7 @@
         useCredits: false,
         selectedPaymentMethod: <?= json_encode((string) ($defaultPaymentMethod ?? 'manual_checkout'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
         paymentMethods: <?= json_encode(array_values($paymentMethods ?? []), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
-        creditsEnabled: <?= !empty($creditsEnabled) ? 'true' : 'false' ?>,
+        creditsEnabled: <?= json_encode(!empty($creditsEnabled), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
         creditsBalance: <?= json_encode((float) ($creditsBalance ?? 0.0), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
         async checkout() {
             this.checkoutError = '';

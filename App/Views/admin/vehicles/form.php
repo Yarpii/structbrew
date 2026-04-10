@@ -79,11 +79,11 @@
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-500">Compatible Products</span>
-                        <span class="text-gray-900"><?= $vehicle['product_count'] ?? 0 ?></span>
+                        <span class="text-gray-900"><?= (int) ($vehicle['product_count'] ?? 0) ?></span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-500">Created</span>
-                        <span class="text-gray-900"><?= $vehicle['created_at'] ?? '—' ?></span>
+                        <span class="text-gray-900"><?= htmlspecialchars((string) ($vehicle['created_at'] ?? '—')) ?></span>
                     </div>
                 </div>
             </div>

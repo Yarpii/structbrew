@@ -102,7 +102,7 @@
                     if ($item['section'] === 'header'):
                 ?>
                     <div class="pt-4 pb-1 px-3" x-show="sidebarOpen" x-cloak>
-                        <span class="text-xs font-semibold text-slate-400 tracking-wider"><?= $item['label'] ?></span>
+                        <span class="text-xs font-semibold text-slate-400 tracking-wider"><?= htmlspecialchars((string) $item['label']) ?></span>
                     </div>
                 <?php else:
                     $isActive = ($currentPath === $item['url']) || ($item['url'] !== '/admin' && str_starts_with($currentPath, $item['url']));
@@ -147,7 +147,7 @@
                     <div class="flex items-center gap-2" x-data="{ open: false }">
                         <button @click="open = !open" class="flex items-center gap-2 text-sm text-gray-700 hover:text-gray-900">
                             <div class="w-8 h-8 bg-admin-accent rounded-full flex items-center justify-center text-white text-xs font-semibold">
-                                <?= strtoupper(substr($adminUser['first_name'] ?? 'A', 0, 1) . substr($adminUser['last_name'] ?? 'D', 0, 1)) ?>
+                                <?= htmlspecialchars(strtoupper(substr((string) ($adminUser['first_name'] ?? 'A'), 0, 1) . substr((string) ($adminUser['last_name'] ?? 'D'), 0, 1))) ?>
                             </div>
                             <span><?= htmlspecialchars(($adminUser['first_name'] ?? 'Admin') . ' ' . ($adminUser['last_name'] ?? '')) ?></span>
                         </button>

@@ -1,6 +1,14 @@
 <?php
 /** @var array $product */
 /** @var array $categories */
+$badgeClassMap = [
+    'Sale' => 'bg-[var(--color-accent)] text-white',
+    'New' => 'bg-emerald-500 text-white',
+    'Bestseller' => 'bg-amber-500 text-white',
+    'Popular' => 'bg-blue-500 text-white',
+    'Out of Stock' => 'bg-gray-500 text-white',
+];
+$badgeClass = $badgeClassMap[(string) ($product['badge'] ?? '')] ?? '';
 ?>
 <div class="product-card group rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5" style="box-shadow: var(--shadow-sm)">
     <a href="/shop/<?= htmlspecialchars($product['slug']) ?>" class="block relative aspect-square bg-[var(--color-bg)] overflow-hidden">
@@ -11,11 +19,7 @@
         </div>
         <?php if ($product['badge']): ?>
             <span class="absolute top-2.5 left-2.5 rounded-full px-2.5 py-0.5 text-xs font-semibold
-                <?= $product['badge'] === 'Sale' ? 'bg-[var(--color-accent)] text-white' : '' ?>
-                <?= $product['badge'] === 'New' ? 'bg-emerald-500 text-white' : '' ?>
-                <?= $product['badge'] === 'Bestseller' ? 'bg-amber-500 text-white' : '' ?>
-                <?= $product['badge'] === 'Popular' ? 'bg-blue-500 text-white' : '' ?>
-                <?= $product['badge'] === 'Out of Stock' ? 'bg-gray-500 text-white' : '' ?>
+                <?= htmlspecialchars($badgeClass) ?>
             "><?= htmlspecialchars($product['badge']) ?></span>
         <?php endif; ?>
     </a>
@@ -30,7 +34,7 @@
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="<?= $i < round($product['rating']) ? 'currentColor' : 'none' ?>" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 <?php endfor; ?>
             </div>
-            <span class="text-xs text-[var(--color-muted)]">(<?= $product['reviews'] ?>)</span>
+            <span class="text-xs text-[var(--color-muted)]">(<?= (int) ($product['reviews'] ?? 0) ?>)</span>
         </div>
         <div class="flex items-center justify-between mt-3">
             <div class="flex items-baseline gap-1.5">
