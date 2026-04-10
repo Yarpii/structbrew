@@ -150,7 +150,7 @@
                 <input type="hidden" name="_csrf_token" value="<?= \App\Core\Session::csrfToken() ?>">
                 <select name="status" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                     <?php foreach (['pending','processing','shipped','delivered','cancelled','refunded'] as $s): ?>
-                    <option value="<?= $s ?>" <?= $order['status'] === $s ? 'selected' : '' ?>><?= ucfirst($s) ?></option>
+                    <option value="<?= htmlspecialchars((string) $s) ?>" <?= $order['status'] === $s ? 'selected' : '' ?>><?= htmlspecialchars(ucfirst((string) $s)) ?></option>
                     <?php endforeach; ?>
                 </select>
                 <textarea name="comment" rows="2" placeholder="Add a comment (optional)"
