@@ -23,7 +23,7 @@
             <select name="status" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                 <option value="">All</option>
                 <?php foreach (['pending','processing','shipped','delivered','cancelled','refunded'] as $s): ?>
-                <option value="<?= $s ?>" <?= ($_GET['status'] ?? '') === $s ? 'selected' : '' ?>><?= ucfirst($s) ?></option>
+                <option value="<?= htmlspecialchars($s) ?>" <?= ($_GET['status'] ?? '') === $s ? 'selected' : '' ?>><?= ucfirst($s) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -32,7 +32,7 @@
             <select name="store_view" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                 <option value="">All</option>
                 <?php foreach ($storeViews ?? [] as $sv): ?>
-                <option value="<?= $sv['id'] ?>" <?= ($_GET['store_view'] ?? '') == $sv['id'] ? 'selected' : '' ?>><?= htmlspecialchars($sv['name']) ?></option>
+                <option value="<?= (int) $sv['id'] ?>" <?= ($_GET['store_view'] ?? '') == $sv['id'] ? 'selected' : '' ?>><?= htmlspecialchars($sv['name']) ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -62,7 +62,7 @@
                     <?php foreach ($orders['data'] as $order): ?>
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-3">
-                            <a href="/admin/orders/<?= $order['id'] ?>" class="font-medium text-blue-600 hover:text-blue-700">
+                            <a href="/admin/orders/<?= (int) $order['id'] ?>" class="font-medium text-blue-600 hover:text-blue-700">
                                 #<?= htmlspecialchars($order['order_number']) ?>
                             </a>
                         </td>
@@ -89,7 +89,7 @@
                         <td class="px-6 py-3 text-right font-medium"><?= htmlspecialchars($order['currency_code'] ?? '') ?> <?= number_format((float)($order['grand_total'] ?? 0), 2) ?></td>
                         <td class="px-6 py-3 text-right text-gray-500 text-xs"><?= $order['created_at'] ?? '' ?></td>
                         <td class="px-6 py-3 text-right">
-                            <a href="/admin/orders/<?= $order['id'] ?>" class="p-1.5 text-gray-400 hover:text-blue-600 rounded-lg hover:bg-blue-50 inline-block">
+                            <a href="/admin/orders/<?= (int) $order['id'] ?>" class="p-1.5 text-gray-400 hover:text-blue-600 rounded-lg hover:bg-blue-50 inline-block">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                             </a>
                         </td>

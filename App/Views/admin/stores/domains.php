@@ -21,7 +21,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Store View</label>
                 <select name="store_view_id" required class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                     <?php foreach ($allStoreViews ?? [] as $sv): ?>
-                    <option value="<?= $sv['id'] ?>"><?= htmlspecialchars($sv['name']) ?> (<?= $sv['locale'] ?>)</option>
+                    <option value="<?= (int) $sv['id'] ?>"><?= htmlspecialchars($sv['name']) ?> (<?= htmlspecialchars($sv['locale'] ?? '') ?>)</option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -57,7 +57,7 @@
                     <td class="px-6 py-3 text-center"><?= $domain['is_primary'] ? '<span class="text-blue-600 text-xs font-medium">Primary</span>' : '—' ?></td>
                     <td class="px-6 py-3 text-center"><span class="w-2 h-2 rounded-full inline-block <?= $domain['is_active'] ? 'bg-green-500' : 'bg-gray-300' ?>"></span></td>
                     <td class="px-6 py-3 text-right">
-                        <form method="POST" action="/admin/stores/domains/<?= $domain['id'] ?>/delete" class="inline" onsubmit="return confirm('Remove this domain?')">
+                        <form method="POST" action="/admin/stores/domains/<?= (int) $domain['id'] ?>/delete" class="inline" onsubmit="return confirm('Remove this domain?')">
                             <input type="hidden" name="_csrf_token" value="<?= \App\Core\Session::csrfToken() ?>">
                             <button type="submit" class="text-red-500 hover:text-red-700 text-xs">Remove</button>
                         </form>

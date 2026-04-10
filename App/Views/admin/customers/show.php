@@ -29,7 +29,7 @@
                             <?php foreach ($orders as $order): ?>
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-3">
-                                    <a href="/admin/orders/<?= $order['id'] ?>" class="font-medium text-blue-600 hover:text-blue-700">
+                                    <a href="/admin/orders/<?= (int) $order['id'] ?>" class="font-medium text-blue-600 hover:text-blue-700">
                                         #<?= htmlspecialchars($order['order_number']) ?>
                                     </a>
                                 </td>
@@ -177,13 +177,13 @@
         <div class="bg-white rounded-xl border border-gray-200 p-6">
             <h3 class="font-semibold text-gray-800 mb-4">Actions</h3>
             <div class="space-y-3">
-                <a href="/admin/customers/<?= $customer['id'] ?>/edit"
+                <a href="/admin/customers/<?= (int) $customer['id'] ?>/edit"
                    class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                     Edit Customer
                 </a>
                 <?php if ($customer['is_active'] ?? 1): ?>
-                <form method="POST" action="/admin/customers/<?= $customer['id'] ?>/deactivate" onsubmit="return confirm('Deactivate this customer account?')">
+                <form method="POST" action="/admin/customers/<?= (int) $customer['id'] ?>/deactivate" onsubmit="return confirm('Deactivate this customer account?')">
                     <input type="hidden" name="_csrf_token" value="<?= \App\Core\Session::csrfToken() ?>">
                     <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 text-sm font-medium rounded-lg transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
@@ -191,7 +191,7 @@
                     </button>
                 </form>
                 <?php else: ?>
-                <form method="POST" action="/admin/customers/<?= $customer['id'] ?>/activate">
+                <form method="POST" action="/admin/customers/<?= (int) $customer['id'] ?>/activate">
                     <input type="hidden" name="_csrf_token" value="<?= \App\Core\Session::csrfToken() ?>">
                     <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-green-50 hover:bg-green-100 text-green-600 text-sm font-medium rounded-lg transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>

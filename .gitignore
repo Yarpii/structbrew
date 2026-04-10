@@ -1,0 +1,31 @@
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+
+# Storage (logs, cache, sessions)
+/storage/cache/*
+/storage/sessions/*
+/storage/logs/*
+!/storage/.gitignore
+!/storage/sessions/.gitignore
+
+# Uploads
+/public/uploads/*
+!/public/uploads/.gitkeep
+
+# IDE and OS files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Dependencies
+/vendor/
+/node_modules/
+
+# Compiled/generated
+*.phar

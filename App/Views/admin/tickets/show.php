@@ -54,7 +54,7 @@ $types     = ['order_support','product_inquiry','technical','billing','shipping'
     <div class="flex items-center gap-2 flex-shrink-0">
         <!-- Escalate -->
         <?php if (!(int)($ticket['is_escalated'] ?? 0)): ?>
-        <form method="POST" action="/admin/tickets/<?= $ticket['id'] ?>/escalate" onsubmit="return confirm('Escalate this ticket to critical?')">
+        <form method="POST" action="/admin/tickets/<?= (int) $ticket['id'] ?>/escalate" onsubmit="return confirm('Escalate this ticket to critical?')">
             <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
             <button type="submit" class="px-3 py-2 bg-orange-50 hover:bg-orange-100 text-orange-700 text-xs font-medium rounded-lg border border-orange-200 transition-colors">
                 Escalate
@@ -123,7 +123,7 @@ $types     = ['order_support','product_inquiry','technical','billing','shipping'
         <?php if (!in_array($ticket['status'], ['closed', 'resolved'])): ?>
         <div class="bg-white rounded-xl border border-gray-200 p-5" x-data="{ internal: false, body: '', cannedId: '' }">
             <h3 class="text-sm font-semibold text-gray-800 mb-4">Add Reply</h3>
-            <form method="POST" action="/admin/tickets/<?= $ticket['id'] ?>/reply">
+            <form method="POST" action="/admin/tickets/<?= (int) $ticket['id'] ?>/reply">
                 <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
                 <input type="hidden" name="is_internal" :value="internal ? '1' : '0'">
 
@@ -134,7 +134,7 @@ $types     = ['order_support','product_inquiry','technical','billing','shipping'
                             class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm text-gray-600">
                         <option value="">— Insert canned response —</option>
                         <?php foreach ($cannedAll as $cr): ?>
-                        <option value="<?= $cr['id'] ?>"><?= htmlspecialchars($cr['name']) ?></option>
+                        <option value="<?= (int) $cr['id'] ?>"><?= htmlspecialchars($cr['name']) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -172,7 +172,7 @@ $types     = ['order_support','product_inquiry','technical','billing','shipping'
             <?php if (!empty($ticket['customer_first'])): ?>
             <p class="text-sm font-semibold text-gray-800"><?= htmlspecialchars($ticket['customer_first'] . ' ' . $ticket['customer_last']) ?></p>
             <p class="text-xs text-gray-400"><?= htmlspecialchars($ticket['customer_email_addr'] ?? '') ?></p>
-            <a href="/admin/customers/<?= $ticket['customer_id'] ?>" class="mt-2 inline-block text-xs text-blue-600 hover:underline">View customer →</a>
+            <a href="/admin/customers/<?= (int) $ticket['customer_id'] ?>" class="mt-2 inline-block text-xs text-blue-600 hover:underline">View customer →</a>
             <?php elseif (!empty($ticket['guest_email'])): ?>
             <p class="text-sm font-semibold text-gray-800"><?= htmlspecialchars($ticket['guest_name'] ?? 'Guest') ?></p>
             <p class="text-xs text-gray-400"><?= htmlspecialchars($ticket['guest_email']) ?></p>
@@ -207,7 +207,7 @@ $types     = ['order_support','product_inquiry','technical','billing','shipping'
         <!-- Edit Properties -->
         <div class="bg-white rounded-xl border border-gray-200 p-4">
             <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Properties</h3>
-            <form method="POST" action="/admin/tickets/<?= $ticket['id'] ?>/update" class="space-y-3">
+            <form method="POST" action="/admin/tickets/<?= (int) $ticket['id'] ?>/update" class="space-y-3">
                 <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
                 <input type="hidden" name="subject" value="<?= htmlspecialchars($ticket['subject']) ?>">
 
@@ -240,7 +240,7 @@ $types     = ['order_support','product_inquiry','technical','billing','shipping'
                     <select name="department_id" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                         <option value="">None</option>
                         <?php foreach ($departments as $d): ?>
-                        <option value="<?= $d['id'] ?>" <?= ($ticket['department_id'] ?? '') == $d['id'] ? 'selected' : '' ?>><?= htmlspecialchars($d['name']) ?></option>
+                        <option value="<?= (int) $d['id'] ?>" <?= ($ticket['department_id'] ?? '') == $d['id'] ? 'selected' : '' ?>><?= htmlspecialchars($d['name']) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -249,7 +249,7 @@ $types     = ['order_support','product_inquiry','technical','billing','shipping'
                     <select name="category_id" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                         <option value="">None</option>
                         <?php foreach ($categories as $c): ?>
-                        <option value="<?= $c['id'] ?>" <?= ($ticket['category_id'] ?? '') == $c['id'] ? 'selected' : '' ?>><?= htmlspecialchars($c['name']) ?></option>
+                        <option value="<?= (int) $c['id'] ?>" <?= ($ticket['category_id'] ?? '') == $c['id'] ? 'selected' : '' ?>><?= htmlspecialchars($c['name']) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -258,7 +258,7 @@ $types     = ['order_support','product_inquiry','technical','billing','shipping'
                     <select name="assigned_agent_id" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                         <option value="">Unassigned</option>
                         <?php foreach ($agents as $a): ?>
-                        <option value="<?= $a['id'] ?>" <?= ($ticket['assigned_agent_id'] ?? '') == $a['id'] ? 'selected' : '' ?>><?= htmlspecialchars(trim($a['first_name'] . ' ' . $a['last_name'])) ?></option>
+                        <option value="<?= (int) $a['id'] ?>" <?= ($ticket['assigned_agent_id'] ?? '') == $a['id'] ? 'selected' : '' ?>><?= htmlspecialchars(trim($a['first_name'] . ' ' . $a['last_name'])) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -287,8 +287,8 @@ $types     = ['order_support','product_inquiry','technical','billing','shipping'
         <?php if (!empty($ticket['order_id'])): ?>
         <div class="bg-white rounded-xl border border-gray-200 p-4">
             <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Linked Order</h3>
-            <a href="/admin/orders/<?= $ticket['order_id'] ?>" class="text-sm text-blue-600 hover:underline">
-                View Order #<?= $ticket['order_id'] ?>
+            <a href="/admin/orders/<?= (int) $ticket['order_id'] ?>" class="text-sm text-blue-600 hover:underline">
+                View Order #<?= (int) $ticket['order_id'] ?>
             </a>
         </div>
         <?php endif; ?>
@@ -305,7 +305,7 @@ $types     = ['order_support','product_inquiry','technical','billing','shipping'
             </button>
         </div>
         <p class="text-sm text-gray-600 mb-4">All replies from this ticket will be moved to the target ticket, and this ticket will be closed.</p>
-        <form method="POST" action="/admin/tickets/<?= $ticket['id'] ?>/merge">
+        <form method="POST" action="/admin/tickets/<?= (int) $ticket['id'] ?>/merge">
             <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
             <div class="mb-4">
                 <label class="block text-xs font-medium text-gray-700 mb-1">Target Ticket ID</label>

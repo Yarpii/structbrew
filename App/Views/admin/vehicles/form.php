@@ -13,7 +13,7 @@
                             <select name="brand_id" required class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                 <option value="">Select Brand</option>
                                 <?php foreach ($vehicleBrands ?? [] as $vb): ?>
-                                <option value="<?= $vb['id'] ?>" <?= ($vehicle['brand_id'] ?? '') == $vb['id'] ? 'selected' : '' ?>>
+                                <option value="<?= (int) $vb['id'] ?>" <?= ($vehicle['brand_id'] ?? '') == $vb['id'] ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($vb['name']) ?>
                                 </option>
                                 <?php endforeach; ?>
@@ -75,7 +75,7 @@
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
                         <span class="text-gray-500">ID</span>
-                        <span class="text-gray-900"><?= $vehicle['id'] ?></span>
+                        <span class="text-gray-900"><?= (int) $vehicle['id'] ?></span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-500">Compatible Products</span>

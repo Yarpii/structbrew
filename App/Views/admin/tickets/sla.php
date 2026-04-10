@@ -56,7 +56,7 @@ $priorityOptions = ['low','normal','high','critical','urgent'];
                     <div class="flex items-center justify-end gap-2">
                         <button onclick="openEditSla(<?= htmlspecialchars(json_encode($pol), ENT_QUOTES) ?>)"
                                 class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-md">Edit</button>
-                        <form method="POST" action="/admin/tickets/sla/<?= $pol['id'] ?>/delete" onsubmit="return confirm('Delete SLA policy?')">
+                        <form method="POST" action="/admin/tickets/sla/<?= (int) $pol['id'] ?>/delete" onsubmit="return confirm('Delete SLA policy?')">
                             <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
                             <button type="submit" class="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-medium rounded-md">Delete</button>
                         </form>

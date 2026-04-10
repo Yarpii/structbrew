@@ -49,7 +49,7 @@
                         <select name="role_id" required class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             <option value="">Select Role</option>
                             <?php foreach ($roles ?? [] as $role): ?>
-                            <option value="<?= $role['id'] ?>" <?= ($user['role_id'] ?? '') == $role['id'] ? 'selected' : '' ?>>
+                            <option value="<?= (int) $role['id'] ?>" <?= ($user['role_id'] ?? '') == $role['id'] ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($role['name']) ?>
                             </option>
                             <?php endforeach; ?>
@@ -88,7 +88,7 @@
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
                         <span class="text-gray-500">ID</span>
-                        <span class="text-gray-900"><?= $user['id'] ?></span>
+                        <span class="text-gray-900"><?= (int) $user['id'] ?></span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-500">Last Login</span>

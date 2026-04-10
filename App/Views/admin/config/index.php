@@ -80,6 +80,12 @@
                                     <option value="0" <?= in_array(strtolower($value), ['', '0', 'false', 'off', 'no'], true) ? 'selected' : '' ?>>No</option>
                                     <option value="1" <?= in_array(strtolower($value), ['1', 'true', 'on', 'yes'], true) ? 'selected' : '' ?>>Yes</option>
                                 </select>
+                            <?php elseif ($type === 'password'): ?>
+                                <input type="password"
+                                       name="config[<?= htmlspecialchars((string) $path) ?>]"
+                                       value="<?= htmlspecialchars($value) ?>"
+                                       autocomplete="off"
+                                       class="w-full px-3 py-2 rounded-md border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             <?php else: ?>
                                 <input type="<?= $type === 'email' ? 'email' : ($type === 'number' ? 'number' : 'text') ?>"
                                        <?= $type === 'number' ? 'step="0.01"' : '' ?>

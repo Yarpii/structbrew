@@ -52,8 +52,8 @@
                         class="w-full bg-admin-sidebar-hover text-white text-sm rounded-lg px-3 py-2 border border-white/20 focus:outline-none focus:border-admin-accent">
                     <option value="0">All Store Views</option>
                     <?php foreach ($storeViews as $sv): ?>
-                    <option value="<?= $sv['id'] ?>" <?= ($currentStoreView ?? 0) == $sv['id'] ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($sv['name']) ?> (<?= $sv['locale'] ?>)
+                    <option value="<?= (int) $sv['id'] ?>" <?= ($currentStoreView ?? 0) == $sv['id'] ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($sv['name']) ?> (<?= htmlspecialchars($sv['locale'] ?? '') ?>)
                     </option>
                     <?php endforeach; ?>
                 </select>
@@ -107,12 +107,12 @@
                 <?php else:
                     $isActive = ($currentPath === $item['url']) || ($item['url'] !== '/admin' && str_starts_with($currentPath, $item['url']));
                 ?>
-                    <a href="<?= $item['url'] ?>"
+                    <a href="<?= htmlspecialchars($item['url']) ?>"
                        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors <?= $isActive ? 'bg-admin-accent text-white' : 'text-slate-300 hover:bg-admin-sidebar-hover hover:text-white' ?>">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="<?= $item['icon'] ?>"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="<?= htmlspecialchars($item['icon']) ?>"/>
                         </svg>
-                        <span x-show="sidebarOpen" x-cloak><?= $item['label'] ?></span>
+                        <span x-show="sidebarOpen" x-cloak><?= htmlspecialchars($item['label']) ?></span>
                     </a>
                 <?php endif; endforeach; ?>
             </nav>

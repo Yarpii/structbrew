@@ -100,11 +100,11 @@
                 <!-- Store View Tabs -->
                 <div class="flex gap-1 border-b border-gray-200 mb-4 overflow-x-auto">
                     <?php foreach ($storeViews ?? [] as $sv): ?>
-                    <button type="button" @click="activeTab = '<?= $sv['id'] ?>'"
-                            :class="activeTab === '<?= $sv['id'] ?>' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                    <button type="button" @click="activeTab = '<?= (int) $sv['id'] ?>'"
+                            :class="activeTab === '<?= (int) $sv['id'] ?>' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
                             class="px-4 py-2 text-sm font-medium border-b-2 whitespace-nowrap transition-colors">
                         <?= htmlspecialchars($sv['name']) ?>
-                        <span class="text-xs text-gray-400">(<?= $sv['locale'] ?>)</span>
+                        <span class="text-xs text-gray-400">(<?= htmlspecialchars($sv['locale'] ?? '') ?>)</span>
                     </button>
                     <?php endforeach; ?>
                 </div>
@@ -113,41 +113,41 @@
                     $trans = $translations[$sv['id']] ?? [];
                     $pricing = $pricingData[$sv['id']] ?? [];
                 ?>
-                <div x-show="activeTab === '<?= $sv['id'] ?>'" x-cloak class="space-y-4">
+                <div x-show="activeTab === '<?= (int) $sv['id'] ?>'" x-cloak class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Name <span class="text-red-500">*</span></label>
-                        <input type="text" name="translations[<?= $sv['id'] ?>][name]"
+                        <input type="text" name="translations[<?= (int) $sv['id'] ?>][name]"
                                value="<?= htmlspecialchars($trans['name'] ?? '') ?>"
                                class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
-                        <textarea name="translations[<?= $sv['id'] ?>][short_description]" rows="2"
+                        <textarea name="translations[<?= (int) $sv['id'] ?>][short_description]" rows="2"
                                   class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"><?= htmlspecialchars($trans['short_description'] ?? '') ?></textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                        <textarea name="translations[<?= $sv['id'] ?>][description]" rows="6"
+                        <textarea name="translations[<?= (int) $sv['id'] ?>][description]" rows="6"
                                   class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"><?= htmlspecialchars($trans['description'] ?? '') ?></textarea>
                     </div>
 
                     <!-- Pricing for this store view -->
                     <div class="grid grid-cols-3 gap-4 pt-2 border-t border-gray-100">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Price (<?= $sv['currency_code'] ?>)</label>
-                            <input type="number" step="0.01" name="pricing[<?= $sv['id'] ?>][price]"
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Price (<?= htmlspecialchars($sv['currency_code'] ?? '') ?>)</label>
+                            <input type="number" step="0.01" name="pricing[<?= (int) $sv['id'] ?>][price]"
                                    value="<?= htmlspecialchars($pricing['price'] ?? '') ?>"
                                    class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Sale Price</label>
-                            <input type="number" step="0.01" name="pricing[<?= $sv['id'] ?>][sale_price]"
+                            <input type="number" step="0.01" name="pricing[<?= (int) $sv['id'] ?>][sale_price]"
                                    value="<?= htmlspecialchars($pricing['sale_price'] ?? '') ?>"
                                    class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Cost Price</label>
-                            <input type="number" step="0.01" name="pricing[<?= $sv['id'] ?>][cost_price]"
+                            <input type="number" step="0.01" name="pricing[<?= (int) $sv['id'] ?>][cost_price]"
                                    value="<?= htmlspecialchars($pricing['cost_price'] ?? '') ?>"
                                    class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         </div>
@@ -157,13 +157,13 @@
                     <div class="grid grid-cols-2 gap-4 pt-2 border-t border-gray-100">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
-                            <input type="text" name="translations[<?= $sv['id'] ?>][meta_title]"
+                            <input type="text" name="translations[<?= (int) $sv['id'] ?>][meta_title]"
                                    value="<?= htmlspecialchars($trans['meta_title'] ?? '') ?>"
                                    class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">URL Key</label>
-                            <input type="text" name="translations[<?= $sv['id'] ?>][url_key]"
+                            <input type="text" name="translations[<?= (int) $sv['id'] ?>][url_key]"
                                    value="<?= htmlspecialchars($trans['url_key'] ?? '') ?>"
                                    class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         </div>
@@ -225,7 +225,7 @@
                 <select name="brand_id" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     <option value="">No brand</option>
                     <?php foreach ($brands ?? [] as $brand): ?>
-                    <option value="<?= $brand['id'] ?>" <?= ($product['brand_id'] ?? '') == $brand['id'] ? 'selected' : '' ?>>
+                    <option value="<?= (int) $brand['id'] ?>" <?= ($product['brand_id'] ?? '') == $brand['id'] ? 'selected' : '' ?>>
                         <?= htmlspecialchars($brand['name']) ?>
                     </option>
                     <?php endforeach; ?>
@@ -238,7 +238,7 @@
                 <div class="space-y-2 max-h-48 overflow-y-auto">
                     <?php foreach ($categories ?? [] as $cat): ?>
                     <label class="flex items-center gap-2">
-                        <input type="checkbox" name="categories[]" value="<?= $cat['id'] ?>"
+                        <input type="checkbox" name="categories[]" value="<?= (int) $cat['id'] ?>"
                                <?= in_array($cat['id'], $selectedCategories ?? []) ? 'checked' : '' ?>
                                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                         <span class="text-sm text-gray-700"><?= htmlspecialchars($cat['name'] ?? $cat['slug']) ?></span>
@@ -275,7 +275,7 @@
                 <div class="space-y-2 max-h-48 overflow-y-auto">
                     <?php foreach ($vehicles ?? [] as $vehicle): ?>
                     <label class="flex items-center gap-2">
-                        <input type="checkbox" name="vehicles[]" value="<?= $vehicle['id'] ?>"
+                        <input type="checkbox" name="vehicles[]" value="<?= (int) $vehicle['id'] ?>"
                                <?= in_array($vehicle['id'], $selectedVehicles ?? []) ? 'checked' : '' ?>
                                class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                         <span class="text-sm text-gray-700"><?= htmlspecialchars($vehicle['display_name'] ?? $vehicle['model']) ?></span>

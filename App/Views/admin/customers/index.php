@@ -53,7 +53,7 @@
                     </td>
                     <td class="px-6 py-3 text-right text-gray-400 text-xs"><?= $customer['created_at'] ?? '' ?></td>
                     <td class="px-6 py-3 text-right">
-                        <a href="/admin/customers/<?= $customer['id'] ?>" class="text-blue-600 hover:text-blue-700 text-xs font-medium">View</a>
+                        <a href="/admin/customers/<?= (int) $customer['id'] ?>" class="text-blue-600 hover:text-blue-700 text-xs font-medium">View</a>
                     </td>
                 </tr>
                 <?php endforeach; ?>

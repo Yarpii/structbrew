@@ -205,11 +205,14 @@ class SetupController extends Controller
 
         // 1. Write .env file
         $envContent = $this->buildEnvContent($dbConfig, $appConfig);
-        $envWritten = @file_put_contents($this->rootPath . '/.env', $envContent);
+        $envPath = $this->rootPath . '/.env';
+        $envWritten = @file_put_contents($envPath, $envContent, LOCK_EX);
         if ($envWritten === false) {
             Session::flash('setup_error', 'Could not write .env file. Check that the root directory is writable.');
             return $this->redirect('/setup/admin');
         }
+        // Restrict .env to owner read/write only
+        @chmod($envPath, 0600);
 
         // 2. Reload config so Database class picks up the new settings
         $this->reloadConfig($dbConfig, $appConfig);
@@ -265,7 +268,8 @@ class SetupController extends Controller
         } catch (Throwable $e) {
             // Remove .env on failure so setup can be retried
             @unlink($this->rootPath . '/.env');
-            Session::flash('setup_error', 'Installation failed: ' . $e->getMessage());
+            error_log("StructBrew setup failed: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+            Session::flash('setup_error', 'Installation failed. Please check the server error log for details.');
             return $this->redirect('/setup/admin');
         }
     }
@@ -417,7 +421,15 @@ class SetupController extends Controller
 
             return null;
         } catch (PDOException $e) {
-            return 'Database connection failed: ' . $e->getMessage();
+            error_log("StructBrew DB connection test failed: " . $e->getMessage());
+            // Don't expose internal PDO error details to the user
+            $msg = 'Database connection failed. Please verify your host, port, username and password.';
+            if (str_contains($e->getMessage(), 'Access denied')) {
+                $msg = 'Database connection failed: access denied. Check your username and password.';
+            } elseif (str_contains($e->getMessage(), 'Connection refused') || str_contains($e->getMessage(), 'No such file')) {
+                $msg = 'Database connection failed: could not connect to the server. Check your host and port.';
+            }
+            return $msg;
         }
     }
 

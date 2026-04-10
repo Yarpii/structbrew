@@ -12,7 +12,7 @@
                         <select name="price_rule_id" required class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             <option value="">Select Price Rule</option>
                             <?php foreach ($priceRules ?? [] as $pr): ?>
-                            <option value="<?= $pr['id'] ?>" <?= ($coupon['price_rule_id'] ?? '') == $pr['id'] ? 'selected' : '' ?>>
+                            <option value="<?= (int) $pr['id'] ?>" <?= ($coupon['price_rule_id'] ?? '') == $pr['id'] ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($pr['name']) ?>
                                 (<?= $pr['type'] === 'percentage' ? $pr['value'] . '%' : number_format((float)$pr['value'], 2) ?>)
                             </option>
@@ -74,7 +74,7 @@
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
                         <span class="text-gray-500">ID</span>
-                        <span class="text-gray-900"><?= $coupon['id'] ?></span>
+                        <span class="text-gray-900"><?= (int) $coupon['id'] ?></span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-500">Times Used</span>

@@ -80,7 +80,7 @@
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
                         <span class="text-gray-500">ID</span>
-                        <span class="text-gray-900"><?= $brand['id'] ?></span>
+                        <span class="text-gray-900"><?= (int) $brand['id'] ?></span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-500">Products</span>

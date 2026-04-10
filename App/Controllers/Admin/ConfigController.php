@@ -111,7 +111,7 @@ final class ConfigController extends BaseAdminController
                 'security/customer_two_factor_enabled' => ['label' => 'Allow Customer 2FA', 'type' => 'boolean'],
                 'security/turnstile_enabled' => ['label' => 'Enable Cloudflare Turnstile', 'type' => 'boolean'],
                 'security/turnstile_site_key' => ['label' => 'Turnstile Site Key', 'type' => 'text'],
-                'security/turnstile_secret_key' => ['label' => 'Turnstile Secret Key', 'type' => 'text'],
+                'security/turnstile_secret_key' => ['label' => 'Turnstile Secret Key', 'type' => 'password'],
             ],
         ],
     ];
@@ -255,7 +255,8 @@ final class ConfigController extends BaseAdminController
 
         } catch (\Throwable $e) {
             $db->rollback();
-            Session::flash('error', 'Failed to save configuration: ' . $e->getMessage());
+            error_log("StructBrew config save failed: " . $e->getMessage());
+            Session::flash('error', 'Failed to save configuration. Please try again.');
         }
 
         $qs = '?scope=' . urlencode($scope) . '&scope_id=' . $scopeId;

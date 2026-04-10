@@ -94,7 +94,11 @@ class Migration
         $this->db->statement('SET FOREIGN_KEY_CHECKS = 0');
         $tables = $this->db->raw("SHOW TABLES")->fetchAll(\PDO::FETCH_COLUMN);
         foreach ($tables as $table) {
-            $this->db->statement("DROP TABLE IF EXISTS `{$table}`");
+            // Sanitize table name to prevent SQL injection via malicious table names
+            $sanitized = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
+            if ($sanitized !== '' && $sanitized === $table) {
+                $this->db->statement("DROP TABLE IF EXISTS `{$sanitized}`");
+            }
         }
         $this->db->statement('SET FOREIGN_KEY_CHECKS = 1');
 

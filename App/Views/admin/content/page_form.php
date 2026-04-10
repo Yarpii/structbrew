@@ -27,11 +27,11 @@
                 <!-- Store View Tabs -->
                 <div class="flex gap-1 border-b border-gray-200 mb-4 overflow-x-auto">
                     <?php foreach ($storeViews ?? [] as $sv): ?>
-                    <button type="button" @click="activeTab = '<?= $sv['id'] ?>'"
-                            :class="activeTab === '<?= $sv['id'] ?>' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
+                    <button type="button" @click="activeTab = '<?= (int) $sv['id'] ?>'"
+                            :class="activeTab === '<?= (int) $sv['id'] ?>' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'"
                             class="px-4 py-2 text-sm font-medium border-b-2 whitespace-nowrap transition-colors">
                         <?= htmlspecialchars($sv['name']) ?>
-                        <span class="text-xs text-gray-400">(<?= $sv['locale'] ?>)</span>
+                        <span class="text-xs text-gray-400">(<?= htmlspecialchars($sv['locale'] ?? '') ?>)</span>
                     </button>
                     <?php endforeach; ?>
                 </div>
@@ -39,29 +39,29 @@
                 <?php foreach ($storeViews ?? [] as $sv):
                     $trans = $translations[$sv['id']] ?? [];
                 ?>
-                <div x-show="activeTab === '<?= $sv['id'] ?>'" x-cloak class="space-y-4">
+                <div x-show="activeTab === '<?= (int) $sv['id'] ?>'" x-cloak class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Title <span class="text-red-500">*</span></label>
-                        <input type="text" name="translations[<?= $sv['id'] ?>][title]"
+                        <input type="text" name="translations[<?= (int) $sv['id'] ?>][title]"
                                value="<?= htmlspecialchars($trans['title'] ?? '') ?>"
                                class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Content</label>
-                        <textarea name="translations[<?= $sv['id'] ?>][content]" rows="12"
+                        <textarea name="translations[<?= (int) $sv['id'] ?>][content]" rows="12"
                                   class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-mono"><?= htmlspecialchars($trans['content'] ?? '') ?></textarea>
                     </div>
                     <!-- SEO -->
                     <div class="grid grid-cols-2 gap-4 pt-2 border-t border-gray-100">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
-                            <input type="text" name="translations[<?= $sv['id'] ?>][meta_title]"
+                            <input type="text" name="translations[<?= (int) $sv['id'] ?>][meta_title]"
                                    value="<?= htmlspecialchars($trans['meta_title'] ?? '') ?>"
                                    class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
-                            <input type="text" name="translations[<?= $sv['id'] ?>][meta_description]"
+                            <input type="text" name="translations[<?= (int) $sv['id'] ?>][meta_description]"
                                    value="<?= htmlspecialchars($trans['meta_description'] ?? '') ?>"
                                    class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         </div>
@@ -90,7 +90,7 @@
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
                         <span class="text-gray-500">ID</span>
-                        <span class="text-gray-900"><?= $page['id'] ?></span>
+                        <span class="text-gray-900"><?= (int) $page['id'] ?></span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-500">Created</span>
