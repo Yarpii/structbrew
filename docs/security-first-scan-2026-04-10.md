@@ -17,6 +17,10 @@ This first-pass scan found **no immediately exploitable, confirmed SQL injection
 - **Medium:** 2
 - **Low:** 2
 
+### Scope-based interpretation
+
+For a custom framework and broad e-commerce scope, this is a **decent first-pass result** (no criticals, no confirmed active SQLi path), but production rollout should still be gated on fixing the high-risk hardening gap and re-testing.
+
 ---
 
 ## Findings
@@ -135,4 +139,3 @@ You cannot reliably attest to “no known CVEs” without an SBOM/dependency man
 3. **Infra/CVE scan** (container image, OS packages, TLS config, exposed ports).
 4. **Secrets & config review** (`.env`, cookie flags, session policy, CORS, rate limits).
 5. **Fix & verify loop**: patch highest risks, rerun scan, produce clean baseline report.
-
