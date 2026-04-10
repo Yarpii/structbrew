@@ -82,12 +82,12 @@
                                     'refunded' => 'bg-gray-100 text-gray-700',
                                     default => 'bg-gray-100 text-gray-700',
                                 } ?>">
-                                <?= ucfirst($order['status']) ?>
+                                <?= htmlspecialchars(ucfirst((string) ($order['status'] ?? 'unknown'))) ?>
                             </span>
                         </td>
-                        <td class="px-6 py-3 text-center text-gray-500"><?= $order['item_count'] ?? 0 ?></td>
+                        <td class="px-6 py-3 text-center text-gray-500"><?= (int) ($order['item_count'] ?? 0) ?></td>
                         <td class="px-6 py-3 text-right font-medium"><?= htmlspecialchars($order['currency_code'] ?? '') ?> <?= number_format((float)($order['grand_total'] ?? 0), 2) ?></td>
-                        <td class="px-6 py-3 text-right text-gray-500 text-xs"><?= $order['created_at'] ?? '' ?></td>
+                        <td class="px-6 py-3 text-right text-gray-500 text-xs"><?= htmlspecialchars((string) ($order['created_at'] ?? '')) ?></td>
                         <td class="px-6 py-3 text-right">
                             <a href="/admin/orders/<?= (int) $order['id'] ?>" class="p-1.5 text-gray-400 hover:text-blue-600 rounded-lg hover:bg-blue-50 inline-block">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
@@ -104,12 +104,12 @@
 
     <?php if (($orders['last_page'] ?? 1) > 1): ?>
     <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-        <p class="text-sm text-gray-500">Showing <?= $orders['from'] ?> to <?= $orders['to'] ?> of <?= $orders['total'] ?></p>
+        <p class="text-sm text-gray-500">Showing <?= (int) ($orders['from'] ?? 0) ?> to <?= (int) ($orders['to'] ?? 0) ?> of <?= (int) ($orders['total'] ?? 0) ?></p>
         <div class="flex gap-1">
             <?php for ($i = 1; $i <= $orders['last_page']; $i++): ?>
             <a href="?page=<?= $i ?>&<?= htmlspecialchars(http_build_query(array_diff_key($_GET, ['page' => '']))) ?>"
                class="px-3 py-1.5 text-sm rounded-lg <?= $i === $orders['current_page'] ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' ?>">
-                <?= $i ?>
+                <?= (int) $i ?>
             </a>
             <?php endfor; ?>
         </div>
