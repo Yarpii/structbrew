@@ -6,6 +6,7 @@ declare(strict_types=1);
 use App\Controllers\AccountController;
 use App\Controllers\AuthController;
 use App\Controllers\CartController;
+use App\Controllers\PartnerController;
 use App\Controllers\ShopController;
 
 $this->get('/shop', [ShopController::class, 'index']);
@@ -38,6 +39,12 @@ $this->post('/account/addresses/{id}/default', [AccountController::class, 'defau
 $this->post('/account/garage', [AccountController::class, 'storeGarageVehicle']);
 $this->post('/account/garage/{id}/delete', [AccountController::class, 'deleteGarageVehicle']);
 $this->post('/account/garage/{id}/select', [AccountController::class, 'selectGarageVehicle']);
+$this->post('/account/garage/{id}/update', [AccountController::class, 'updateGarageVehicle']);
+$this->post('/account/garage/{id}/photo', [AccountController::class, 'uploadGaragePhoto']);
+$this->post('/account/garage/{id}/spec', [AccountController::class, 'updateGarageSpec']);
+$this->post('/account/garage/{id}/mods', [AccountController::class, 'storeGarageMod']);
+$this->post('/account/garage/{id}/mods/{modId}/toggle', [AccountController::class, 'toggleGarageMod']);
+$this->post('/account/garage/{id}/mods/{modId}/delete', [AccountController::class, 'deleteGarageMod']);
 $this->post('/account/credits/purchase', [AccountController::class, 'purchaseCredits']);
 $this->get('/account/orders/{id}', [AccountController::class, 'order']);
 $this->get('/account/orders/{id}/invoice', [AccountController::class, 'invoice']);
@@ -50,4 +57,8 @@ $this->get('/account/tickets/{id}', [AccountController::class, 'ticketShow']);
 $this->post('/account/tickets/{id}/reply', [AccountController::class, 'ticketReply']);
 $this->post('/account/tickets/{id}/close', [AccountController::class, 'ticketClose']);
 $this->post('/account/tickets/{id}/reopen', [AccountController::class, 'ticketReopen']);
+
+// ─── Account Partner ──────────────────────────────────────────────────────────
+$this->get('/account/partner', [PartnerController::class, 'dashboard']);
+
 $this->get('/api/products', [ShopController::class, 'apiProducts']);

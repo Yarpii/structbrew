@@ -3,6 +3,21 @@
         <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--color-text)]">Privacy Policy</h1>
         <p class="mt-3 text-[var(--color-muted)]">Last updated: <?= date('F j, Y') ?></p>
 
+        <div class="mt-8 grid gap-3 sm:grid-cols-3 text-sm">
+            <div class="rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+                <p class="font-semibold text-[var(--color-text)] mb-1">&#x2713; We don't sell your data</p>
+                <p class="text-xs text-[var(--color-muted)]">Your personal information is never sold to third parties.</p>
+            </div>
+            <div class="rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+                <p class="font-semibold text-[var(--color-text)] mb-1">&#x2713; You can request deletion</p>
+                <p class="text-xs text-[var(--color-muted)]">Ask us to delete your account and data at any time.</p>
+            </div>
+            <div class="rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+                <p class="font-semibold text-[var(--color-text)] mb-1">&#x2713; Unsubscribe anytime</p>
+                <p class="text-xs text-[var(--color-muted)]">Marketing emails always include a one-click unsubscribe link.</p>
+            </div>
+        </div>
+
         <div class="mt-10 space-y-8 text-sm text-[var(--color-muted)] leading-relaxed">
             <div>
                 <h2 class="text-lg font-bold text-[var(--color-text)] mb-2">1. Information We Collect</h2>

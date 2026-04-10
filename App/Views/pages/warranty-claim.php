@@ -33,7 +33,7 @@
             </div>
 
             <div class="space-y-4">
-                <div class="rounded-[var,--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+                <div class="rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
                     <h3 class="text-sm font-bold text-[var(--color-text)] mb-2">What happens next?</h3>
                     <ol class="space-y-2 text-sm text-[var(--color-muted)] list-decimal list-inside">
                         <li>We review your claim within 2 business days.</li>

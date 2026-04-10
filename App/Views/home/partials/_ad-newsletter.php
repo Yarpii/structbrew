@@ -36,7 +36,7 @@
             </div>
             <h2 class="text-2xl font-bold text-[var(--color-text)]">Stay in the Loop</h2>
             <p class="mt-2 text-sm text-[var(--color-muted)] leading-relaxed">
-                Get exclusive deals, new product drops, and tech tips — straight to your inbox. No spam, unsubscribe anytime.
+                Get exclusive deals, new part drops, and maintenance tips — straight to your inbox. No spam, unsubscribe anytime.
             </p>
             <form class="mt-6 flex flex-col sm:flex-row gap-3 max-w-md mx-auto" @submit.prevent="alert('Subscribed! (demo)')">
                 <input type="email" required placeholder="your@email.com" autocomplete="email" spellcheck="false"

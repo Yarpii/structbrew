@@ -13,8 +13,8 @@ $badgeClass = $badgeClassMap[(string) ($product['badge'] ?? '')] ?? '';
 <div class="product-card group rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5" style="box-shadow: var(--shadow-sm)">
     <a href="/shop/<?= htmlspecialchars($product['slug']) ?>" class="block relative aspect-square bg-[var(--color-bg)] overflow-hidden">
         <div class="product-img w-full h-full flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-[var(--color-accent)]/20 to-[var(--color-accent)]/5 flex items-center justify-center">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity=".6"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-[var(--color-accent)]/20 to-[var(--color-accent)]/5 flex items-center justify-center">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity=".6"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
             </div>
         </div>
         <?php if ($product['badge']): ?>
@@ -23,7 +23,7 @@ $badgeClass = $badgeClassMap[(string) ($product['badge'] ?? '')] ?? '';
             "><?= htmlspecialchars($product['badge']) ?></span>
         <?php endif; ?>
     </a>
-    <div class="p-3.5">
+    <div class="p-2.5">
         <p class="text-xs text-[var(--color-muted)] uppercase tracking-wide mb-1"><?= htmlspecialchars($categories[$product['category']] ?? $product['category']) ?></p>
         <a href="/shop/<?= htmlspecialchars($product['slug']) ?>" class="block text-sm font-semibold text-[var(--color-text)] leading-snug hover:text-[var(--color-accent)] transition-colors line-clamp-2">
             <?= htmlspecialchars($product['name']) ?>
@@ -49,7 +49,7 @@ $badgeClass = $badgeClassMap[(string) ($product['badge'] ?? '')] ?? '';
                 <button
                     @click="$store.cart.add(JSON.parse(this.dataset.product))"
                     data-product="<?= htmlspecialchars(json_encode(['id' => (int) $product['id'], 'name' => $product['name'], 'price' => (float) $product['price'], 'sale_price' => isset($product['sale_price']) ? (float) $product['sale_price'] : null, 'slug' => $product['slug']], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8') ?>"
-                    class="inline-flex h-8 w-8 items-center justify-center rounded-[var(--radius-button)] bg-[var(--color-accent)] text-white transition hover:bg-[var(--color-accent-hover)]"
+                    class="inline-flex h-7 w-7 items-center justify-center rounded-[var(--radius-button)] bg-[var(--color-accent)] text-white transition hover:bg-[var(--color-accent-hover)]"
                     title="Add to cart"
                 >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>

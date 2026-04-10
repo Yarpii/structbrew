@@ -1,28 +1,80 @@
-<!-- Categories -->
-<section class="bg-[var(--color-bg)]">
-    <div class="mx-auto w-[92%] sm:w-[90%] md:w-[88%] lg:w-[85%] py-12">
-        <div class="mb-5 flex items-end justify-between gap-3">
-            <div>
-                <h2 class="text-2xl font-bold text-[var(--color-text)]">Shop by Category</h2>
-                <p class="mt-1 text-sm text-[var(--color-muted)]">Browse all categories in the catalog</p>
-            </div>
-            <a href="/shop" class="inline-flex h-9 items-center rounded-[var(--radius-button)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm font-medium text-[var(--color-text)] transition hover:border-[var(--color-accent)]/35 hover:text-[var(--color-accent)]">
-                View All Products
-            </a>
-        </div>
+<!-- Part Finder Strip -->
+<section class="bg-[var(--color-surface)] border-b border-[var(--color-border)]" style="box-shadow:var(--shadow-sm)">
+    <div class="mx-auto w-[92%] sm:w-[90%] md:w-[88%] lg:w-[85%] py-3.5">
+        <div
+            x-data='{
+                brandId: "",
+                vehicleId: "",
+                options: <?= htmlspecialchars((string)(json_encode($garageVehicleOptions ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: "[]"), ENT_QUOTES, "UTF-8") ?>,
+                get brands() {
+                    const m = {};
+                    this.options.forEach(v => { if (!m[v.brand_id]) m[v.brand_id] = { id: v.brand_id, name: v.brand }; });
+                    return Object.values(m).sort((a, b) => a.name.localeCompare(b.name));
+                },
+                get models() {
+                    return this.options.filter(v => !this.brandId || String(v.brand_id) === String(this.brandId));
+                }
+            }'
+        >
+            <form action="/shop" method="get"
+                  class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
 
-        <div class="rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] p-3 sm:p-4" style="box-shadow: var(--shadow-sm)">
-            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                <?php foreach ($categories as $key => $name): ?>
-                    <a href="/shop?category=<?= htmlspecialchars($key) ?>"
-                       class="group flex items-center gap-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm text-[var(--color-text)] transition hover:border-[var(--color-accent)]/35 hover:bg-[var(--color-accent)]/5 hover:text-[var(--color-accent)]">
-                        <span class="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md bg-[var(--color-accent)]/10 text-[var(--color-accent)]">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h3l2 2h9a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-                        </span>
-                        <span class="truncate font-medium"><?= htmlspecialchars($name) ?></span>
-                    </a>
-                <?php endforeach; ?>
-            </div>
+                <!-- Label -->
+                <p class="hidden lg:flex items-center gap-2 shrink-0 text-sm font-semibold text-[var(--color-text)] pr-3 border-r border-[var(--color-border)]">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--color-accent)]"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                    Find parts for your bike
+                </p>
+
+                <!-- Brand -->
+                <select
+                    x-model="brandId"
+                    @change="vehicleId = ''"
+                    name="brand_id"
+                    class="h-10 rounded-[var(--radius-input)] border border-[var(--color-border)] bg-[var(--color-bg)] px-3 text-sm text-[var(--color-text)] focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/10 sm:w-36"
+                >
+                    <option value="">All Brands</option>
+                    <template x-for="b in brands" :key="b.id">
+                        <option :value="b.id" x-text="b.name"></option>
+                    </template>
+                </select>
+
+                <!-- Model -->
+                <select
+                    x-model="vehicleId"
+                    name="vehicle_id"
+                    class="h-10 rounded-[var(--radius-input)] border border-[var(--color-border)] bg-[var(--color-bg)] px-3 text-sm text-[var(--color-text)] focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/10 sm:w-44"
+                >
+                    <option value="">All Models</option>
+                    <template x-for="m in models" :key="m.id">
+                        <option :value="m.id" x-text="m.model"></option>
+                    </template>
+                </select>
+
+                <!-- Keyword -->
+                <div class="relative flex-1">
+                    <svg class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-muted)]" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input
+                        type="search" name="q"
+                        placeholder="Search parts, accessories..."
+                        class="h-10 w-full rounded-[var(--radius-input)] border border-[var(--color-border)] bg-[var(--color-bg)] pl-9 pr-4 text-sm focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/10"
+                    >
+                </div>
+
+                <!-- Submit -->
+                <button type="submit"
+                        class="h-10 shrink-0 inline-flex items-center gap-1.5 rounded-[var(--radius-button)] bg-[var(--color-accent)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-hover)]">
+                    Search
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+
+                <!-- Browse all -->
+                <a href="/shop"
+                   class="hidden md:inline-flex h-10 shrink-0 items-center gap-1 border-l border-[var(--color-border)] pl-4 ml-1 text-sm text-[var(--color-muted)] transition hover:text-[var(--color-accent)]">
+                    Browse all
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+
+            </form>
         </div>
     </div>
 </section>

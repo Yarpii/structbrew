@@ -17,7 +17,7 @@
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-[var(--color-text)]"><?= htmlspecialchars(__('secure_payment')) ?></p>
-                    <p class="text-xs text-[var,--color-muted)]">SSL encrypted checkout</p>
+                    <p class="text-xs text-[var(--color-muted)]">SSL encrypted checkout</p>
                 </div>
             </div>
             <div class="flex items-start gap-3 p-3 rounded-card border border-[var(--color-border)] bg-[var(--color-bg)]">
@@ -26,16 +26,16 @@
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-[var(--color-text)]">Easy Returns</p>
-                    <p class="text-xs text-[var,--color-muted)]">30-day return policy</p>
+                    <p class="text-xs text-[var(--color-muted)]">30-day return policy</p>
                 </div>
             </div>
-            <div class="flex items-start gap-3 p-3 rounded-card border border-[var(--color-border)] bg-[var,--color-bg)]">
-                <div class="shrink-0 w-9 h-9 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center text-[var,--color-accent)]">
+            <div class="flex items-start gap-3 p-3 rounded-card border border-[var(--color-border)] bg-[var(--color-bg)]">
+                <div class="shrink-0 w-9 h-9 rounded-lg bg-[var(--color-accent)]/10 flex items-center justify-center text-[var(--color-accent)]">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72"/></svg>
                 </div>
                 <div>
-                    <p class="text-sm font-semibold text-[var,--color-text)]">24/7 Support</p>
-                    <p class="text-xs text-[var,--color-muted)]">Dedicated help center</p>
+                    <p class="text-sm font-semibold text-[var(--color-text)]">24/7 Support</p>
+                    <p class="text-xs text-[var(--color-muted)]">Dedicated help center</p>
                 </div>
             </div>
         </div>
@@ -47,25 +47,33 @@
 
     <!-- Logo + Social + Newsletter -->
     <div class="mx-auto w-[92%] sm:w-[90%] md:w-[88%] lg:w-[85%] py-8">
-        <div class="grid gap-6 lg:grid-cols-2 lg:items-center">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div>
-                <a href="/" class="flex items-center gap-2.5 mb-3" aria-label="Scooter Dynamics">
-                    <img src="/assets/images/logo-light.svg" alt="Scooter Dynamics" class="h-12 w-auto">
+                <a href="/" class="flex items-center gap-2.5 mb-4" aria-label="Scooter Dynamics">
+                    <img src="/assets/images/logo-light.svg" alt="Scooter Dynamics" class="h-16 w-auto">
                 </a>
-                <p class="text-[0.9375rem] text-gray-400">Your one-stop shop for premium tech and accessories.</p>
-                <div class="mt-3 flex flex-wrap gap-4 text-[0.9375rem]">
-                    <a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="#">Instagram</a>
-                    <a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="#">YouTube</a>
-                    <a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="#">TikTok</a>
+                <p class="max-w-[22rem] text-sm text-gray-400 leading-relaxed">Your specialist for performance scooter parts, accessories and upgrades. From engine tuning to wheels — we stock the brands riders trust.</p>
+                <div class="mt-4 flex items-center gap-3">
+                    <a class="flex h-8 w-8 items-center justify-center rounded-md bg-white/10 text-gray-400 transition hover:bg-[var(--color-accent)] hover:text-white" href="#" aria-label="Instagram">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+                    </a>
+                    <a class="flex h-8 w-8 items-center justify-center rounded-md bg-white/10 text-gray-400 transition hover:bg-[var(--color-accent)] hover:text-white" href="#" aria-label="YouTube">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg>
+                    </a>
+                    <a class="flex h-8 w-8 items-center justify-center rounded-md bg-white/10 text-gray-400 transition hover:bg-[var(--color-accent)] hover:text-white" href="#" aria-label="TikTok">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.78a4.85 4.85 0 0 1-1.01-.09z"/></svg>
+                    </a>
                 </div>
             </div>
-            <div>
-                <h2 class="mb-2 text-base font-bold text-white"><?= htmlspecialchars(__('subscribe')) ?></h2>
-                <p class="mb-3 text-[0.9375rem] text-gray-400"><?= htmlspecialchars(__('newsletter_signup')) ?></p>
-                <form class="flex flex-wrap gap-2" x-data="{ email: '' }" @submit.prevent="email = ''; alert('Thanks for subscribing!')">
-                    <input type="email" x-model="email" required placeholder="<?= htmlspecialchars(__('enter_email')) ?>"
-                           class="min-w-[14rem] grow rounded-[var(--radius-input)] border border-white/20 bg-white/10 px-3.5 py-2.5 text-[0.9375rem] text-white placeholder-gray-400 focus:border-[var(--color-accent)] focus:ring-1 focus:ring-[var(--color-accent)]">
-                    <button type="submit" class="rounded-[var(--radius-button)] bg-[var(--color-accent)] px-4 py-2.5 text-[0.9375rem] font-semibold text-white transition hover:bg-[var(--color-accent-hover)]"><?= htmlspecialchars(__('subscribe')) ?></button>
+            <div class="flex flex-col gap-3">
+                <div>
+                    <p class="text-sm font-bold text-white">Stay up to date</p>
+                    <p class="mt-0.5 text-sm text-gray-400">New parts, deals and restocks — straight to your inbox.</p>
+                </div>
+                <form class="flex gap-2" x-data="{ email: '' }" @submit.prevent="email = ''; alert('Thanks for subscribing!')">
+                    <input type="email" x-model="email" required placeholder="Your email address"
+                           class="w-56 rounded-[var(--radius-input)] border border-white/20 bg-white/10 px-3.5 py-2.5 text-sm text-white placeholder-gray-400 focus:border-[var(--color-accent)] focus:ring-1 focus:ring-[var(--color-accent)]">
+                    <button type="submit" class="shrink-0 rounded-[var(--radius-button)] bg-[var(--color-accent)] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-hover)]">Subscribe</button>
                 </form>
             </div>
         </div>
@@ -74,17 +82,15 @@
     <!-- Link Columns -->
     <div class="border-y border-white/10">
         <div class="mx-auto w-[92%] sm:w-[90%] md:w-[88%] lg:w-[85%] py-8">
-            <div class="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+            <div class="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+
                 <!-- Shop -->
                 <section>
                     <h3 class="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-gray-500"><?= htmlspecialchars(__('shop')) ?></h3>
                     <ul class="grid gap-2.5 text-[0.9375rem]">
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop">All Products</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop?category=electronics">Electronics</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop?category=audio">Audio</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop?category=accessories">Accessories</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var,--color-accent)]" href="/shop?category=gaming">Gaming</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop?category=wearables">Wearables</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/categories">Browse Categories</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/brands">Browse Brands</a></li>
                     </ul>
                 </section>
 
@@ -92,12 +98,9 @@
                 <section>
                     <h3 class="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-gray-500">For Business</h3>
                     <ul class="grid gap-2.5 text-[0.9375rem]">
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/wholesale-partnerships">Wholesale</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/dealer-onboarding">Dealer Onboarding</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/b2b-contact">B2B Contact & Intake</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/advertise">Advertise with Us</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/priority-support">Priority Support</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/bulk-ordering">Bulk Ordering Guide</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/b2b-contact">B2B Overview</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/dealer-onboarding">Become a Dealer</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/partner-program">Partner Program</a></li>
                     </ul>
                 </section>
 
@@ -124,27 +127,11 @@
                             <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/login">Ticket Portal Login</a></li>
                         <?php endif; ?>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/contact"><?= htmlspecialchars(__('contact_us')) ?></a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/returns-warranty">Returns & Warranty</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/order-issues">Order Issues Help</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/vat-invoices">VAT & Invoices</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/returns-warranty">Returns &amp; Warranty</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/faq"><?= htmlspecialchars(__('faq')) ?></a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/installation-guides">Installation Guides</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/compatibility">Compatibility Help</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/availability-restock">Availability & Restock</a></li>
-                    </ul>
-                </section>
-
-                <!-- International -->
-                <section>
-                    <h3 class="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-gray-500">International</h3>
-                    <ul class="grid gap-2.5 text-[0.9375rem]">
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shipping-by-country">Shipping by Country</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/incoterms">Incoterms: DAP & DDP</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/customs-duties">Customs & Duties FAQ</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/international-returns">International Returns</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/customs-checklist">Customs Checklist</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shipping-restrictions">Shipping Restrictions</a></li>
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/exchange-policy-international">International Exchange Policy</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/incoterms">Incoterms: DAP &amp; DDP</a></li>
                     </ul>
                 </section>
 
@@ -152,7 +139,7 @@
                 <section>
                     <h3 class="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-gray-500">Policies</h3>
                     <ul class="grid gap-2.5 text-[0.9375rem]">
-                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/terms-and-conditions">Terms & Conditions</a></li>
+                        <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/terms-and-conditions">Terms &amp; Conditions</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/privacy-policy">Privacy Policy</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/pre-order-policy">Pre-Order Policy</a></li>
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/cookie-policy">Cookie Policy</a></li>
@@ -161,21 +148,7 @@
                         <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/warranty-exclusions">Warranty Exclusions</a></li>
                     </ul>
                 </section>
-            </div>
 
-            <!-- Top Categories -->
-            <div class="mt-7 border-t border-white/10 pt-6">
-                <h3 class="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-gray-500">Top Categories</h3>
-                <ul class="grid grid-cols-1 gap-x-8 gap-y-2.5 text-[0.9375rem] sm:grid-cols-2 lg:grid-cols-4">
-                    <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop?category=audio">Audio & Headphones</a></li>
-                    <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop?category=gaming">Gaming Peripherals</a></li>
-                    <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop?category=accessories">Laptop Accessories</a></li>
-                    <li><a class="text-gray-400 transition-colors hover:text-[var,--color-accent)]" href="/shop?category=wearables">Smartwatches & Trackers</a></li>
-                    <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop?category=electronics">Monitors & Displays</a></li>
-                    <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop?category=home">Smart Home</a></li>
-                    <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop?category=accessories">Cables & Chargers</a></li>
-                    <li><a class="text-gray-400 transition-colors hover:text-[var(--color-accent)]" href="/shop?category=accessories">Bags & Cases</a></li>
-                </ul>
             </div>
         </div>
     </div>

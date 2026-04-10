@@ -576,7 +576,13 @@ final class ProductController extends BaseAdminController
 
         foreach ($attributes as &$attribute) {
             $attribute['options'] = [];
-            if (!empty($attribute['options_json'])) {
+            $type = $attribute['input_type'] ?? 'text';
+            if (in_array($type, ['swatch_color', 'swatch_image', 'multi_select'], true)) {
+                $attribute['options'] = $db->table('attribute_swatch_options')
+                    ->where('attribute_id', $attribute['id'])
+                    ->orderBy('sort_order', 'ASC')
+                    ->get();
+            } elseif (!empty($attribute['options_json'])) {
                 $decoded = json_decode((string) $attribute['options_json'], true);
                 if (is_array($decoded)) {
                     $attribute['options'] = $decoded;
@@ -632,6 +638,26 @@ final class ProductController extends BaseAdminController
 
         if ($type === 'boolean') {
             return in_array((string) $value, ['1', 'true', 'yes', 'on'], true) ? '1' : '0';
+        }
+
+        // Multi-select: value is an array of swatch option values
+        if ($type === 'multi_select') {
+            if (!is_array($value) || empty($value)) {
+                return null;
+            }
+            $allowed = array_column($attribute['options'], 'value');
+            $filtered = array_values(array_filter($value, static fn($v) => in_array((string) $v, $allowed, true)));
+            return empty($filtered) ? null : json_encode($filtered);
+        }
+
+        // Swatch types: single swatch option value
+        if ($type === 'swatch_color' || $type === 'swatch_image') {
+            $stringValue = trim((string) $value);
+            if ($stringValue === '') {
+                return null;
+            }
+            $allowed = array_column($attribute['options'], 'value');
+            return in_array($stringValue, $allowed, true) ? $stringValue : null;
         }
 
         if ($value === null) {

@@ -3,53 +3,69 @@
         <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--color-text)]">Terms & Conditions</h1>
         <p class="mt-3 text-[var(--color-muted)]">Last updated: <?= date('F j, Y') ?></p>
 
+        <nav class="mt-8 rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+            <p class="text-xs font-semibold uppercase tracking-widest text-[var(--color-muted)] mb-3">Contents</p>
+            <ol class="grid gap-1.5 sm:grid-cols-2 text-sm">
+                <li><a href="#general" class="text-[var(--color-accent)] hover:underline">1. General</a></li>
+                <li><a href="#orders" class="text-[var(--color-accent)] hover:underline">2. Orders & Pricing</a></li>
+                <li><a href="#payment" class="text-[var(--color-accent)] hover:underline">3. Payment</a></li>
+                <li><a href="#shipping" class="text-[var(--color-accent)] hover:underline">4. Shipping & Delivery</a></li>
+                <li><a href="#returns" class="text-[var(--color-accent)] hover:underline">5. Returns & Refunds</a></li>
+                <li><a href="#warranty" class="text-[var(--color-accent)] hover:underline">6. Warranty</a></li>
+                <li><a href="#ip" class="text-[var(--color-accent)] hover:underline">7. Intellectual Property</a></li>
+                <li><a href="#liability" class="text-[var(--color-accent)] hover:underline">8. Limitation of Liability</a></li>
+                <li><a href="#law" class="text-[var(--color-accent)] hover:underline">9. Governing Law</a></li>
+                <li><a href="#contact-tac" class="text-[var(--color-accent)] hover:underline">10. Contact</a></li>
+            </ol>
+        </nav>
+
         <div class="mt-10 space-y-8 text-sm text-[var(--color-muted)] leading-relaxed">
-            <div>
+            <div id="general">
                 <h2 class="text-lg font-bold text-[var(--color-text)] mb-2">1. General</h2>
                 <p>These Terms & Conditions ("Terms") govern your use of the Scooter Dynamics website and all purchases made through it. By placing an order, you agree to be bound by these Terms. We reserve the right to update these Terms at any time — the latest version is always available on this page.</p>
             </div>
 
-            <div>
+            <div id="orders">
                 <h2 class="text-lg font-bold text-[var(--color-text)] mb-2">2. Orders & Pricing</h2>
                 <p>All prices are listed in USD and include applicable taxes unless otherwise stated. We reserve the right to correct pricing errors. An order confirmation email does not constitute acceptance — your order is accepted when we dispatch the goods. We may decline orders at our discretion, in which case a full refund will be issued.</p>
             </div>
 
-            <div>
+            <div id="payment">
                 <h2 class="text-lg font-bold text-[var(--color-text)] mb-2">3. Payment</h2>
                 <p>Payment is due at the time of purchase. We accept the methods listed on our <a href="/payment-methods" class="text-[var(--color-accent)] hover:underline">payment methods</a> page. All transactions are processed through PCI-compliant payment providers. We do not store your full card details.</p>
             </div>
 
-            <div>
+            <div id="shipping">
                 <h2 class="text-lg font-bold text-[var(--color-text)] mb-2">4. Shipping & Delivery</h2>
                 <p>Delivery times are estimates and not guaranteed. Risk of loss passes to you upon delivery to the carrier. For international orders, you are responsible for any import duties and taxes unless DDP shipping is selected. See our <a href="/shipping-by-country" class="text-[var(--color-accent)] hover:underline">shipping page</a> for details.</p>
             </div>
 
-            <div>
+            <div id="returns">
                 <h2 class="text-lg font-bold text-[var(--color-text)] mb-2">5. Returns & Refunds</h2>
                 <p>Items may be returned within 30 days of delivery, subject to the conditions outlined in our <a href="/returns-warranty" class="text-[var(--color-accent)] hover:underline">returns & warranty</a> policy. Refunds are issued to the original payment method within 5 business days of receiving the returned item. Shipping costs are non-refundable unless the return is due to our error.</p>
             </div>
 
-            <div>
+            <div id="warranty">
                 <h2 class="text-lg font-bold text-[var(--color-text)] mb-2">6. Warranty</h2>
                 <p>All products carry a 12-month warranty against manufacturing defects. This warranty does not cover damage from misuse, accidents, unauthorized modification, or normal wear and tear. See <a href="/warranty-exclusions" class="text-[var(--color-accent)] hover:underline">warranty exclusions</a> for full details.</p>
             </div>
 
-            <div>
+            <div id="ip">
                 <h2 class="text-lg font-bold text-[var(--color-text)] mb-2">7. Intellectual Property</h2>
                 <p>All content on this website — including text, images, logos, and design — is owned by Scooter Dynamics or its licensors and is protected by copyright and trademark laws. You may not reproduce, distribute, or use any content without our prior written consent.</p>
             </div>
 
-            <div>
+            <div id="liability">
                 <h2 class="text-lg font-bold text-[var(--color-text)] mb-2">8. Limitation of Liability</h2>
                 <p>To the maximum extent permitted by law, Scooter Dynamics shall not be liable for any indirect, incidental, or consequential damages arising from your use of the website or products purchased. Our total liability shall not exceed the amount you paid for the relevant order.</p>
             </div>
 
-            <div>
+            <div id="law">
                 <h2 class="text-lg font-bold text-[var(--color-text)] mb-2">9. Governing Law</h2>
                 <p>These Terms are governed by the laws of the State of Delaware, USA. Any disputes shall be resolved in the courts of Delaware. If any provision is found to be unenforceable, the remaining provisions continue in full force.</p>
             </div>
 
-            <div>
+            <div id="contact-tac">
                 <h2 class="text-lg font-bold text-[var(--color-text)] mb-2">10. Contact</h2>
                 <p>Questions about these Terms? <a href="/contact" class="text-[var(--color-accent)] hover:underline">Contact us</a> or email legal@scooterdynamics.store.</p>
             </div>

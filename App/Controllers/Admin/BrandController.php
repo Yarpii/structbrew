@@ -56,7 +56,7 @@ final class BrandController extends BaseAdminController
      */
     public function create(): Response
     {
-        return $this->adminView('admin/brands/create', [
+        return $this->adminView('admin/brands/form', [
             'title' => 'Create Brand',
         ]);
     }
@@ -122,9 +122,10 @@ final class BrandController extends BaseAdminController
             return $this->redirect('/admin/brands');
         }
 
-        return $this->adminView('admin/brands/edit', [
-            'title' => 'Edit Brand',
-            'brand' => $brand,
+        return $this->adminView('admin/brands/form', [
+            'title'      => 'Edit Brand',
+            'brand'      => $brand,
+            'formAction' => '/admin/brands/' . $id,
         ]);
     }
 

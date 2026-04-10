@@ -35,7 +35,7 @@
                     <div class="flex items-center gap-2 mb-1">
                         <span class="inline-flex items-center rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-bold">LIMITED TIME</span>
                     </div>
-                    <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">Save up to 40% on selected items</h2>
+                    <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">Save up to 40% on selected parts</h2>
                     <p class="mt-1 text-white/80 text-sm">Don't miss these deals — <?= (int) count($onSale) ?> products on sale right now.</p>
                 </div>
             </div>

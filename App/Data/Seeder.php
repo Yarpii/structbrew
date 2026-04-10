@@ -54,11 +54,11 @@ class Seeder
         foreach ($taxData as $t) {
             $zoneId = $db->table('tax_zones')->insert([
                 'name' => $t['name'], 'country_code' => $t['country_code'], 'is_active' => 1,
-                'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H;i:s'),
+                'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'),
             ]);
             $db->table('tax_rates')->insert([
                 'tax_zone_id' => $zoneId, 'name' => "BTW {$t['country_code']}", 'rate' => $t['rate'], 'is_active' => 1,
-                'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H;i:s'),
+                'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'),
             ]);
         }
 
@@ -84,7 +84,7 @@ class Seeder
         $brandIds = [];
         foreach ($brandData as $i => $b) {
             $brandIds[$b['slug']] = $db->table('brands')->insert(array_merge($b, [
-                'is_active' => 1, 'sort_order' => $i, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H;i:s'),
+                'is_active' => 1, 'sort_order' => $i, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'),
             ]));
         }
 
@@ -115,13 +115,13 @@ class Seeder
                 'brand_id' => $brandIds[$v['brand']], 'model' => $v['model'],
                 'year_from' => $v['year_from'], 'year_to' => $v['year_to'],
                 'engine_cc' => $v['cc'], 'slug' => $slug, 'is_active' => 1,
-                'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H;i:s'),
+                'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'),
             ]);
         }
 
         // ─── Categories ──────────────────────────────────────
         echo "  Seeding categories...\n";
-        $catIds = self::seedCategoryTaxonomy($db, [$nlViewId, $deViewId, $frViewId, $enViewId]);
+        $catIds = self::seedCategoryTaxonomy($db, $viewIds);
 
         // ─── Products ────────────────────────────────────────
         echo "  Seeding products...\n";
@@ -193,11 +193,16 @@ class Seeder
                 'weight' => $p['weight'], 'is_active' => 1, 'is_featured' => rand(0, 1),
                 'manage_stock' => 1, 'stock_qty' => $p['stock'], 'low_stock_threshold' => 5,
                 'oem_number' => $p['oem'],
-                'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H;i:s'),
+                'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'),
             ]);
 
             // Translations per store view
+            $seenTranslationViews = [];
             foreach ($localeViewMap as $lang => $svId) {
+                if (in_array((int) $svId, $seenTranslationViews, true)) {
+                    continue;
+                }
+                $seenTranslationViews[] = (int) $svId;
                 $db->table('product_translations')->insert([
                     'product_id' => $productId, 'store_view_id' => $svId,
                     'name' => $p[$lang]['name'], 'short_description' => $p[$lang]['desc'],
@@ -260,7 +265,7 @@ class Seeder
         ];
         foreach ($shippingMethods as $sm) {
             $db->table('shipping_methods')->insert(array_merge($sm, [
-                'is_active' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H;i:s'),
+                'is_active' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'),
             ]));
         }
 
@@ -287,6 +292,7 @@ class Seeder
         $domainAssigned = [];
         $preferredViewIds = ['nl' => null, 'de' => null, 'fr' => null, 'en' => null];
         $defaultViewId = null;
+        $enUsViewId = null;  // will be promoted to is_default after all views are inserted
         $now = date('Y-m-d H:i:s');
         $websiteSort = 0;
         $storeSort = 0;
@@ -331,7 +337,7 @@ class Seeder
                 'locale' => $locale,
                 'currency_code' => $currency,
                 'theme' => 'default',
-                'is_default' => $defaultViewId === null ? 1 : 0,
+                'is_default' => 0,
                 'sort_order' => $viewSort++,
                 'is_active' => 1,
                 'created_at' => $now,
@@ -340,6 +346,11 @@ class Seeder
 
             if ($defaultViewId === null) {
                 $defaultViewId = (int) $viewId;
+            }
+
+            // Track the first en_US view with a root path prefix — this will become the master
+            if ($enUsViewId === null && $locale === 'en_US' && $pathPrefix === '/') {
+                $enUsViewId = (int) $viewId;
             }
 
             if (isset($preferredViewIds[$languageCode]) && $preferredViewIds[$languageCode] === null && $pathPrefix === '/') {
@@ -363,6 +374,12 @@ class Seeder
             }
         }
 
+        // Set the master default: prefer the first en_US root view, fall back to the very first view
+        $masterViewId = $enUsViewId ?? $defaultViewId;
+        if ($masterViewId) {
+            $db->table('store_views')->where('id', $masterViewId)->update(['is_default' => 1]);
+        }
+
         foreach ($preferredViewIds as $lang => $id) {
             if ($id === null) {
                 $preferredViewIds[$lang] = $defaultViewId;
@@ -370,7 +387,7 @@ class Seeder
         }
 
         return [
-            'default_view_id' => (int) $defaultViewId,
+            'default_view_id' => (int) ($masterViewId ?? $defaultViewId),
             'preferred_view_ids' => $preferredViewIds,
         ];
     }
@@ -556,10 +573,15 @@ class Seeder
                 'low_stock_threshold' => 5,
                 'oem_number' => 'OEM-' . str_pad((string) $index, 5, '0', STR_PAD_LEFT),
                 'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H;i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
             ]);
 
+            $seenTranslationViews = [];
             foreach ($localeViewMap as $lang => $svId) {
+                if (in_array((int) $svId, $seenTranslationViews, true)) {
+                    continue;
+                }
+                $seenTranslationViews[] = (int) $svId;
                 $name = $categoryName . ' Item ' . $index;
                 $description = 'Quality replacement and performance part for ' . $categoryName . '.';
                 $db->table('product_translations')->insert([
@@ -663,7 +685,7 @@ class Seeder
             foreach ($attributeRows as $attrCode => $attrValue) {
                 $db->table('product_attributes')->insert([
                     'product_id' => $productId,
-                    'attribute_code' => $attrCode,
+                    'attribute_key' => $attrCode,
                     'attribute_value' => $attrValue,
                 ]);
             }

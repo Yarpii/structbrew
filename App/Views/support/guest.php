@@ -46,13 +46,29 @@
     <div class="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-5" style="box-shadow: var(--shadow-sm)">
         <h3 class="text-sm font-semibold text-[var(--color-text)]">Help Topics</h3>
         <div class="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3 text-sm">
-            <a class="text-[var(--color-accent)] hover:underline" href="/returns-warranty">Returns & Warranty</a>
+            <a class="text-[var(--color-accent)] hover:underline" href="/returns-warranty">Returns &amp; Warranty</a>
+            <a class="text-[var(--color-accent)] hover:underline" href="/returns-decision-tree">Returns Decision Tree</a>
+            <a class="text-[var(--color-accent)] hover:underline" href="/warranty-claim">Warranty Claim Checklist</a>
+            <a class="text-[var(--color-accent)] hover:underline" href="/warranty-exclusions">Warranty Exclusions</a>
             <a class="text-[var(--color-accent)] hover:underline" href="/order-issues">Order Issues Help</a>
-            <a class="text-[var(--color-accent)] hover:underline" href="/vat-invoices">VAT & Invoices</a>
+            <a class="text-[var(--color-accent)] hover:underline" href="/vat-invoices">VAT &amp; Invoices</a>
             <a class="text-[var(--color-accent)] hover:underline" href="/faq">FAQ Hub</a>
             <a class="text-[var(--color-accent)] hover:underline" href="/installation-guides">Installation Guides</a>
             <a class="text-[var(--color-accent)] hover:underline" href="/compatibility">Compatibility Help</a>
-            <a class="text-[var(--color-accent)] hover:underline" href="/availability-restock">Availability & Restock</a>
+            <a class="text-[var(--color-accent)] hover:underline" href="/availability-restock">Availability &amp; Restock</a>
+        </div>
+    </div>
+
+    <div class="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-5" style="box-shadow: var(--shadow-sm)">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h3 class="text-sm font-semibold text-[var(--color-text)]">Business &amp; Wholesale Enquiries</h3>
+                <p class="mt-1 text-xs text-[var(--color-muted)]">Dealer accounts, partner programs, and bulk orders have a dedicated team. Contact us at <a class="text-[var(--color-accent)] hover:underline" href="mailto:b2b@scooterdynamics.store">b2b@scooterdynamics.store</a> or explore our programs.</p>
+            </div>
+            <div class="flex shrink-0 flex-wrap gap-2">
+                <a href="/b2b-contact" class="inline-flex h-9 items-center rounded-md border border-[var(--color-border)] bg-[var(--color-bg)] px-4 text-xs font-medium text-[var(--color-text)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]">B2B Programs</a>
+                <a href="/contact" class="inline-flex h-9 items-center rounded-md bg-[var(--color-accent)] px-4 text-xs font-semibold text-white transition hover:bg-[var(--color-accent-hover)]">Contact Us</a>
+            </div>
         </div>
     </div>
 </section>

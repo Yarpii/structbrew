@@ -88,6 +88,10 @@ $this->post('/admin/content/pages/{id}', ['App\Controllers\Admin\ContentControll
 $this->post('/admin/content/pages/{id}/delete', ['App\Controllers\Admin\ContentController', 'deletePage']);
 $this->get('/admin/content/translations', ['App\Controllers\Admin\ContentController', 'translations']);
 $this->post('/admin/content/translations', ['App\Controllers\Admin\ContentController', 'saveTranslations']);
+$this->post('/admin/content/translations/key', ['App\Controllers\Admin\ContentController', 'addTranslationKey']);
+$this->post('/admin/content/translations/key/{id}/delete', ['App\Controllers\Admin\ContentController', 'deleteTranslationKey']);
+$this->get('/admin/content/translations/export', ['App\Controllers\Admin\ContentController', 'exportTranslations']);
+$this->post('/admin/content/translations/import', ['App\Controllers\Admin\ContentController', 'importTranslations']);
 
 // ─── Stores ──────────────────────────────────────────────────
 $this->get('/admin/stores/websites', ['App\Controllers\Admin\StoreController', 'websites']);
@@ -102,6 +106,26 @@ $this->post('/admin/stores/views/{id}/delete', ['App\Controllers\Admin\StoreCont
 $this->get('/admin/stores/domains', ['App\Controllers\Admin\StoreController', 'domains']);
 $this->post('/admin/stores/domains', ['App\Controllers\Admin\StoreController', 'createDomain']);
 $this->post('/admin/stores/domains/{id}/delete', ['App\Controllers\Admin\StoreController', 'deleteDomain']);
+
+// ─── Partners ────────────────────────────────────────────────
+$this->get('/admin/partners', ['App\Controllers\Admin\PartnerController', 'applications']);
+$this->get('/admin/partners/accounts', ['App\Controllers\Admin\PartnerController', 'accounts']);
+$this->get('/admin/partners/accounts/{id}', ['App\Controllers\Admin\PartnerController', 'showAccount']);
+$this->post('/admin/partners/accounts/{id}', ['App\Controllers\Admin\PartnerController', 'updateAccount']);
+$this->post('/admin/partners/accounts/{id}/referrals', ['App\Controllers\Admin\PartnerController', 'addReferral']);
+$this->post('/admin/partners/accounts/{id}/referrals/{refId}/status', ['App\Controllers\Admin\PartnerController', 'updateReferralStatus']);
+$this->get('/admin/partners/{id}', ['App\Controllers\Admin\PartnerController', 'showApplication']);
+$this->post('/admin/partners/{id}/approve', ['App\Controllers\Admin\PartnerController', 'approveApplication']);
+$this->post('/admin/partners/{id}/reject', ['App\Controllers\Admin\PartnerController', 'rejectApplication']);
+
+// ─── Dealers ─────────────────────────────────────────────────
+$this->get('/admin/dealers', ['App\Controllers\Admin\DealerController', 'applications']);
+$this->get('/admin/dealers/accounts', ['App\Controllers\Admin\DealerController', 'accounts']);
+$this->get('/admin/dealers/accounts/{id}', ['App\Controllers\Admin\DealerController', 'showAccount']);
+$this->post('/admin/dealers/accounts/{id}', ['App\Controllers\Admin\DealerController', 'updateAccount']);
+$this->get('/admin/dealers/{id}', ['App\Controllers\Admin\DealerController', 'showApplication']);
+$this->post('/admin/dealers/{id}/approve', ['App\Controllers\Admin\DealerController', 'approveApplication']);
+$this->post('/admin/dealers/{id}/reject', ['App\Controllers\Admin\DealerController', 'rejectApplication']);
 
 // ─── Configuration ───────────────────────────────────────────
 $this->get('/admin/config', ['App\Controllers\Admin\ConfigController', 'index']);

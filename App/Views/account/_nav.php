@@ -7,6 +7,7 @@ $tabs = [
     'addresses' => ['label' => 'Addresses',  'href' => '/account/addresses'],
     'garage'    => ['label' => 'Garage',     'href' => '/account/garage'],
     'support'   => ['label' => 'Support',    'href' => '/account/tickets'],
+    'partner'   => ['label' => 'Partner',    'href' => '/account/partner'],
 ];
 ?>
 <div class="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-2">

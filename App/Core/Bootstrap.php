@@ -24,6 +24,9 @@ final class Bootstrap
                 require $file;
             }
         });
+
+        require_once $appPath . '/helpers.php';
+
         try {
             // Load configuration
             Config::load($rootPath . '/config');

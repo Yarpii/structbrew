@@ -35,8 +35,8 @@
 <body class="h-full bg-admin-bg" x-data="{ sidebarOpen: true, mobileMenu: false }">
     <div class="flex h-full">
         <!-- Sidebar -->
-        <aside class="fixed inset-y-0 left-0 z-30 flex flex-col bg-admin-sidebar text-white transition-all duration-300"
-               :class="sidebarOpen ? 'w-64' : 'w-20'">
+        <aside class="fixed inset-y-0 left-0 z-30 flex flex-col bg-admin-sidebar text-white transition-all duration-300 w-56"
+               :class="sidebarOpen ? 'w-56' : 'w-20'">
             <!-- Logo -->
             <div class="flex items-center h-16 px-4 border-b border-white/10">
                 <div class="flex items-center gap-3">
@@ -47,8 +47,8 @@
 
             <!-- Store Scope Selector -->
             <?php if (!empty($storeViews)): ?>
-            <div class="px-3 py-3 border-b border-white/10" x-show="sidebarOpen" x-cloak>
-                <select name="store_scope" onchange="window.location.href='?store_view='+this.value"
+            <div class="px-2 py-2 border-b border-white/10" x-show="sidebarOpen" x-cloak>
+                <select name="store_scope" onchange="window.location.href=window.location.pathname+'?store_view='+this.value"
                         class="w-full bg-admin-sidebar-hover text-white text-sm rounded-lg px-3 py-2 border border-white/20 focus:outline-none focus:border-admin-accent">
                     <option value="0">All Store Views</option>
                     <?php foreach ($storeViews as $sv): ?>
@@ -61,7 +61,7 @@
             <?php endif; ?>
 
             <!-- Navigation -->
-            <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <nav class="flex-1 overflow-y-auto py-2 px-2 space-y-0.5">
                 <?php
                 $menuItems = [
                     ['label' => 'Dashboard', 'url' => '/admin', 'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6', 'section' => ''],
@@ -74,6 +74,12 @@
                     ['label' => 'SALES', 'section' => 'header'],
                     ['label' => 'Orders', 'url' => '/admin/orders', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01', 'section' => 'sales'],
                     ['label' => 'Customers', 'url' => '/admin/customers', 'icon' => 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z', 'section' => 'sales'],
+                    ['label' => 'PARTNERS', 'section' => 'header'],
+                    ['label' => 'Applications', 'url' => '/admin/partners', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'section' => 'partners'],
+                    ['label' => 'Partner Accounts', 'url' => '/admin/partners/accounts', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z', 'section' => 'partners'],
+                    ['label' => 'DEALERS', 'section' => 'header'],
+                    ['label' => 'Applications', 'url' => '/admin/dealers', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'section' => 'dealers'],
+                    ['label' => 'Dealer Accounts', 'url' => '/admin/dealers/accounts', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4', 'section' => 'dealers'],
                     ['label' => 'MARKETING', 'section' => 'header'],
                     ['label' => 'Price Rules', 'url' => '/admin/marketing/price-rules', 'icon' => 'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z', 'section' => 'marketing'],
                     ['label' => 'Coupons', 'url' => '/admin/marketing/coupons', 'icon' => 'M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z', 'section' => 'marketing'],
@@ -101,14 +107,14 @@
                 foreach ($menuItems as $item):
                     if ($item['section'] === 'header'):
                 ?>
-                    <div class="pt-4 pb-1 px-3" x-show="sidebarOpen" x-cloak>
-                        <span class="text-xs font-semibold text-slate-400 tracking-wider"><?= htmlspecialchars((string) $item['label']) ?></span>
+                    <div class="pt-3 pb-0.5 px-2" x-show="sidebarOpen" x-cloak>
+                        <span class="text-xs font-semibold text-slate-400 tracking-wider uppercase"><?= htmlspecialchars((string) $item['label']) ?></span>
                     </div>
                 <?php else:
                     $isActive = ($currentPath === $item['url']) || ($item['url'] !== '/admin' && str_starts_with($currentPath, $item['url']));
                 ?>
                     <a href="<?= htmlspecialchars($item['url']) ?>"
-                       class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors <?= $isActive ? 'bg-admin-accent text-white' : 'text-slate-300 hover:bg-admin-sidebar-hover hover:text-white' ?>">
+                       class="flex items-center gap-2.5 px-2.5 py-1.5 rounded text-sm transition-colors <?= $isActive ? 'bg-admin-accent text-white' : 'text-slate-300 hover:bg-admin-sidebar-hover hover:text-white' ?>">
                         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="<?= htmlspecialchars($item['icon']) ?>"/>
                         </svg>
@@ -130,7 +136,7 @@
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 transition-all duration-300" :class="sidebarOpen ? 'ml-64' : 'ml-20'">
+        <div class="flex-1 transition-all duration-300 ml-56" :class="sidebarOpen ? 'ml-56' : 'ml-20'">
             <!-- Top Bar -->
             <header class="sticky top-0 z-20 bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6">
                 <div class="flex items-center gap-4">

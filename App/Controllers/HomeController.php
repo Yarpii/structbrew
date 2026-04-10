@@ -20,14 +20,76 @@ final class HomeController extends Controller
     public function index(Request $req): Response
     {
         Translator::page('shop');
+
+        $db = Database::getInstance();
+
+        // Garage: brands + vehicle options (needed for both guests and logged-in)
+        $brands = $db->table('brands')->where('is_active', 1)->orderBy('name', 'ASC')->get();
+        $brandById = [];
+        foreach ($brands as $brand) {
+            $brandById[(int) $brand['id']] = (string) $brand['name'];
+        }
+
+        $vehicles = $db->table('vehicles')->where('is_active', 1)->orderBy('model', 'ASC')->get();
+        $garageVehicleOptions = [];
+        foreach ($vehicles as $vehicle) {
+            $brandName = $brandById[(int) ($vehicle['brand_id'] ?? 0)] ?? 'Unknown';
+            $garageVehicleOptions[] = [
+                'id'       => (int) $vehicle['id'],
+                'brand_id' => (int) ($vehicle['brand_id'] ?? 0),
+                'brand'    => $brandName,
+                'model'    => (string) ($vehicle['model'] ?? ''),
+                'label'    => trim($brandName . ' ' . (string) ($vehicle['model'] ?? '')),
+            ];
+        }
+
+        // Garage vehicles for logged-in users
+        $garageVehicles = [];
+        if (Auth::isLoggedIn()) {
+            $customerId = (int) Auth::customerId();
+            try {
+                $rows = $db->table('customer_vehicles')
+                    ->where('customer_id', $customerId)
+                    ->orderBy('is_default', 'DESC')
+                    ->orderBy('id', 'ASC')
+                    ->get();
+                foreach ($rows as $row) {
+                    $meta = null;
+                    foreach ($garageVehicleOptions as $opt) {
+                        if ((int) $opt['id'] === (int) ($row['vehicle_id'] ?? 0)) {
+                            $meta = $opt;
+                            break;
+                        }
+                    }
+                    if ($meta === null) continue;
+                    $garageVehicles[] = [
+                        'id'           => (int) ($row['id'] ?? 0),
+                        'vehicle_id'   => (int) ($row['vehicle_id'] ?? 0),
+                        'vehicle_type' => (string) ($row['vehicle_type'] ?? 'scooter'),
+                        'is_default'   => (int) ($row['is_default'] ?? 0) === 1,
+                        'label'        => $meta['label'],
+                        'brand'        => $meta['brand'],
+                        'model'        => $meta['model'],
+                    ];
+                }
+            } catch (\Throwable) {}
+        }
+
         return $this->view('home.index', [
-            'title'       => 'Home',
-            'featured'    => Products::featured(4),
-            'trending'    => Products::trending(4),
-            'newArrivals' => Products::newArrivals(4),
-            'onSale'      => Products::onSale(),
-            'categories'  => Products::categories(),
-            'ads'         => $this->activeAdsByPlacements(['home_find_setup', 'home_deals', 'home_newsletter']),
+            'title'                => 'Home',
+            'featured'             => Products::featured(6),
+            'trending'             => Products::trending(6),
+            'newArrivals'          => Products::newArrivals(6),
+            'onSale'               => Products::onSale(),
+            'engineParts'          => Products::byCategory('engine-components', 6),
+            'exhaustParts'         => Products::byCategory('exhaust-systems', 6),
+            'brakesParts'          => Products::byCategory('braking-systems', 6),
+            'performanceParts'     => Products::byCategory('performance-tuning', 6),
+            'wheelsParts'          => Products::byCategory('wheels-tires-hubs', 6),
+            'categories'           => Products::categories(),
+            'ads'                  => $this->activeAdsByPlacements(['home_find_setup', 'home_deals', 'home_newsletter']),
+            'garageVehicleOptions' => $garageVehicleOptions,
+            'garageVehicles'       => $garageVehicles,
         ]);
     }
 

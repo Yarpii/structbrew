@@ -24,7 +24,7 @@ final class AuthController extends Controller
 
         View::setDefaultLayout(null);
 
-        return $this->view('admin/auth/login', [
+        return $this->view('admin.layout.login', [
             'csrfToken'  => Session::csrfToken(),
             'flashError' => Session::getFlash('error'),
         ]);

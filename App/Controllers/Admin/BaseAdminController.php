@@ -36,7 +36,15 @@ abstract class BaseAdminController extends Controller
             ->orderBy('sort_order', 'ASC')
             ->get();
 
+        // Persist store view selection in session
+        $storeViewParam = $this->request?->query('store_view');
+        if ($storeViewParam !== null) {
+            Session::set('admin_store_view', (int) $storeViewParam);
+        }
+        $currentStoreView = Session::get('admin_store_view', 0);
+
         View::share('storeViews', $this->storeViews);
+        View::share('currentStoreView', $currentStoreView);
         View::share('csrfToken', Session::csrfToken());
         View::share('flashSuccess', Session::getFlash('success'));
         View::share('flashError', Session::getFlash('error'));
@@ -48,11 +56,12 @@ abstract class BaseAdminController extends Controller
     protected function adminView(string $viewName, array $data = [], int $status = 200): Response
     {
         $data = array_merge([
-            'adminUser'    => Auth::admin(),
-            'storeViews'   => $this->storeViews,
-            'csrfToken'    => Session::csrfToken(),
-            'flashSuccess' => Session::getFlash('success'),
-            'flashError'   => Session::getFlash('error'),
+            'adminUser'        => Auth::admin(),
+            'storeViews'       => $this->storeViews,
+            'currentStoreView' => Session::get('admin_store_view', 0),
+            'csrfToken'        => Session::csrfToken(),
+            'flashSuccess'     => Session::getFlash('success'),
+            'flashError'       => Session::getFlash('error'),
         ], $data);
 
         return $this->view($viewName, $data, $status);

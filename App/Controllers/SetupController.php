@@ -224,16 +224,26 @@ class SetupController extends Controller
         Database::resetInstance();
 
         try {
-            // 4. Run migrations
+            // 4. Run migrations — use fresh() if tables already exist from a prior failed attempt
             $migration = new Migration();
-            $migrationResult = $migration->run();
+            $db = Database::getInstance();
+            $existingTables = $db->raw("SHOW TABLES")->fetchAll(\PDO::FETCH_COLUMN);
+            $migrationResult = count($existingTables) > 0
+                ? $migration->fresh()
+                : $migration->run();
 
             // 5. Seed the database
-            require_once $this->rootPath . '/App/Data/Seeder.php';
-            \App\Data\Seeder::run();
+            $obStarted = ob_start();
+            try {
+                require_once $this->rootPath . '/App/Data/Seeder.php';
+                \App\Data\Seeder::run();
+            } finally {
+                if ($obStarted && ob_get_level() > 0) {
+                    ob_end_clean();
+                }
+            }
 
             // 6. Create admin user (may already exist from seeder, update if so)
-            $db = Database::getInstance();
             $existingAdmin = $db->table('admin_users')->where('email', $adminEmail)->first();
             if (!$existingAdmin) {
                 $role = $db->table('admin_roles')->where('name', 'Super Admin')->first();
@@ -268,8 +278,10 @@ class SetupController extends Controller
         } catch (Throwable $e) {
             // Remove .env on failure so setup can be retried
             @unlink($this->rootPath . '/.env');
-            error_log("StructBrew setup failed: " . $e->getMessage() . "\n" . $e->getTraceAsString());
-            Session::flash('setup_error', 'Installation failed. Please check the server error log for details.');
+            $logMsg = "StructBrew setup failed: " . $e->getMessage() . "\n" . $e->getTraceAsString();
+            error_log($logMsg);
+            @file_put_contents($this->rootPath . '/setup_error.log', date('[Y-m-d H:i:s] ') . $logMsg . "\n", FILE_APPEND);
+            Session::flash('setup_error', 'Installation failed: ' . $e->getMessage());
             return $this->redirect('/setup/admin');
         }
     }

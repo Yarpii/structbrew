@@ -41,7 +41,7 @@ final class Products
         return $products[0] ?? null;
     }
 
-    public static function byCategory(string $category): array
+    public static function byCategory(string $category, int $limit = 0): array
     {
         $db = Database::getInstance();
         $categoryRow = $db->table('categories')->where('slug', $category)->first();
@@ -88,7 +88,8 @@ final class Products
             ->orderBy('id', 'DESC')
             ->get();
 
-        return self::hydrateProducts($products);
+        $result = self::hydrateProducts($products);
+        return $limit > 0 ? array_slice($result, 0, $limit) : $result;
     }
 
     public static function featured(int $limit = 8): array

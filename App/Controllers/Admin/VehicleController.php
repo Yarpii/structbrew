@@ -21,7 +21,7 @@ final class VehicleController extends BaseAdminController
         $perPage = 20;
 
         $search  = (string) $this->request->query('search');
-        $brandId = $this->request->query('brand_id');
+        $brandId = $this->request->query('brand');
 
         $query = $db->table('vehicles')
             ->select('vehicles.*', 'brands.name as brand_name')
@@ -53,11 +53,11 @@ final class VehicleController extends BaseAdminController
         $brands = $db->table('brands')->orderBy('name', 'ASC')->get();
 
         return $this->adminView('admin/vehicles/index', [
-            'title'    => 'Vehicles',
-            'vehicles' => $vehicles,
-            'brands'   => $brands,
-            'search'   => $search,
-            'brandId'  => $brandId,
+            'title'         => 'Vehicles',
+            'vehicles'      => $vehicles,
+            'vehicleBrands' => $brands,
+            'search'        => $search,
+            'brandId'       => $brandId,
         ]);
     }
 
@@ -69,9 +69,9 @@ final class VehicleController extends BaseAdminController
         $db = Database::getInstance();
         $brands = $db->table('brands')->orderBy('name', 'ASC')->get();
 
-        return $this->adminView('admin/vehicles/create', [
-            'title'  => 'Create Vehicle',
-            'brands' => $brands,
+        return $this->adminView('admin/vehicles/form', [
+            'title'         => 'Create Vehicle',
+            'vehicleBrands' => $brands,
         ]);
     }
 
@@ -143,10 +143,11 @@ final class VehicleController extends BaseAdminController
 
         $brands = $db->table('brands')->orderBy('name', 'ASC')->get();
 
-        return $this->adminView('admin/vehicles/edit', [
-            'title'   => 'Edit Vehicle',
-            'vehicle' => $vehicle,
-            'brands'  => $brands,
+        return $this->adminView('admin/vehicles/form', [
+            'title'         => 'Edit Vehicle',
+            'vehicle'       => $vehicle,
+            'vehicleBrands' => $brands,
+            'formAction'    => '/admin/vehicles/' . $id,
         ]);
     }
 

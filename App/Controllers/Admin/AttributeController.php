@@ -48,16 +48,17 @@ final class AttributeController extends BaseAdminController
     public function create(): Response
     {
         return $this->adminView('admin/attributes/form', [
-            'title' => 'Create Attribute',
-            'formAction' => '/admin/attributes',
-            'attribute' => [
-                'input_type' => 'text',
-                'is_required' => 0,
-                'is_filterable' => 0,
-                'is_active' => 1,
-                'sort_order' => 0,
+            'title'       => 'Create Attribute',
+            'formAction'  => '/admin/attributes',
+            'attribute'   => [
+                'input_type'   => 'text',
+                'is_required'  => 0,
+                'is_filterable'=> 0,
+                'is_active'    => 1,
+                'sort_order'   => 0,
             ],
-            'optionsText' => '',
+            'optionsText'   => '',
+            'swatchOptions' => [],
         ]);
     }
 
@@ -71,9 +72,9 @@ final class AttributeController extends BaseAdminController
         $data = $this->validatedInput();
 
         $validator = Validator::make($data, [
-            'code' => 'required|slug|unique:attributes,code',
-            'label' => 'required|max:255',
-            'input_type' => 'required|in:text,textarea,number,boolean,select',
+            'code'       => 'required|slug|unique:attributes,code',
+            'label'      => 'required|max:255',
+            'input_type' => 'required|in:text,textarea,number,boolean,select,swatch_color,swatch_image,multi_select',
             'sort_order' => 'integer',
         ]);
 
@@ -82,21 +83,31 @@ final class AttributeController extends BaseAdminController
             return $this->redirect('/admin/attributes/create');
         }
 
-        $db = Database::getInstance();
+        $db  = Database::getInstance();
         $now = date('Y-m-d H:i:s');
 
-        $attributeId = $db->table('attributes')->insert([
-            'code' => $data['code'],
-            'label' => $data['label'],
-            'input_type' => $data['input_type'],
-            'options_json' => $this->optionsToJson($data['input_type'], $data['options_text']),
-            'is_required' => (int) $data['is_required'],
-            'is_filterable' => (int) $data['is_filterable'],
-            'is_active' => (int) $data['is_active'],
-            'sort_order' => (int) $data['sort_order'],
-            'created_at' => $now,
-            'updated_at' => $now,
-        ]);
+        $db->beginTransaction();
+        try {
+            $attributeId = $db->table('attributes')->insert([
+                'code'         => $data['code'],
+                'label'        => $data['label'],
+                'input_type'   => $data['input_type'],
+                'options_json' => $this->optionsToJson($data['input_type'], $data['options_text']),
+                'is_required'  => (int) $data['is_required'],
+                'is_filterable'=> (int) $data['is_filterable'],
+                'is_active'    => (int) $data['is_active'],
+                'sort_order'   => (int) $data['sort_order'],
+                'created_at'   => $now,
+                'updated_at'   => $now,
+            ]);
+
+            $this->syncSwatchOptions($db, (int) $attributeId, $data['input_type']);
+            $db->commit();
+        } catch (\Throwable $e) {
+            $db->rollback();
+            Session::flash('error', 'Failed to create attribute: ' . $e->getMessage());
+            return $this->redirect('/admin/attributes/create');
+        }
 
         $this->logActivity('create', 'attribute', $attributeId, null, $data);
         Session::flash('success', 'Attribute created successfully.');
@@ -122,11 +133,18 @@ final class AttributeController extends BaseAdminController
             }
         }
 
+        $swatchOptions = Database::getInstance()
+            ->table('attribute_swatch_options')
+            ->where('attribute_id', $id)
+            ->orderBy('sort_order', 'ASC')
+            ->get();
+
         return $this->adminView('admin/attributes/form', [
-            'title' => 'Edit Attribute',
-            'formAction' => '/admin/attributes/' . $id,
-            'attribute' => $attribute,
-            'optionsText' => implode("\n", $options),
+            'title'         => 'Edit Attribute',
+            'formAction'    => '/admin/attributes/' . $id,
+            'attribute'     => $attribute,
+            'optionsText'   => implode("\n", $options),
+            'swatchOptions' => $swatchOptions,
         ]);
     }
 
@@ -147,9 +165,9 @@ final class AttributeController extends BaseAdminController
         $data = $this->validatedInput();
 
         $validator = Validator::make($data, [
-            'code' => 'required|slug|unique:attributes,code,' . $id,
-            'label' => 'required|max:255',
-            'input_type' => 'required|in:text,textarea,number,boolean,select',
+            'code'       => 'required|slug|unique:attributes,code,' . $id,
+            'label'      => 'required|max:255',
+            'input_type' => 'required|in:text,textarea,number,boolean,select,swatch_color,swatch_image,multi_select',
             'sort_order' => 'integer',
         ]);
 
@@ -162,15 +180,15 @@ final class AttributeController extends BaseAdminController
 
         try {
             $db->table('attributes')->where('id', $id)->update([
-                'code' => $data['code'],
-                'label' => $data['label'],
-                'input_type' => $data['input_type'],
+                'code'         => $data['code'],
+                'label'        => $data['label'],
+                'input_type'   => $data['input_type'],
                 'options_json' => $this->optionsToJson($data['input_type'], $data['options_text']),
-                'is_required' => (int) $data['is_required'],
-                'is_filterable' => (int) $data['is_filterable'],
-                'is_active' => (int) $data['is_active'],
-                'sort_order' => (int) $data['sort_order'],
-                'updated_at' => date('Y-m-d H:i:s'),
+                'is_required'  => (int) $data['is_required'],
+                'is_filterable'=> (int) $data['is_filterable'],
+                'is_active'    => (int) $data['is_active'],
+                'sort_order'   => (int) $data['sort_order'],
+                'updated_at'   => date('Y-m-d H:i:s'),
             ]);
 
             if ($attribute['code'] !== $data['code']) {
@@ -179,6 +197,7 @@ final class AttributeController extends BaseAdminController
                     ->update(['attribute_key' => $data['code']]);
             }
 
+            $this->syncSwatchOptions($db, $id, $data['input_type']);
             $db->commit();
 
             $this->logActivity('update', 'attribute', $id, $attribute, $data);
@@ -245,7 +264,7 @@ final class AttributeController extends BaseAdminController
             return null;
         }
 
-        $rows = preg_split('/\r\n|\r|\n/', $optionsText) ?: [];
+        $rows    = preg_split('/\r\n|\r|\n/', $optionsText) ?: [];
         $options = [];
         foreach ($rows as $row) {
             $option = trim($row);
@@ -255,5 +274,92 @@ final class AttributeController extends BaseAdminController
         }
 
         return empty($options) ? null : json_encode(array_values(array_unique($options)));
+    }
+
+    private function syncSwatchOptions(Database $db, int $attributeId, string $inputType): void
+    {
+        if (!in_array($inputType, ['swatch_color', 'swatch_image', 'multi_select'], true)) {
+            return;
+        }
+
+        $labels     = (array) ($this->input('swatch_labels', []));
+        $values     = (array) ($this->input('swatch_values', []));
+        $existingIds= (array) ($this->input('swatch_ids', []));
+        $files      = $_FILES['swatch_images'] ?? [];
+
+        // Delete options that were removed (not in submitted swatch_ids)
+        $keepIds = array_filter(array_map('intval', $existingIds));
+        if (!empty($keepIds)) {
+            $placeholders = implode(',', array_fill(0, count($keepIds), '?'));
+            $db->statement(
+                "DELETE FROM attribute_swatch_options WHERE attribute_id = ? AND id NOT IN ({$placeholders})",
+                array_merge([$attributeId], $keepIds)
+            );
+        } else {
+            $db->table('attribute_swatch_options')->where('attribute_id', $attributeId)->delete();
+        }
+
+        foreach ($labels as $idx => $label) {
+            $label = trim((string) $label);
+            if ($label === '') {
+                continue;
+            }
+
+            $value    = trim((string) ($values[$idx] ?? ''));
+            $existId  = (int) ($existingIds[$idx] ?? 0);
+
+            // Handle image upload for swatch_image type
+            if ($inputType === 'swatch_image') {
+                $uploadedName = $files['name'][$idx] ?? '';
+                $tmpPath      = $files['tmp_name'][$idx] ?? '';
+                $uploadErr    = $files['error'][$idx] ?? UPLOAD_ERR_NO_FILE;
+
+                if ($uploadErr === UPLOAD_ERR_OK && $tmpPath !== '') {
+                    $ext      = strtolower(pathinfo((string) $uploadedName, PATHINFO_EXTENSION));
+                    $allowed  = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+                    if (in_array($ext, $allowed, true)) {
+                        $filename = 'swatch_' . $attributeId . '_' . uniqid() . '.' . $ext;
+                        $dest     = __DIR__ . '/../../../public/uploads/attributes/' . $filename;
+                        if (move_uploaded_file($tmpPath, $dest)) {
+                            // Remove old image file if replacing
+                            if ($existId > 0) {
+                                $old = $db->table('attribute_swatch_options')->where('id', $existId)->first();
+                                if ($old && !empty($old['value'])) {
+                                    $oldFile = __DIR__ . '/../../../public/uploads/attributes/' . $old['value'];
+                                    if (is_file($oldFile)) {
+                                        @unlink($oldFile);
+                                    }
+                                }
+                            }
+                            $value = $filename;
+                        }
+                    }
+                }
+                // Keep existing value if no new upload
+                if ($value === '' && $existId > 0) {
+                    $existing = $db->table('attribute_swatch_options')->where('id', $existId)->first();
+                    $value    = $existing['value'] ?? '';
+                }
+            }
+
+            if ($value === '') {
+                continue;
+            }
+
+            if ($existId > 0) {
+                $db->table('attribute_swatch_options')->where('id', $existId)->update([
+                    'label'      => $label,
+                    'value'      => $value,
+                    'sort_order' => (int) $idx,
+                ]);
+            } else {
+                $db->table('attribute_swatch_options')->insert([
+                    'attribute_id' => $attributeId,
+                    'label'        => $label,
+                    'value'        => $value,
+                    'sort_order'   => (int) $idx,
+                ]);
+            }
+        }
     }
 }

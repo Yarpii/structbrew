@@ -692,8 +692,12 @@ final class AccountController extends BaseStorefrontController
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
 
+        $redirectTo = trim((string) $this->input('_redirect', '/account/garage'));
+        if (!in_array($redirectTo, ['/account/garage', '/'], true)) {
+            $redirectTo = '/account/garage';
+        }
         Session::flash('success', 'Vehicle added to your garage.');
-        return $this->redirect('/account/garage');
+        return $this->redirect($redirectTo);
     }
 
     public function deleteGarageVehicle(string $id): Response
@@ -742,8 +746,12 @@ final class AccountController extends BaseStorefrontController
             }
         }
 
+        $redirectTo = trim((string) $this->input('_redirect', '/account/garage'));
+        if (!in_array($redirectTo, ['/account/garage', '/'], true)) {
+            $redirectTo = '/account/garage';
+        }
         Session::flash('success', 'Vehicle removed from your garage.');
-        return $this->redirect('/account/garage');
+        return $this->redirect($redirectTo);
     }
 
     public function selectGarageVehicle(string $id): Response
@@ -786,6 +794,291 @@ final class AccountController extends BaseStorefrontController
             ]);
 
         Session::flash('success', 'Default garage vehicle updated.');
+        return $this->redirect('/account/garage');
+    }
+
+    public function updateGarageVehicle(string $id): Response
+    {
+        if ($response = $this->redirectIfGuest()) {
+            return $response;
+        }
+
+        if (!$this->verifyCsrf()) {
+            Session::flash('error', 'Invalid security token.');
+            return $this->redirect('/account/garage');
+        }
+
+        $customerId = (int) Auth::customerId();
+        $db = Database::getInstance();
+
+        $vehicle = $db->table('customer_vehicles')
+            ->where('id', (int) $id)
+            ->where('customer_id', $customerId)
+            ->first();
+
+        if (!$vehicle) {
+            Session::flash('error', 'Garage vehicle not found.');
+            return $this->redirect('/account/garage');
+        }
+
+        $mileage = $this->input('mileage_km', '');
+        $interval = $this->input('service_interval_km', '');
+        $lastService = $this->input('last_service_km', '');
+        $notes = trim((string) $this->input('notes', ''));
+
+        $db->table('customer_vehicles')
+            ->where('id', (int) $id)
+            ->where('customer_id', $customerId)
+            ->update([
+                'mileage_km' => $mileage !== '' && $mileage !== null ? (int) $mileage : null,
+                'service_interval_km' => $interval !== '' && $interval !== null ? (int) $interval : null,
+                'last_service_km' => $lastService !== '' && $lastService !== null ? (int) $lastService : null,
+                'notes' => $notes !== '' ? $notes : null,
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+
+        Session::flash('success', 'Vehicle details updated.');
+        return $this->redirect('/account/garage');
+    }
+
+    public function uploadGaragePhoto(string $id): Response
+    {
+        if ($response = $this->redirectIfGuest()) {
+            return $response;
+        }
+
+        if (!$this->verifyCsrf()) {
+            Session::flash('error', 'Invalid security token.');
+            return $this->redirect('/account/garage');
+        }
+
+        $customerId = (int) Auth::customerId();
+        $db = Database::getInstance();
+
+        $vehicle = $db->table('customer_vehicles')
+            ->where('id', (int) $id)
+            ->where('customer_id', $customerId)
+            ->first();
+
+        if (!$vehicle) {
+            Session::flash('error', 'Garage vehicle not found.');
+            return $this->redirect('/account/garage');
+        }
+
+        $file = $_FILES['photo'] ?? null;
+        if (!$file || ($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+            Session::flash('error', 'No photo was uploaded.');
+            return $this->redirect('/account/garage');
+        }
+
+        if (($file['size'] ?? 0) > 5 * 1024 * 1024) {
+            Session::flash('error', 'Photo must be under 5 MB.');
+            return $this->redirect('/account/garage');
+        }
+
+        $mime = mime_content_type($file['tmp_name']);
+        $allowedMimes = ['image/jpeg' => 'jpg', 'image/jpg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
+        if (!isset($allowedMimes[$mime])) {
+            Session::flash('error', 'Only JPEG, PNG, or WebP images are allowed.');
+            return $this->redirect('/account/garage');
+        }
+
+        $ext = $allowedMimes[$mime];
+        $filename = $customerId . '_' . $id . '_' . uniqid() . '.' . $ext;
+        $destDir = __DIR__ . '/../../public/uploads/garage/';
+        $destPath = $destDir . $filename;
+
+        if (!is_dir($destDir)) {
+            mkdir($destDir, 0755, true);
+        }
+
+        // Delete old photo if present
+        $oldPath = (string) ($vehicle['photo_path'] ?? '');
+        if ($oldPath !== '' && file_exists(__DIR__ . '/../../public/' . ltrim($oldPath, '/'))) {
+            @unlink(__DIR__ . '/../../public/' . ltrim($oldPath, '/'));
+        }
+
+        if (!move_uploaded_file($file['tmp_name'], $destPath)) {
+            Session::flash('error', 'Failed to save the photo. Please try again.');
+            return $this->redirect('/account/garage');
+        }
+
+        $db->table('customer_vehicles')
+            ->where('id', (int) $id)
+            ->where('customer_id', $customerId)
+            ->update([
+                'photo_path' => 'uploads/garage/' . $filename,
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+
+        Session::flash('success', 'Photo updated.');
+        return $this->redirect('/account/garage');
+    }
+
+    public function updateGarageSpec(string $id): Response
+    {
+        if ($response = $this->redirectIfGuest()) {
+            return $response;
+        }
+
+        if (!$this->verifyCsrf()) {
+            Session::flash('error', 'Invalid security token.');
+            return $this->redirect('/account/garage');
+        }
+
+        $customerId = (int) Auth::customerId();
+        $db = Database::getInstance();
+
+        $vehicle = $db->table('customer_vehicles')
+            ->where('id', (int) $id)
+            ->where('customer_id', $customerId)
+            ->first();
+
+        if (!$vehicle) {
+            Session::flash('error', 'Garage vehicle not found.');
+            return $this->redirect('/account/garage');
+        }
+
+        $year    = $this->input('spec_year', '');
+        $colour  = trim((string) $this->input('spec_colour', ''));
+        $cc      = $this->input('spec_engine_cc', '');
+        $mods    = trim((string) $this->input('spec_mods_summary', ''));
+
+        $db->table('customer_vehicles')
+            ->where('id', (int) $id)
+            ->where('customer_id', $customerId)
+            ->update([
+                'spec_year'         => $year !== '' && $year !== null ? (int) $year : null,
+                'spec_colour'       => $colour !== '' ? $colour : null,
+                'spec_engine_cc'    => $cc !== '' && $cc !== null ? (int) $cc : null,
+                'spec_mods_summary' => $mods !== '' ? $mods : null,
+                'updated_at'        => date('Y-m-d H:i:s'),
+            ]);
+
+        Session::flash('success', 'Build spec saved.');
+        return $this->redirect('/account/garage');
+    }
+
+    public function storeGarageMod(string $id): Response
+    {
+        if ($response = $this->redirectIfGuest()) {
+            return $response;
+        }
+
+        if (!$this->verifyCsrf()) {
+            Session::flash('error', 'Invalid security token.');
+            return $this->redirect('/account/garage');
+        }
+
+        $customerId = (int) Auth::customerId();
+        $db = Database::getInstance();
+
+        $vehicle = $db->table('customer_vehicles')
+            ->where('id', (int) $id)
+            ->where('customer_id', $customerId)
+            ->first();
+
+        if (!$vehicle) {
+            Session::flash('error', 'Garage vehicle not found.');
+            return $this->redirect('/account/garage');
+        }
+
+        $title  = trim((string) $this->input('title', ''));
+        $search = trim((string) $this->input('product_search', ''));
+
+        if ($title === '') {
+            Session::flash('error', 'Mod title is required.');
+            return $this->redirect('/account/garage');
+        }
+
+        $db->table('customer_vehicle_mods')->insert([
+            'customer_vehicle_id' => (int) $id,
+            'title'               => substr($title, 0, 255),
+            'product_search'      => $search !== '' ? substr($search, 0, 255) : null,
+            'is_done'             => 0,
+            'sort_order'          => 0,
+            'created_at'          => date('Y-m-d H:i:s'),
+            'updated_at'          => date('Y-m-d H:i:s'),
+        ]);
+
+        Session::flash('success', 'Mod added to your list.');
+        return $this->redirect('/account/garage');
+    }
+
+    public function toggleGarageMod(string $id, string $modId): Response
+    {
+        if ($response = $this->redirectIfGuest()) {
+            return $response;
+        }
+
+        if (!$this->verifyCsrf()) {
+            Session::flash('error', 'Invalid security token.');
+            return $this->redirect('/account/garage');
+        }
+
+        $customerId = (int) Auth::customerId();
+        $db = Database::getInstance();
+
+        $vehicle = $db->table('customer_vehicles')
+            ->where('id', (int) $id)
+            ->where('customer_id', $customerId)
+            ->first();
+
+        if (!$vehicle) {
+            Session::flash('error', 'Garage vehicle not found.');
+            return $this->redirect('/account/garage');
+        }
+
+        $mod = $db->table('customer_vehicle_mods')
+            ->where('id', (int) $modId)
+            ->where('customer_vehicle_id', (int) $id)
+            ->first();
+
+        if (!$mod) {
+            Session::flash('error', 'Mod not found.');
+            return $this->redirect('/account/garage');
+        }
+
+        $db->table('customer_vehicle_mods')
+            ->where('id', (int) $modId)
+            ->update([
+                'is_done'    => (int) $mod['is_done'] === 1 ? 0 : 1,
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+
+        return $this->redirect('/account/garage');
+    }
+
+    public function deleteGarageMod(string $id, string $modId): Response
+    {
+        if ($response = $this->redirectIfGuest()) {
+            return $response;
+        }
+
+        if (!$this->verifyCsrf()) {
+            Session::flash('error', 'Invalid security token.');
+            return $this->redirect('/account/garage');
+        }
+
+        $customerId = (int) Auth::customerId();
+        $db = Database::getInstance();
+
+        $vehicle = $db->table('customer_vehicles')
+            ->where('id', (int) $id)
+            ->where('customer_id', $customerId)
+            ->first();
+
+        if (!$vehicle) {
+            Session::flash('error', 'Garage vehicle not found.');
+            return $this->redirect('/account/garage');
+        }
+
+        $db->table('customer_vehicle_mods')
+            ->where('id', (int) $modId)
+            ->where('customer_vehicle_id', (int) $id)
+            ->delete();
+
+        Session::flash('success', 'Mod removed.');
         return $this->redirect('/account/garage');
     }
 
@@ -1358,14 +1651,107 @@ final class AccountController extends BaseStorefrontController
                 continue;
             }
 
+            $mileageKm      = isset($row['mileage_km']) && $row['mileage_km'] !== null ? (int) $row['mileage_km'] : null;
+            $intervalKm     = isset($row['service_interval_km']) && $row['service_interval_km'] !== null ? (int) $row['service_interval_km'] : null;
+            $lastServiceKm  = isset($row['last_service_km']) && $row['last_service_km'] !== null ? (int) $row['last_service_km'] : null;
+
+            // Service progress: km since last service vs interval
+            $serviceProgress = null;
+            $kmSinceService  = null;
+            $kmUntilService  = null;
+            if ($intervalKm !== null && $intervalKm > 0 && $lastServiceKm !== null && $mileageKm !== null) {
+                $kmSinceService = max(0, $mileageKm - $lastServiceKm);
+                $kmUntilService = max(0, $intervalKm - $kmSinceService);
+                $serviceProgress = min(100, (int) round(($kmSinceService / $intervalKm) * 100));
+            }
+
+            // Purchase history: orders containing parts compatible with this vehicle
+            $purchaseHistory = [];
+            try {
+                $vehicleId = (int) ($row['vehicle_id'] ?? 0);
+                $purchaseHistory = $db->raw("
+                    SELECT DISTINCT o.id, o.order_number, o.status, o.grand_total, o.currency_code, o.created_at
+                    FROM orders o
+                    INNER JOIN order_items oi ON oi.order_id = o.id
+                    INNER JOIN product_vehicles pv ON pv.product_id = oi.product_id
+                    WHERE o.customer_id = :cid
+                      AND pv.vehicle_id = :vid
+                    ORDER BY o.created_at DESC
+                    LIMIT 5
+                ", ['cid' => $customerId, 'vid' => $vehicleId])->fetchAll(\PDO::FETCH_ASSOC);
+            } catch (\Throwable) {
+                $purchaseHistory = [];
+            }
+
+            // Compatible parts count
+            $partsCount = 0;
+            try {
+                $result = $db->raw("
+                    SELECT COUNT(DISTINCT p.id) as cnt
+                    FROM products p
+                    INNER JOIN product_vehicles pv ON pv.product_id = p.id
+                    WHERE pv.vehicle_id = :vid AND p.is_active = 1
+                ", ['vid' => (int) ($row['vehicle_id'] ?? 0)])->fetchAll(\PDO::FETCH_ASSOC);
+                $partsCount = (int) (($result[0]['cnt'] ?? 0));
+            } catch (\Throwable) {
+                $partsCount = 0;
+            }
+
+            // Total spent on this vehicle (all time, all orders with compatible parts)
+            $totalSpent = null;
+            try {
+                $spentResult = $db->raw("
+                    SELECT SUM(oi.unit_price * oi.qty) as total
+                    FROM order_items oi
+                    INNER JOIN orders o ON o.id = oi.order_id
+                    INNER JOIN product_vehicles pv ON pv.product_id = oi.product_id
+                    WHERE o.customer_id = :cid
+                      AND pv.vehicle_id = :vid
+                      AND o.status NOT IN ('cancelled','refunded')
+                ", ['cid' => $customerId, 'vid' => (int) ($row['vehicle_id'] ?? 0)])->fetchAll(\PDO::FETCH_ASSOC);
+                $raw = $spentResult[0]['total'] ?? null;
+                $totalSpent = $raw !== null ? (float) $raw : null;
+            } catch (\Throwable) {
+                $totalSpent = null;
+            }
+
+            // Mod / wishlist items
+            $mods = [];
+            try {
+                $mods = $db->table('customer_vehicle_mods')
+                    ->where('customer_vehicle_id', (int) ($row['id'] ?? 0))
+                    ->orderBy('sort_order', 'ASC')
+                    ->orderBy('id', 'ASC')
+                    ->get();
+            } catch (\Throwable) {
+                $mods = [];
+            }
+
             $garageVehicles[] = [
-                'id' => (int) ($row['id'] ?? 0),
-                'vehicle_id' => (int) ($row['vehicle_id'] ?? 0),
-                'vehicle_type' => (string) ($row['vehicle_type'] ?? 'scooter'),
-                'is_default' => (int) ($row['is_default'] ?? 0) === 1,
-                'label' => $vehicleMeta['label'],
-                'brand' => $vehicleMeta['brand'],
-                'model' => $vehicleMeta['model'],
+                'id'               => (int) ($row['id'] ?? 0),
+                'vehicle_id'       => (int) ($row['vehicle_id'] ?? 0),
+                'vehicle_type'     => (string) ($row['vehicle_type'] ?? 'scooter'),
+                'is_default'       => (int) ($row['is_default'] ?? 0) === 1,
+                'label'            => $vehicleMeta['label'],
+                'brand'            => $vehicleMeta['brand'],
+                'model'            => $vehicleMeta['model'],
+                'nickname'         => (string) ($row['nickname'] ?? ''),
+                'photo_path'       => (string) ($row['photo_path'] ?? ''),
+                'spec_year'        => isset($row['spec_year']) && $row['spec_year'] !== null ? (int) $row['spec_year'] : null,
+                'spec_colour'      => (string) ($row['spec_colour'] ?? ''),
+                'spec_engine_cc'   => isset($row['spec_engine_cc']) && $row['spec_engine_cc'] !== null ? (int) $row['spec_engine_cc'] : null,
+                'spec_mods_summary'=> (string) ($row['spec_mods_summary'] ?? ''),
+                'mileage_km'       => $mileageKm,
+                'service_interval_km' => $intervalKm,
+                'last_service_km'  => $lastServiceKm,
+                'notes'            => (string) ($row['notes'] ?? ''),
+                'service_progress' => $serviceProgress,
+                'km_since_service' => $kmSinceService,
+                'km_until_service' => $kmUntilService,
+                'purchase_history' => $purchaseHistory,
+                'parts_count'      => $partsCount,
+                'total_spent'      => $totalSpent,
+                'mods'             => $mods,
             ];
         }
 

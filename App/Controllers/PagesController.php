@@ -38,8 +38,8 @@ final class PagesController extends Controller
     private const TITLES = [
         // Business
         'wholesale-partnerships'         => 'Wholesale Partnerships',
-        'dealer-onboarding'              => 'Dealer Onboarding',
-        'b2b-contact'                    => 'B2B Contact & Intake',
+        'dealer-onboarding'              => 'Dealer Program',
+        'b2b-contact'                    => 'Work with Us — B2B',
         'advertise'                      => 'Advertise with Us',
         'priority-support'               => 'Priority Support',
         'bulk-ordering'                  => 'Bulk Ordering Guide',

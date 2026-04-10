@@ -294,16 +294,3 @@ final class Translator
         return dirname(__DIR__) . '/Locale/' . $locale;
     }
 }
-
-/**
- * Global translation helper.
- *
- * Usage in views:
- *   <?= __('add_to_cart') ?>
- *   <?= __('showing_results', ['from' => 1, 'to' => 24, 'total' => 100]) ?>
- *   <?= __('shop.add_to_cart') ?>  ← explicit group access
- */
-function __(string $key, array $replace = []): string
-{
-    return Translator::get($key, $replace);
-}

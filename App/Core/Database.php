@@ -497,6 +497,10 @@ class Database
         if ($value === '*') {
             return true;
         }
+        // table.* wildcard
+        if (preg_match('/^`?[a-zA-Z0-9_]+`?\.\*$/', $value)) {
+            return true;
+        }
         if (preg_match('/^`?[a-zA-Z0-9_]+`?(?:\.`?[a-zA-Z0-9_]+`?)*(?:\s+as\s+`?[a-zA-Z0-9_]+`?)?$/i', $value)) {
             return true;
         }

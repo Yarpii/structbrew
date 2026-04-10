@@ -6,9 +6,9 @@
                 <div class="absolute top-1/3 right-1/4 w-60 h-60 bg-[var(--color-accent)] rounded-full blur-[80px]"></div>
             </div>
             <div class="relative">
-                <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">Ready to upgrade your setup?</h2>
+                <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">Ready to upgrade your scooter?</h2>
                 <p class="mt-3 text-gray-300 max-w-lg mx-auto leading-relaxed">
-                    Browse our full collection of premium tech products. Free shipping on orders over $50.
+                    Browse our full range of scooter parts and accessories. Free shipping on orders over $50.
                 </p>
                 <div class="mt-6 flex justify-center gap-3">
                     <a href="/shop" class="inline-flex h-12 items-center gap-2 rounded-[var(--radius-button)] bg-[var(--color-accent)] px-6 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-hover)]">

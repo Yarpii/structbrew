@@ -8,9 +8,9 @@
         <div class="grid md:grid-cols-3 gap-5">
             <?php
             $testimonials = [
-                ['name' => 'Sarah K.', 'role' => 'Remote Worker', 'text' => 'The noise-cancelling headphones are a game-changer for my home office. Crystal clear audio and the battery lasts all week. Best tech purchase this year.', 'rating' => 5],
-                ['name' => 'Marcus T.', 'role' => 'Gamer', 'text' => 'Bought the mechanical keyboard and gaming mouse combo. The build quality is insane for the price. Fast shipping too — arrived in 2 days.', 'rating' => 5],
-                ['name' => 'Lisa M.', 'role' => 'Content Creator', 'text' => 'The 4K webcam and ultrawide monitor completely upgraded my streaming setup. Customer support helped me pick the right specs. Will definitely buy again.', 'rating' => 4],
+                ['name' => 'Jamie R.', 'role' => 'Daily Commuter', 'text' => 'Ordered a replacement throttle cable and brake pads — both fit perfectly on my first attempt. Shipping was fast and the packaging kept everything safe. Will be my go-to for parts from now on.', 'rating' => 5],
+                ['name' => 'Marcus T.', 'role' => 'Scooter Enthusiast', 'text' => 'Picked up a performance variator kit and new drive belt. The quality is excellent and the price beat every other site I checked. Had my scooter running like new within an hour.', 'rating' => 5],
+                ['name' => 'Lisa M.', 'role' => 'Mechanic', 'text' => 'I order parts here for multiple customer scooters every week. The stock is reliable, descriptions are accurate, and the customer support team helped me track down a hard-to-find carburettor jet. Highly recommended.', 'rating' => 5],
             ];
             foreach ($testimonials as $t): ?>
                 <div class="rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6" style="box-shadow: var(--shadow-sm)">

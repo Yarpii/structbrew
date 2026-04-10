@@ -1,4 +1,6 @@
-<?php\n\ndeclare(strict_types=1);\n\nreturn array (
+<?php
+
+return array (
   'de_at' => 
   array (
     'url' => 'https://scooterdynamics.at/',
@@ -1629,4 +1631,4 @@
     'country' => 'SG',
     'tax_rate' => 0.0,
   ),
-);\n
+);

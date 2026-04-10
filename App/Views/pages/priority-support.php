@@ -33,7 +33,7 @@
                         <thead>
                             <tr>
                                 <th class="text-left px-3 py-2 border-b border-[var(--color-border)] text-[var(--color-muted)] font-semibold">Tier</th>
-                                <th class="text-left px-3 py-2 border-b border-[var(--color-border)] text-[var,--color-muted)] font-semibold">First response</th>
+                                <th class="text-left px-3 py-2 border-b border-[var(--color-border)] text-[var(--color-muted)] font-semibold">First response</th>
                                 <th class="text-left px-3 py-2 border-b border-[var(--color-border)] text-[var(--color-muted)] font-semibold">Channels</th>
                                 <th class="text-left px-3 py-2 border-b border-[var(--color-border)] text-[var(--color-muted)] font-semibold">Use case</th>
                             </tr>
