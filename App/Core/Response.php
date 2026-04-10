@@ -75,6 +75,29 @@ final class Response
     {
         if (!headers_sent()) {
             http_response_code($this->status);
+            $defaults = [
+                'X-Content-Type-Options' => 'nosniff',
+                'X-Frame-Options' => 'SAMEORIGIN',
+                'Referrer-Policy' => 'strict-origin-when-cross-origin',
+                'Permissions-Policy' => 'camera=(), microphone=(), geolocation=()',
+                // Start in report-only mode to avoid breaking existing inline scripts.
+                'Content-Security-Policy-Report-Only' => "default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'",
+            ];
+
+            if (
+                (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+                || (int) ($_SERVER['SERVER_PORT'] ?? 0) === 443
+                || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https'
+            ) {
+                $defaults['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains';
+            }
+
+            foreach ($defaults as $name => $value) {
+                if (!array_key_exists($name, $this->headers)) {
+                    $this->headers[$name] = $value;
+                }
+            }
+
             foreach ($this->headers as $name => $value) {
                 // Prevent CRLF header injection
                 $name = str_replace(["\r", "\n", "\0"], '', (string) $name);
