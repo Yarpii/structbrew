@@ -69,7 +69,7 @@
                             </a>
                         </td>
                         <td class="px-6 py-3 text-center text-gray-500">
-                            <?= $vehicle['year_from'] ?? '—' ?> – <?= $vehicle['year_to'] ?? 'present' ?>
+                            <?= htmlspecialchars((string) ($vehicle['year_from'] ?? '—')) ?> – <?= htmlspecialchars((string) ($vehicle['year_to'] ?? 'present')) ?>
                         </td>
                         <td class="px-6 py-3 text-center text-gray-500">
                             <?= $vehicle['engine_cc'] ? number_format($vehicle['engine_cc']) . ' cc' : '—' ?>
@@ -103,7 +103,7 @@
     <?php if (($vehicles['last_page'] ?? 1) > 1): ?>
     <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
         <p class="text-sm text-gray-500">
-            Showing <?= $vehicles['from'] ?? 0 ?> to <?= $vehicles['to'] ?? 0 ?> of <?= $vehicles['total'] ?? 0 ?> vehicles
+            Showing <?= (int) ($vehicles['from'] ?? 0) ?> to <?= (int) ($vehicles['to'] ?? 0) ?> of <?= (int) ($vehicles['total'] ?? 0) ?> vehicles
         </p>
         <div class="flex gap-1">
             <?php for ($i = 1; $i <= $vehicles['last_page']; $i++): ?>

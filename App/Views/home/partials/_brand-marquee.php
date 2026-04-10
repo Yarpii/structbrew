@@ -8,8 +8,8 @@
                 $brands = ['TechNova', 'SoundWave', 'PixelForge', 'CloudNine', 'VoltEdge', 'DataPulse', 'NeonByte', 'AeroSync', 'CoreFusion', 'BlinkIO', 'TechNova', 'SoundWave', 'PixelForge', 'CloudNine', 'VoltEdge', 'DataPulse', 'NeonByte', 'AeroSync', 'CoreFusion', 'BlinkIO'];
                 foreach ($brands as $brand): ?>
                     <span class="inline-flex items-center gap-2 text-[var(--color-muted)]/60 text-lg font-bold tracking-tight select-none">
-                        <span class="w-8 h-8 rounded-lg bg-[var(--color-border)] flex items-center justify-center text-xs font-extrabold text-[var(--color-muted)]"><?= $brand[0] ?></span>
-                        <?= $brand ?>
+                        <span class="w-8 h-8 rounded-lg bg-[var(--color-border)] flex items-center justify-center text-xs font-extrabold text-[var(--color-muted)]"><?= htmlspecialchars(substr((string) $brand, 0, 1)) ?></span>
+                        <?= htmlspecialchars((string) $brand) ?>
                     </span>
                 <?php endforeach; ?>
             </div>

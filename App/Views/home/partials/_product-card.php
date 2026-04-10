@@ -30,7 +30,7 @@
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="<?= $i < round($product['rating']) ? 'currentColor' : 'none' ?>" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 <?php endfor; ?>
             </div>
-            <span class="text-xs text-[var(--color-muted)]">(<?= $product['reviews'] ?>)</span>
+            <span class="text-xs text-[var(--color-muted)]">(<?= (int) ($product['reviews'] ?? 0) ?>)</span>
         </div>
         <div class="flex items-center justify-between mt-3">
             <div class="flex items-baseline gap-1.5">
