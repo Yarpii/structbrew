@@ -83,6 +83,9 @@ class Database
 
     public function table(string $table): self
     {
+        if (!$this->isSafeIdentifier($table)) {
+            throw new \InvalidArgumentException('Invalid table name');
+        }
         $builder = clone $this;
         $builder->reset();
         $builder->table = $this->prefix . $table;
@@ -103,17 +106,28 @@ class Database
 
     public function select(string ...$columns): self
     {
+        foreach ($columns as $column) {
+            if (!$this->isSafeSelectExpression($column)) {
+                throw new \InvalidArgumentException('Invalid select expression');
+            }
+        }
         $this->selects = $columns;
         return $this;
     }
 
     public function where(string $column, mixed $operatorOrValue, mixed $value = null): self
     {
+        if (!$this->isSafeIdentifierPath($column)) {
+            throw new \InvalidArgumentException('Invalid column name in where()');
+        }
         if ($value === null) {
             $value = $operatorOrValue;
             $operator = '=';
         } else {
             $operator = $operatorOrValue;
+        }
+        if (!$this->isAllowedOperator((string) $operator)) {
+            throw new \InvalidArgumentException('Invalid operator in where()');
         }
 
         $placeholder = ':w_' . str_replace('.', '_', $column) . '_' . count($this->wheres);
@@ -124,6 +138,9 @@ class Database
 
     public function whereIn(string $column, array $values): self
     {
+        if (!$this->isSafeIdentifierPath($column)) {
+            throw new \InvalidArgumentException('Invalid column name in whereIn()');
+        }
         $placeholders = [];
         foreach ($values as $i => $val) {
             $key = ':win_' . count($this->wheres) . "_{$i}";
@@ -136,18 +153,27 @@ class Database
 
     public function whereNull(string $column): self
     {
+        if (!$this->isSafeIdentifierPath($column)) {
+            throw new \InvalidArgumentException('Invalid column name in whereNull()');
+        }
         $this->wheres[] = "{$column} IS NULL";
         return $this;
     }
 
     public function whereNotNull(string $column): self
     {
+        if (!$this->isSafeIdentifierPath($column)) {
+            throw new \InvalidArgumentException('Invalid column name in whereNotNull()');
+        }
         $this->wheres[] = "{$column} IS NOT NULL";
         return $this;
     }
 
     public function whereRaw(string $sql, array $bindings = []): self
     {
+        if (preg_match('/(;|--|\/\*)/', $sql)) {
+            throw new \InvalidArgumentException('Unsafe SQL fragment in whereRaw()');
+        }
         $this->wheres[] = $sql;
         $this->bindings = array_merge($this->bindings, $bindings);
         return $this;
@@ -155,6 +181,9 @@ class Database
 
     public function orderBy(string $column, string $direction = 'ASC'): self
     {
+        if (!$this->isSafeIdentifierPath($column)) {
+            throw new \InvalidArgumentException('Invalid column name in orderBy()');
+        }
         $direction = strtoupper($direction) === 'DESC' ? 'DESC' : 'ASC';
         $this->orderBy[] = "{$column} {$direction}";
         return $this;
@@ -162,6 +191,11 @@ class Database
 
     public function groupBy(string ...$columns): self
     {
+        foreach ($columns as $column) {
+            if (!$this->isSafeIdentifierPath($column)) {
+                throw new \InvalidArgumentException('Invalid column name in groupBy()');
+            }
+        }
         $this->groupBy = array_merge($this->groupBy, $columns);
         return $this;
     }
@@ -180,6 +214,14 @@ class Database
 
     public function join(string $table, string $first, string $operator, string $second, string $type = 'INNER'): self
     {
+        if (
+            !$this->isSafeIdentifier($table)
+            || !$this->isSafeIdentifierPath($first)
+            || !$this->isAllowedOperator($operator)
+            || !$this->isSafeIdentifierPath($second)
+        ) {
+            throw new \InvalidArgumentException('Invalid join arguments');
+        }
         $table = $this->prefix . $table;
         $this->joins[] = "{$type} JOIN {$table} ON {$first} {$operator} {$second}";
         return $this;
@@ -254,6 +296,11 @@ class Database
 
     public function insert(array $data): int
     {
+        foreach (array_keys($data) as $column) {
+            if (!$this->isSafeIdentifier((string) $column)) {
+                throw new \InvalidArgumentException('Invalid column name in insert()');
+            }
+        }
         $columns = implode(', ', array_keys($data));
         $placeholders = implode(', ', array_map(fn($k) => ":{$k}", array_keys($data)));
         $sql = "INSERT INTO {$this->table} ({$columns}) VALUES ({$placeholders})";
@@ -270,6 +317,11 @@ class Database
         if (empty($rows)) return 0;
 
         $columns = array_keys($rows[0]);
+        foreach ($columns as $column) {
+            if (!$this->isSafeIdentifier((string) $column)) {
+                throw new \InvalidArgumentException('Invalid column name in insertBatch()');
+            }
+        }
         $colStr = implode(', ', $columns);
         $placeholderSets = [];
         $bindings = [];
@@ -294,6 +346,9 @@ class Database
         $sets = [];
         $bindings = [];
         foreach ($data as $key => $value) {
+            if (!$this->isSafeIdentifier((string) $key)) {
+                throw new \InvalidArgumentException('Invalid column name in update()');
+            }
             $placeholder = ":set_{$key}";
             $sets[] = "{$key} = {$placeholder}";
             $bindings[$placeholder] = $value;
@@ -419,5 +474,35 @@ class Database
     public function __clone()
     {
         // Keep same PDO connection but allow independent query building
+    }
+
+    private function isSafeIdentifier(string $value): bool
+    {
+        return (bool) preg_match('/^`?[a-zA-Z0-9_]+`?$/', $value);
+    }
+
+    private function isSafeIdentifierPath(string $value): bool
+    {
+        return (bool) preg_match('/^`?[a-zA-Z0-9_]+`?(?:\.`?[a-zA-Z0-9_]+`?)*$/', $value);
+    }
+
+    private function isAllowedOperator(string $operator): bool
+    {
+        return in_array(strtoupper(trim($operator)), ['=', '!=', '<>', '>', '<', '>=', '<='], true);
+    }
+
+    private function isSafeSelectExpression(string $value): bool
+    {
+        $value = trim($value);
+        if ($value === '*') {
+            return true;
+        }
+        if (preg_match('/^`?[a-zA-Z0-9_]+`?(?:\.`?[a-zA-Z0-9_]+`?)*(?:\s+as\s+`?[a-zA-Z0-9_]+`?)?$/i', $value)) {
+            return true;
+        }
+        if (preg_match('/^(COUNT|SUM|AVG|MIN|MAX)\((\*|`?[a-zA-Z0-9_]+`?(?:\.`?[a-zA-Z0-9_]+`?)*)\)\s+as\s+`?[a-zA-Z0-9_]+`?$/i', $value)) {
+            return true;
+        }
+        return false;
     }
 }
