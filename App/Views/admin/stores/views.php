@@ -35,7 +35,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Locale</label>
                 <select name="locale" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                     <?php foreach (['en_US','en_GB','nl_NL','de_DE','fr_FR','es_ES','it_IT','pt_PT','pl_PL','sv_SE','da_DK','nb_NO','fi_FI','cs_CZ','hu_HU','ro_RO','bg_BG','hr_HR','sk_SK','sl_SI','el_GR','tr_TR'] as $loc): ?>
-                    <option value="<?= $loc ?>"><?= $loc ?></option>
+                    <option value="<?= htmlspecialchars($loc) ?>"><?= htmlspecialchars($loc) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -43,7 +43,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Currency</label>
                 <select name="currency_code" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm">
                     <?php foreach (['EUR','USD','GBP','CHF','SEK','NOK','DKK','PLN','CZK','HUF','RON','BGN','HRK','TRY'] as $cur): ?>
-                    <option value="<?= $cur ?>"><?= $cur ?></option>
+                    <option value="<?= htmlspecialchars($cur) ?>"><?= htmlspecialchars($cur) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>

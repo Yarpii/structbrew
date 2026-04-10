@@ -53,8 +53,8 @@
                 <tr class="hover:bg-gray-50">
                     <td class="px-6 py-3 font-mono text-sm text-gray-900"><?= htmlspecialchars($domain['domain']) ?></td>
                     <td class="px-6 py-3 text-gray-700"><?= htmlspecialchars($domain['store_view_name'] ?? '—') ?></td>
-                    <td class="px-6 py-3"><span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded"><?= $domain['locale'] ?? '—' ?></span></td>
-                    <td class="px-6 py-3 text-center"><?= $domain['is_primary'] ? '<span class="text-blue-600 text-xs font-medium">Primary</span>' : '—' ?></td>
+                    <td class="px-6 py-3"><span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded"><?= htmlspecialchars((string) ($domain['locale'] ?? '—')) ?></span></td>
+                    <td class="px-6 py-3 text-center"><?= !empty($domain['is_primary']) ? '<span class="text-blue-600 text-xs font-medium">Primary</span>' : '—' ?></td>
                     <td class="px-6 py-3 text-center"><span class="w-2 h-2 rounded-full inline-block <?= $domain['is_active'] ? 'bg-green-500' : 'bg-gray-300' ?>"></span></td>
                     <td class="px-6 py-3 text-right">
                         <form method="POST" action="/admin/stores/domains/<?= (int) $domain['id'] ?>/delete" class="inline" onsubmit="return confirm('Remove this domain?')">
