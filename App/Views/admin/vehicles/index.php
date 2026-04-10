@@ -75,7 +75,7 @@
                             <?= $vehicle['engine_cc'] ? number_format($vehicle['engine_cc']) . ' cc' : '—' ?>
                         </td>
                         <td class="px-6 py-3 text-center">
-                            <span class="inline-block w-2 h-2 rounded-full <?= ($vehicle['is_active'] ?? 0) ? 'bg-green-500' : 'bg-gray-300' ?>"></span>
+                            <span class="inline-block w-2 h-2 rounded-full <?= !empty($vehicle['is_active']) ? 'bg-green-500' : 'bg-gray-300' ?>"></span>
                         </td>
                         <td class="px-6 py-3 text-right">
                             <div class="flex items-center justify-end gap-2">
@@ -109,7 +109,7 @@
             <?php for ($i = 1; $i <= $vehicles['last_page']; $i++): ?>
             <a href="?page=<?= $i ?>&<?= htmlspecialchars(http_build_query(array_diff_key($_GET, ['page' => '']))) ?>"
                class="px-3 py-1.5 text-sm rounded-lg <?= $i === ($vehicles['current_page'] ?? 1) ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100' ?>">
-                <?= $i ?>
+                <?= (int) $i ?>
             </a>
             <?php endfor; ?>
         </div>

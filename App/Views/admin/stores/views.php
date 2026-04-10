@@ -92,8 +92,8 @@
                     <td class="px-6 py-3"><span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded"><?= htmlspecialchars($view['locale'] ?? '') ?></span></td>
                     <td class="px-6 py-3"><span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded"><?= htmlspecialchars($view['currency_code'] ?? '') ?></span></td>
                     <td class="px-6 py-3 text-gray-500"><?= htmlspecialchars($view['theme']) ?></td>
-                    <td class="px-6 py-3 text-center"><?= $view['is_default'] ? '<span class="text-blue-600">Yes</span>' : '—' ?></td>
-                    <td class="px-6 py-3 text-center"><span class="w-2 h-2 rounded-full inline-block <?= $view['is_active'] ? 'bg-green-500' : 'bg-gray-300' ?>"></span></td>
+                    <td class="px-6 py-3 text-center"><?= !empty($view['is_default']) ? '<span class="text-blue-600">Yes</span>' : '—' ?></td>
+                    <td class="px-6 py-3 text-center"><span class="w-2 h-2 rounded-full inline-block <?= !empty($view['is_active']) ? 'bg-green-500' : 'bg-gray-300' ?>"></span></td>
                     <td class="px-6 py-3 text-right">
                         <a href="/admin/stores/views/<?= (int) $view['id'] ?>/edit" class="text-blue-600 hover:text-blue-700 text-xs">Edit</a>
                     </td>
