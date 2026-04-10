@@ -1,6 +1,14 @@
 <?php
 /** @var array $product */
 /** @var array $categories */
+$badgeClassMap = [
+    'Sale' => 'bg-[var(--color-accent)] text-white',
+    'New' => 'bg-emerald-500 text-white',
+    'Bestseller' => 'bg-amber-500 text-white',
+    'Popular' => 'bg-blue-500 text-white',
+    'Out of Stock' => 'bg-gray-500 text-white',
+];
+$badgeClass = $badgeClassMap[(string) ($product['badge'] ?? '')] ?? '';
 ?>
 <div class="product-card group rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5" style="box-shadow: var(--shadow-sm)">
     <a href="/shop/<?= htmlspecialchars($product['slug']) ?>" class="block relative aspect-square bg-[var(--color-bg)] overflow-hidden">
@@ -11,11 +19,7 @@
         </div>
         <?php if ($product['badge']): ?>
             <span class="absolute top-2.5 left-2.5 rounded-full px-2.5 py-0.5 text-xs font-semibold
-                <?= $product['badge'] === 'Sale' ? 'bg-[var(--color-accent)] text-white' : '' ?>
-                <?= $product['badge'] === 'New' ? 'bg-emerald-500 text-white' : '' ?>
-                <?= $product['badge'] === 'Bestseller' ? 'bg-amber-500 text-white' : '' ?>
-                <?= $product['badge'] === 'Popular' ? 'bg-blue-500 text-white' : '' ?>
-                <?= $product['badge'] === 'Out of Stock' ? 'bg-gray-500 text-white' : '' ?>
+                <?= htmlspecialchars($badgeClass) ?>
             "><?= htmlspecialchars($product['badge']) ?></span>
         <?php endif; ?>
     </a>
