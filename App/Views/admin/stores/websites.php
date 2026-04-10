@@ -46,12 +46,12 @@
                 <h3 class="font-semibold text-gray-900"><?= htmlspecialchars($website['name']) ?></h3>
                 <p class="text-xs text-gray-400 font-mono"><?= htmlspecialchars($website['code']) ?></p>
             </div>
-            <?php if ($website['is_default']): ?>
+            <?php if (!empty($website['is_default'])): ?>
             <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">Default</span>
             <?php endif; ?>
         </div>
         <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full <?= $website['is_active'] ? 'bg-green-500' : 'bg-gray-300' ?>"></span>
+            <span class="w-2 h-2 rounded-full <?= !empty($website['is_active']) ? 'bg-green-500' : 'bg-gray-300' ?>"></span>
         </div>
     </div>
 
@@ -73,11 +73,11 @@
                             <div class="flex items-center gap-2">
                                 <p class="text-sm text-gray-600"><?= htmlspecialchars($view['name']) ?></p>
                                 <span class="text-xs text-gray-400"><?= htmlspecialchars($view['locale'] ?? '') ?> / <?= htmlspecialchars($view['currency_code'] ?? '') ?></span>
-                                <?php if ($view['is_default']): ?>
+                                <?php if (!empty($view['is_default'])): ?>
                                 <span class="px-1.5 py-0.5 bg-green-100 text-green-700 text-[10px] rounded">Default</span>
                                 <?php endif; ?>
                             </div>
-                            <span class="w-2 h-2 rounded-full <?= $view['is_active'] ? 'bg-green-500' : 'bg-gray-300' ?>"></span>
+                            <span class="w-2 h-2 rounded-full <?= !empty($view['is_active']) ? 'bg-green-500' : 'bg-gray-300' ?>"></span>
                         </div>
                     </div>
                     <?php endforeach; ?>
